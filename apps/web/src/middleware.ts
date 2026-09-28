@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-// Protected routes (require auth)
+// Protected routes (require authentication)
 const PROTECTED = [
   '/dashboard',
   '/tracker',
@@ -16,7 +16,7 @@ const PROTECTED = [
   '/profile',
 ];
 
-// Auth routes (redirect to dashboard if already logged in)
+// Auth routes
 const AUTH_ROUTES = [
   '/login',
   '/register',
@@ -26,30 +26,57 @@ const AUTH_ROUTES = [
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
   const hasRefreshCookie = req.cookies.has('sb_refresh');
 
-  // If accessing protected route without refresh cookie → login
-  if (PROTECTED.some((p) => pathname === p || pathname.startsWith(p + '/'))) {
+  // ----------------------------------------------------------
+  // PROTECTED ROUTES
+  // ----------------------------------------------------------
+  if (
+    PROTECTED.some(
+      (p) => pathname === p || pathname.startsWith(p + '/'),
+    )
+  ) {
     if (!hasRefreshCookie) {
       const url = req.nextUrl.clone();
+
       url.pathname = '/login';
       url.searchParams.set('next', pathname);
+
       return NextResponse.redirect(url);
     }
   }
 
-  // If accessing auth route WITH refresh cookie → dashboard
-  if (AUTH_ROUTES.some((p) => pathname === p || pathname.startsWith(p + '/'))) {
+  // ----------------------------------------------------------
+  // NORMAL AUTH ROUTES
+  // ----------------------------------------------------------
+  if (
+    AUTH_ROUTES.some(
+      (p) => pathname === p || pathname.startsWith(p + '/'),
+    )
+  ) {
     if (hasRefreshCookie) {
       const url = req.nextUrl.clone();
+
       url.pathname = '/dashboard';
+
       return NextResponse.redirect(url);
     }
   }
+
+  // ----------------------------------------------------------
+  // VERIFY EMAIL
+  //
+  // Do NOT redirect based on cookie here.
+  // A newly registered user must be able to access this page
+  // before having a refresh cookie.
+  // ----------------------------------------------------------
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!api|_next|static|favicon.ico|uploads).*)'],
+  matcher: [
+    '/((?!api|_next|static|favicon.ico|uploads).*)',
+  ],
 };

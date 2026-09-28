@@ -150,8 +150,25 @@ export class AuthController {
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'ইমেইল যাচাই করো (OTP দিয়ে)' })
-  async verifyEmail(@Body() dto: VerifyEmailDto) {
-    return this.authService.verifyEmail(dto);
+  async verifyEmail(
+    @Body() dto: VerifyEmailDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.verifyEmail(dto, {
+      userAgent: req.headers['user-agent'],
+      ipAddress: req.ip,
+    });
+
+    this.setRefreshCookie(res, result.data.refreshToken, false);
+
+    return {
+      message: result.message,
+      data: {
+        user: result.data.user,
+        accessToken: result.data.accessToken,
+      },
+    };
   }
 
   // ----------------------------------------------------------

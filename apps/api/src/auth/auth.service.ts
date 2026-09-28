@@ -231,29 +231,52 @@ export class AuthService {
   }
 
   // ----------------------------------------------------------
-  // VERIFY EMAIL
-  // ----------------------------------------------------------
-  async verifyEmail(dto: VerifyEmailDto) {
+// VERIFY EMAIL
+// ----------------------------------------------------------
+  async verifyEmail(dto: VerifyEmailDto, meta: ClientMeta) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email.toLowerCase() },
     });
-    if (!user) throw new NotFoundException(MESSAGES.USER_NOT_FOUND);
-    if (user.isEmailVerified) {
-      return { message: 'ইমেইল আগেই যাচাই করা হয়েছে', data: null };
+
+    if (!user) {
+      throw new NotFoundException(MESSAGES.USER_NOT_FOUND);
     }
 
+    if (user.isEmailVerified) {
+      throw new BadRequestException('ইমেইল আগেই যাচাই করা হয়েছে');
+    }
+
+    // Verify OTP first
     await this.otp.verifyOtp({
       userId: user.id,
       code: dto.otp,
       purpose: 'EMAIL_VERIFICATION',
     });
 
-    await this.prisma.user.update({
+    // Mark email as verified
+    const verifiedUser = await this.prisma.user.update({
       where: { id: user.id },
       data: { isEmailVerified: true },
     });
 
-    return { message: MESSAGES.EMAIL_VERIFIED, data: null };
+    // Create authenticated session ONLY after successful verification
+    const tokens = await this.issueTokens(
+      verifiedUser.id,
+      verifiedUser.email,
+      verifiedUser.username,
+      verifiedUser.role,
+      false,
+      meta,
+    );
+
+    return {
+      message: MESSAGES.EMAIL_VERIFIED,
+      data: {
+        user: this.toAuthUser(verifiedUser),
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      },
+    };
   }
 
   // ----------------------------------------------------------

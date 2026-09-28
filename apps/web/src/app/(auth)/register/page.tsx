@@ -46,7 +46,9 @@ export default function RegisterPage() {
 
       login(res.data.accessToken, res.data.user);
       toast.success('অ্যাকাউন্ট তৈরি হয়েছে! 🎉');
-      router.replace('/verify-email');
+      router.replace(
+        `/verify-email?email=${encodeURIComponent(form.email.toLowerCase())}`,
+      );
     } catch (err) {
       const e = err as ApiError;
       setError(e.message || 'রেজিস্ট্রেশন ব্যর্থ');
