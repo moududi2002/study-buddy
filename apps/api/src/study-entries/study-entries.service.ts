@@ -285,8 +285,18 @@ export class StudyEntriesService {
   // HELPERS
   // ----------------------------------------------------------
   private async invalidateCache(userId: string, date: Date) {
-    const key = `study:today:${userId}:${DateUtil.toISODate(date)}`;
-    await this.redis.del(key);
+    const keys = [
+      `study:today:${userId}:${DateUtil.toISODate(date)}`,
+      `streak:heatmap:${userId}:365`,
+      `streak:heatmap:${userId}:90`,
+      `streak:heatmap:${userId}:30`,
+    ];
+
+    // Weekly challenge cache (this week's key)
+    const { start } = DateUtil.getWeekRange(new Date());
+    keys.push(`streak:challenge:${userId}:${DateUtil.toISODate(start)}`);
+
+    await Promise.all(keys.map((k) => this.redis.del(k)));
   }
 
   private serialize(entry: any) {

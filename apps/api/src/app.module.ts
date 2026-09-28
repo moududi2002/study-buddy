@@ -14,6 +14,9 @@ import { UsersModule } from './users/users.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { StudyEntriesModule } from './study-entries/study-entries.module';
 import { GamificationModule } from './gamification/gamification.module';
+import { StreakModule } from './streak/streak.module';
+import { GoalsModule } from './goals/goals.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { GamificationModule } from './gamification/gamification.module';
     SubjectsModule,
     StudyEntriesModule,
     GamificationModule,
+    StreakModule,
+    GoalsModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
