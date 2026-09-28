@@ -4,7 +4,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { OtpInput } from '@/components/ui/otp-input';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const params = useSearchParams();
   const email = params.get('email') ?? '';
@@ -26,18 +26,22 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email) {
       toast.error('ইমেইল পাওয়া যায়নি, আবার শুরু করো');
       router.push('/forgot-password');
       return;
     }
+
     setLoading(true);
+
     try {
       const res = await api.post<{ success: true; message: string }>(
         '/auth/reset-password',
         { email, otp, newPassword },
         { skipAuth: true },
       );
+
       toast.success(res.message);
       router.replace('/login');
     } catch (err) {
@@ -57,21 +61,32 @@ export default function ResetPasswordPage() {
       >
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🔐</div>
-          <h1 className="text-2xl font-bold text-primary-800">নতুন পাসওয়ার্ড দাও</h1>
-          {email && <p className="text-primary-600 mt-2 text-sm">{email}</p>}
+          <h1 className="text-2xl font-bold text-primary-800">
+            নতুন পাসওয়ার্ড দাও
+          </h1>
+
+          {email && (
+            <p className="text-primary-600 mt-2 text-sm">{email}</p>
+          )}
         </div>
 
         <div className="card-soft p-6 md:p-8">
           <form onSubmit={onSubmit} className="space-y-5">
             <div>
               <Label>ইমেইলে পাঠানো কোড</Label>
+
               <div className="mt-2">
-                <OtpInput value={otp} onChange={setOtp} disabled={loading} />
+                <OtpInput
+                  value={otp}
+                  onChange={setOtp}
+                  disabled={loading}
+                />
               </div>
             </div>
 
             <div>
               <Label htmlFor="newPassword">নতুন পাসওয়ার্ড</Label>
+
               <Input
                 id="newPassword"
                 type="password"
@@ -97,5 +112,13 @@ export default function ResetPasswordPage() {
         </div>
       </motion.div>
     </main>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

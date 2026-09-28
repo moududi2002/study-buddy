@@ -86,7 +86,7 @@ export default function RegisterPage() {
                 icon={<User size={18} />}
                 value={form.fullName}
                 onChange={(e) => set('fullName', e.target.value)}
-                placeholder="রাফি আহমেদ"
+                placeholder="সিরাজুম মুনিরা"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                 icon={<Mail size={18} />}
                 value={form.email}
                 onChange={(e) => set('email', e.target.value)}
-                placeholder="rafi@example.com"
+                placeholder="munira@example.com"
                 autoComplete="email"
                 required
               />
@@ -112,7 +112,7 @@ export default function RegisterPage() {
                 icon={<AtSign size={18} />}
                 value={form.username}
                 onChange={(e) => set('username', e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
-                placeholder="rafi_2010"
+                placeholder="munira_2010"
                 autoComplete="username"
                 required
               />

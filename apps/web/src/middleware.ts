@@ -20,7 +20,6 @@ const PROTECTED = [
 const AUTH_ROUTES = [
   '/login',
   '/register',
-  '/verify-email',
   '/forgot-password',
   '/reset-password',
 ];

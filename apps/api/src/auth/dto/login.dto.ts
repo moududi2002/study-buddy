@@ -7,7 +7,7 @@ import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty({
-    example: 'student@example.com অথবা rafi_2010',
+    example: 'monira@example.com অথবা munira_2010',
     description: 'ইমেইল অথবা ইউজারনেম',
   })
   @IsString()

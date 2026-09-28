@@ -1,10 +1,7 @@
-// ============================================================
-// Path: apps/web/src/app/(auth)/login/page.tsx
-// ============================================================
-
+//apps/web/src/app/(auth)/login/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -16,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const nextUrl = params.get('next') || '/dashboard';
@@ -32,6 +29,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     try {
       const res = await api.post<{
         success: true;
@@ -66,9 +64,11 @@ export default function LoginPage() {
           >
             🐱
           </motion.div>
+
           <h1 className="text-3xl font-bold">
             <span className="text-gradient">Study Buddy</span>
           </h1>
+
           <p className="text-primary-600 mt-1">আবার স্বাগতম! 🌸</p>
         </div>
 
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 icon={<Mail size={18} />}
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="rafi@example.com বা rafi_2010"
+                placeholder="munira@example.com বা munira_2010"
                 autoComplete="username"
                 required
               />
@@ -111,6 +111,7 @@ export default function LoginPage() {
                 />
                 মনে রাখো
               </label>
+
               <Link
                 href="/forgot-password"
                 className="text-primary-500 hover:text-primary-700 font-medium"
@@ -133,12 +134,23 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-primary-600">
             অ্যাকাউন্ট নেই?{' '}
-            <Link href="/register" className="text-primary-600 hover:text-primary-800 font-semibold">
+            <Link
+              href="/register"
+              className="text-primary-600 hover:text-primary-800 font-semibold"
+            >
               নতুন অ্যাকাউন্ট খোলো
             </Link>
           </p>
         </div>
       </motion.div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

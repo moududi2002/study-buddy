@@ -263,18 +263,19 @@ export default function DashboardPage() {
               {insight?.insight ?? 'কিছুক্ষণ পর আবার দেখা যাবে...'}
             </p>
           </div>
-          {insight && (
+         {insight && (
             <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
               <div className="rounded-xl bg-lavender-100 px-3 py-2">
                 <p className="text-primary-400">মোট</p>
                 <p className="font-semibold text-primary-800">
-                  {formatMinutesShort(insight.stats.totalMinutes)}
+                  {formatMinutesShort(insight.stats?.totalMinutes ?? 0)}
                 </p>
               </div>
+
               <div className="rounded-xl bg-pink-soft-100 px-3 py-2">
                 <p className="text-primary-400">পড়া দিন</p>
                 <p className="font-semibold text-primary-800">
-                  {toBnDigits(insight.stats.daysStudied)}
+                  {toBnDigits(insight.stats?.daysStudied ?? 0)}
                 </p>
               </div>
             </div>

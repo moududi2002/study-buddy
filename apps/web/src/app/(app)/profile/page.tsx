@@ -58,6 +58,7 @@ interface Profile {
   level: number;
   createdAt: string;
   hasGoogleLinked: boolean;
+isEmailVerified: boolean;
 }
 
 export default function ProfilePage() {

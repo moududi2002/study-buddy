@@ -6,13 +6,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, Length, MinLength, MaxLength } from 'class-validator';
 
 export class SendOtpDto {
-  @ApiProperty({ example: 'rafi@example.com' })
+  @ApiProperty({ example: 'munira@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
   email: string;
 }
 
 export class VerifyEmailDto {
-  @ApiProperty({ example: 'rafi@example.com' })
+  @ApiProperty({ example: 'munira@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
   email: string;
 
@@ -23,13 +23,13 @@ export class VerifyEmailDto {
 }
 
 export class ForgotPasswordDto {
-  @ApiProperty({ example: 'rafi@example.com' })
+  @ApiProperty({ example: 'munira@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
   email: string;
 }
 
 export class ResetPasswordDto {
-  @ApiProperty({ example: 'rafi@example.com' })
+  @ApiProperty({ example: 'munira@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
   email: string;
 

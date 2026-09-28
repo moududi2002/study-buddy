@@ -15,11 +15,11 @@ import {
 } from 'class-validator';
 
 export class RegisterDto {
-  @ApiProperty({ example: 'student@example.com' })
+  @ApiProperty({ example: 'munira@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
   email: string;
 
-  @ApiProperty({ example: 'rafi_2010' })
+  @ApiProperty({ example: 'munira_2010' })
   @IsString()
   @MinLength(3, { message: 'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে' })
   @MaxLength(20, { message: 'ইউজারনেম সর্বোচ্চ ২০ অক্ষরের' })

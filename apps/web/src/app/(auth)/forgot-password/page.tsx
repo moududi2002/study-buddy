@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
                 icon={<Mail size={18} />}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="rafi@example.com"
+                placeholder="munira@example.com"
                 required
               />
             </div>
