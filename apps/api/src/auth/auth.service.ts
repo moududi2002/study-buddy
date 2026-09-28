@@ -89,21 +89,11 @@ export class AuthService {
       purpose: 'EMAIL_VERIFICATION',
     });
 
-    const tokens = await this.issueTokens(
-      user.id,
-      user.email,
-      user.username,
-      user.role,
-      false,
-      meta,
-    );
 
     return {
       message: MESSAGES.REGISTER_SUCCESS,
       data: {
         user: this.toAuthUser(user),
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
       },
     };
   }

@@ -43,8 +43,7 @@ export default function RegisterPage() {
         message: string;
         data: { user: AuthUser; accessToken: string };
       }>('/auth/register', form);
-
-      login(res.data.accessToken, res.data.user);
+      
       toast.success('অ্যাকাউন্ট তৈরি হয়েছে! 🎉');
       router.replace(
         `/verify-email?email=${encodeURIComponent(form.email.toLowerCase())}`,

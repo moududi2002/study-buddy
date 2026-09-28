@@ -52,10 +52,8 @@ export class AuthController {
       userAgent: req.headers['user-agent'],
       ipAddress: req.ip,
     });
-    this.setRefreshCookie(res, result.data.refreshToken, false);
     return {
       message: result.message,
-      data: { user: result.data.user, accessToken: result.data.accessToken },
     };
   }
 
