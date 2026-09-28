@@ -296,29 +296,31 @@ export class AnalyticsService {
   // DASHBOARD (all-in-one)
   // ----------------------------------------------------------
   async dashboard(userId: string) {
-    const [weekly, streak, user, todayAgg] = await Promise.all([
-      this.weekly(userId),
-      this.prisma.user.findUnique({
-        where: { id: userId },
-        select: {
-          currentStreak: true,
-          longestStreak: true,
-          xp: true,
-          level: true,
-          fullName: true,
-          avatarUrl: true,
-        },
-      }),
-      this.prisma.user.findUnique({
-        where: { id: userId },
-        select: { xp: true, level: true },
-      }),
-      this.prisma.studyEntry.aggregate({
-        where: { userId, date: DateUtil.toDateOnly(new Date()) },
-        _sum: { durationMinutes: true },
-        _count: { _all: true },
-      }),
-    ]);
+    const [weekly, user, todayAgg] = await Promise.all([
+  this.weekly(userId),
+
+    this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        currentStreak: true,
+        longestStreak: true,
+        xp: true,
+        level: true,
+        fullName: true,
+        avatarUrl: true,
+      },
+    }),
+
+    this.prisma.studyEntry.aggregate({
+      where: {
+        userId,
+        date: DateUtil.toDateOnly(new Date()),
+      },
+      _sum: { durationMinutes: true },
+      _count: { _all: true },
+    }),
+  ]);
+
 
     const todayMinutes = todayAgg._sum.durationMinutes ?? 0;
     const todayEntries = todayAgg._count._all;

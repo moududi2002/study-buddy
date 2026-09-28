@@ -13,7 +13,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { StudyMood } from '@prisma/client';
+import { StudyMood } from '../../generated/prisma/client';
 
 export class CreateStudyEntryDto {
   @ApiProperty({ example: 'clx1234subject' })

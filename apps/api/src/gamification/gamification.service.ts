@@ -3,7 +3,7 @@
 // ============================================================
 
 import { Injectable, Logger } from '@nestjs/common';
-import { BadgeCode } from '@prisma/client';
+import { BadgeCode } from '../generated/prisma/client';
 import { DateUtil, LevelUtil } from '../common/utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { BADGE_DEFINITIONS } from '../../prisma/seed';

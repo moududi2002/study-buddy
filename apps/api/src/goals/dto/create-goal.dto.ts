@@ -3,7 +3,7 @@
 // ============================================================
 
 import { ApiProperty } from '@nestjs/swagger';
-import { GoalType } from '@prisma/client';
+import { GoalType } from '../../generated/prisma/client';
 import {
   IsEnum,
   IsInt,

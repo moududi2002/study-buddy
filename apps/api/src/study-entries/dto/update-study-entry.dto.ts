@@ -12,7 +12,8 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { StudyMood } from '@prisma/client';
+import { StudyMood } from '../../generated/prisma/client';
+
 
 export class UpdateStudyEntryDto {
   @ApiProperty({ required: false })

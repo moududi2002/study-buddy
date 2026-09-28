@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "description": "Study Buddy backend API - NestJS",
+  
   "scripts": {
-    "build": "prisma generate && nest build && pnpm prisma:copy",
-    "prisma:generate": "prisma generate",
-    "prisma:copy": "mkdir -p dist/src/generated/prisma && cp -R src/generated/prisma/. dist/src/generated/prisma/",
+    "build": "prisma generate && nest build && cp -r src/generated dist/src/",
     "start": "nest start",
     "dev": "prisma generate && nest start --watch",
     "start:prod": "node dist/src/main.js",
-    "lint": "eslint \"src/**/*.ts\" --fix",
+
+    "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:seed": "ts-node prisma/seed.ts"
   },
+
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },

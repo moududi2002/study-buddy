@@ -8,7 +8,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Goal, GoalType } from '@prisma/client';
+import { Goal, GoalType } from '../generated/prisma/client';
 import { MESSAGES } from '../common/messages';
 import { DateUtil, LevelUtil } from '../common/utils';
 import { GamificationService } from '../gamification/gamification.service';

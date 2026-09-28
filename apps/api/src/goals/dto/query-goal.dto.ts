@@ -3,7 +3,7 @@
 // ============================================================
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { GoalType } from '@prisma/client';
+import { GoalType } from '../../generated/prisma/client';
 import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 
