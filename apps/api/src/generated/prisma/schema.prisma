@@ -11,8 +11,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
-
 // ============================================================
 // ENUMS
 // ============================================================
@@ -51,37 +49,37 @@ enum BadgeCode {
 // ============================================================
 
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  username        String    @unique
-  fullName        String
-  passwordHash    String
-  classLevel      Int
-  avatarUrl       String?
-  role            UserRole  @default(STUDENT)
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String   @unique
+  fullName     String
+  passwordHash String
+  classLevel   Int
+  avatarUrl    String?
+  role         UserRole @default(STUDENT)
 
-  xp              Int       @default(0)
-  level           Int       @default(1)
-  currentStreak   Int       @default(0)
-  longestStreak   Int       @default(0)
-  lastStudyDate   DateTime? @db.Date
+  xp            Int       @default(0)
+  level         Int       @default(1)
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastStudyDate DateTime? @db.Date
 
-  isEmailVerified Boolean   @default(false)
-  isActive        Boolean   @default(true)
+  isEmailVerified Boolean @default(false)
+  isActive        Boolean @default(true)
 
-  googleId        String?   @unique
+  googleId String? @unique
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  subjects        Subject[]
-  studyEntries    StudyEntry[]
-  goals           Goal[]
-  badges          UserBadge[]
-  otpTokens       OtpToken[]
-  refreshTokens   RefreshToken[]
-  diaries         StudyDiary[]
+  subjects      Subject[]
+  studyEntries  StudyEntry[]
+  goals         Goal[]
+  badges        UserBadge[]
+  otpTokens     OtpToken[]
+  refreshTokens RefreshToken[]
+  diaries       StudyDiary[]
 
   @@index([email])
   @@index([username])
@@ -105,7 +103,7 @@ model OtpToken {
   consumed  Boolean    @default(false)
   createdAt DateTime   @default(now())
 
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, purpose])
   @@index([code])
@@ -116,17 +114,17 @@ model OtpToken {
 // ============================================================
 
 model RefreshToken {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   userId     String
-  tokenHash  String   @unique
+  tokenHash  String    @unique
   userAgent  String?
   ipAddress  String?
-  rememberMe Boolean  @default(false)
+  rememberMe Boolean   @default(false)
   expiresAt  DateTime
   revokedAt  DateTime?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

@@ -3,8 +3,8 @@
 // ============================================================
 
 import "dotenv/config";
-import { PrismaClient } from '../node_modules/.prisma/client';
-import { BadgeCode } from '../node_modules/.prisma/client';
+import { PrismaClient } from '../src/generated/prisma/client';
+import { BadgeCode } from '../src/generated/prisma/client';
 import * as argon2 from 'argon2';
 import { PrismaPg } from "@prisma/adapter-pg";
 
@@ -13,9 +13,7 @@ const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
 });
 
-const prisma = new PrismaClient({
-  adapter,
-});
+const prisma = new PrismaClient({ adapter });
 
 // Default subject template for new students
 export const DEFAULT_SUBJECTS = [
