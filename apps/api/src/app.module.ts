@@ -11,6 +11,9 @@ import { RedisModule } from './redis/redis.module';
 import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { SubjectsModule } from './subjects/subjects.module';
+import { StudyEntriesModule } from './study-entries/study-entries.module';
+import { GamificationModule } from './gamification/gamification.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { UsersModule } from './users/users.module';
     MailModule,
     AuthModule,
     UsersModule,
+    SubjectsModule,
+    StudyEntriesModule,
+    GamificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
