@@ -4,7 +4,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState,Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { MailCheck, RefreshCw } from 'lucide-react';
@@ -14,7 +14,7 @@ import { useAuthStore, AuthUser } from '@/lib/stores/auth.store';
 import { Button } from '@/components/ui/button';
 import { OtpInput } from '@/components/ui/otp-input';
 
-export default function VerifyEmailPage() {
+export function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -188,5 +188,13 @@ export default function VerifyEmailPage() {
         </p>
       </motion.div>
     </main>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
