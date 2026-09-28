@@ -1,0 +1,238 @@
+// ============================================================
+// Path: apps/api/prisma/schema.prisma
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  STUDENT
+}
+
+enum StudyMood {
+  HAPPY
+  NEUTRAL
+  SAD
+}
+
+enum GoalType {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum BadgeCode {
+  FIRST_STUDY_ENTRY
+  SEVEN_DAY_STREAK
+  THIRTY_DAY_STREAK
+  HUNDRED_HOURS
+  MATH_HERO
+  SCIENCE_EXPLORER
+  CONSISTENCY_CHAMPION
+  CHAPTER_FINISHER
+  EARLY_BIRD
+  NIGHT_OWL
+}
+
+// ============================================================
+// USER
+// ============================================================
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  username        String    @unique
+  fullName        String
+  passwordHash    String
+  classLevel      Int
+  avatarUrl       String?
+  role            UserRole  @default(STUDENT)
+
+  xp              Int       @default(0)
+  level           Int       @default(1)
+  currentStreak   Int       @default(0)
+  longestStreak   Int       @default(0)
+  lastStudyDate   DateTime? @db.Date
+
+  isEmailVerified Boolean   @default(false)
+  isActive        Boolean   @default(true)
+
+  googleId        String?   @unique
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  subjects        Subject[]
+  studyEntries    StudyEntry[]
+  goals           Goal[]
+  badges          UserBadge[]
+  otpTokens       OtpToken[]
+  refreshTokens   RefreshToken[]
+  diaries         StudyDiary[]
+
+  @@index([email])
+  @@index([username])
+}
+
+// ============================================================
+// OTP TOKEN (Email verification + Password reset)
+// ============================================================
+
+enum OtpPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+model OtpToken {
+  id        String     @id @default(cuid())
+  userId    String
+  code      String
+  purpose   OtpPurpose
+  expiresAt DateTime
+  consumed  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+  @@index([code])
+}
+
+// ============================================================
+// REFRESH TOKEN (Device session management)
+// ============================================================
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  userAgent  String?
+  ipAddress  String?
+  rememberMe Boolean  @default(false)
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ============================================================
+// SUBJECT
+// ============================================================
+
+model Subject {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  color     String   @default("#A78BFA")
+  icon      String   @default("📚")
+  isCustom  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studyEntries StudyEntry[]
+  goals        Goal[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+// ============================================================
+// STUDY ENTRY (Daily study log)
+// ============================================================
+
+model StudyEntry {
+  id              String    @id @default(cuid())
+  userId          String
+  subjectId       String
+  date            DateTime  @db.Date
+  durationMinutes Int
+  chapter         String?
+  note            String?   @db.Text
+  mood            StudyMood @default(NEUTRAL)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([userId, subjectId])
+  @@index([subjectId])
+}
+
+// ============================================================
+// GOAL
+// ============================================================
+
+model Goal {
+  id             String   @id @default(cuid())
+  userId         String
+  subjectId      String?
+  title          String
+  type           GoalType
+  targetMinutes  Int?
+  targetChapters Int?
+  progressValue  Int      @default(0)
+  isCompleted    Boolean  @default(false)
+  startsAt       DateTime @db.Date
+  endsAt         DateTime @db.Date
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+
+  @@index([userId, type])
+  @@index([userId, startsAt, endsAt])
+}
+
+// ============================================================
+// BADGE
+// ============================================================
+
+model UserBadge {
+  id       String    @id @default(cuid())
+  userId   String
+  code     BadgeCode
+  earnedAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, code])
+  @@index([userId])
+}
+
+// ============================================================
+// STUDY DIARY (Personal notes / feelings)
+// ============================================================
+
+model StudyDiary {
+  id        String    @id @default(cuid())
+  userId    String
+  date      DateTime  @db.Date
+  content   String    @db.Text
+  mood      StudyMood @default(NEUTRAL)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+}

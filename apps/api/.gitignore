@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+*.log
+uploads/
+coverage/
+.turbo/
+/generated/prisma
