@@ -112,6 +112,10 @@ export class AuthService {
     if (!user) throw new UnauthorizedException(MESSAGES.INVALID_CREDENTIALS);
     if (!user.isActive) throw new ForbiddenException(MESSAGES.ACCOUNT_DISABLED);
 
+    if (!user.isEmailVerified) {
+    throw new ForbiddenException('উহু, 🤨 । ইমেইল ভেরিফাই করা হয়নি সোনা । এত তাড়া কিসের, হুম? আগে OTP দিয়ে ইমেইল ভেরিফাই করে আসো। 🏃‍♀️দৌড় দিয়ে ইনবক্স থেকে OTP নিয়ে verify করে ফেলো কেমন 😽 ');
+  }
+
     const valid = await PasswordUtil.verify(user.passwordHash, dto.password);
     if (!valid) throw new UnauthorizedException(MESSAGES.INVALID_CREDENTIALS);
 
@@ -150,6 +154,11 @@ export class AuthService {
       throw new UnauthorizedException(MESSAGES.TOKEN_EXPIRED);
     }
     if (!stored.user.isActive) throw new ForbiddenException(MESSAGES.ACCOUNT_DISABLED);
+    if (!stored.user.isEmailVerified) {
+  throw new ForbiddenException(
+    'উহু, 🤨 । ইমেইল ভেরিফাই করা হয়নি সোনা । এত তাড়া কিসের, হুম? আগে OTP দিয়ে ইমেইল ভেরিফাই করে আসো। 🏃‍♀️দৌড় দিয়ে ইনবক্স থেকে OTP নিয়ে verify করে ফেলো কেমন 😽',
+  );
+}
 
     await this.prisma.refreshToken.update({
       where: { id: stored.id },
