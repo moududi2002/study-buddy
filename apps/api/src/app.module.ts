@@ -17,6 +17,7 @@ import { GamificationModule } from './gamification/gamification.module';
 import { StreakModule } from './streak/streak.module';
 import { GoalsModule } from './goals/goals.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     StreakModule,
     GoalsModule,
     AnalyticsModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
