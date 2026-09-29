@@ -4,6 +4,7 @@
 
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -18,13 +19,19 @@ import { StreakModule } from './streak/streak.module';
 import { GoalsModule } from './goals/goals.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AiModule } from './ai/ai.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { GroupsModule } from './groups/groups.module';
+import { FriendsModule } from './friends/friends.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     RedisModule,
     MailModule,
+    NotificationsModule,
     AuthModule,
     UsersModule,
     SubjectsModule,
@@ -34,6 +41,9 @@ import { AiModule } from './ai/ai.module';
     GoalsModule,
     AnalyticsModule,
     AiModule,
+    GroupsModule,
+    FriendsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -127,6 +127,12 @@ export default function TrackerPage() {
     } finally {
       setSubmitting(false);
     }
+   
+   
+    if (res.data.xpGained > 0) {
+    // optional: only big XP
+     fire();
+}
   };
 
   const remove = async (id: string) => {

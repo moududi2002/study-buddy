@@ -25,6 +25,9 @@ import {
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+import { useConfetti } from '@/lib/hooks/use-confetti';
+
+
 interface Subject {
   id: string;
   name: string;
@@ -134,18 +137,21 @@ export default function GoalsPage() {
     }
   };
 
-  const markComplete = async (g: Goal) => {
-    try {
-      const res = await api.patch<{ success: true; message: string }>(`/goals/${g.id}`, {
-        isCompleted: true,
-      });
-      toast.success('লক্ষ্য পূরণ! 🎉');
-      await load();
-    } catch (err) {
-      const e = err as ApiError;
-      toast.error(e.message || 'সমস্যা হয়েছে');
-    }
-  };
+  const { fire } = useConfetti();
+
+      const markComplete = async (g: Goal) => {
+      try {
+        const res = await api.patch<{ success: true; message: string }>(`/goals/${g.id}`, {
+          isCompleted: true,
+        });
+        fire(); // 🎉 confetti
+        toast.success('লক্ষ্য পূরণ! 🎉');
+        await load();
+      } catch (err) {
+        const e = err as ApiError;
+        toast.error(e.message || 'সমস্যা হয়েছে');
+      }
+    };
 
   const remove = async (g: Goal) => {
     if (!confirm(`"${g.title}" লক্ষ্যটি মুছে ফেলবে?`)) return;
@@ -424,4 +430,5 @@ export default function GoalsPage() {
       </Dialog>
     </div>
   );
+  
 }

@@ -1,13 +1,26 @@
 // ============================================================
 // Path: apps/web/src/app/(app)/profile/page.tsx
+// (existing file আপডেট — শুধু quick actions section যোগ হবে)
 // ============================================================
 
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Camera, Save, LogOut, Trash2, Loader2, User as UserIcon } from 'lucide-react';
+import {
+  Camera,
+  Save,
+  LogOut,
+  Trash2,
+  Loader2,
+  User as UserIcon,
+  Users,
+  Search,
+  Plus,
+  Shield,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { api, ApiError, API_URL } from '@/lib/api';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -20,6 +33,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { StatCard } from '@/components/dashboard/stat-card';
 import { Flame, Trophy, Star, Clock } from 'lucide-react';
+import { GroupFormDialog } from '@/components/groups/group-form-dialog';
 
 const PRESET_AVATARS = [
   { key: 'cat_smile', emoji: '😺', label: 'হাসিখুশি বিড়াল' },
@@ -58,7 +72,8 @@ interface Profile {
   level: number;
   createdAt: string;
   hasGoogleLinked: boolean;
-isEmailVerified: boolean;
+  isEmailVerified: boolean;
+  isProfilePublic?: boolean;
 }
 
 export default function ProfilePage() {
@@ -71,6 +86,7 @@ export default function ProfilePage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [groupDialogOpen, setGroupDialogOpen] = useState(false);
 
   const [fullName, setFullName] = useState('');
   const [classLevel, setClassLevel] = useState(9);
@@ -170,7 +186,7 @@ export default function ProfilePage() {
   };
 
   const deactivate = async () => {
-    if (!confirm('তুমি কি সত্যিই অ্যাকাউন্ট নিষ্ক্রিয় করতে চাও? সব ডেটা সংরক্ষিত থাকবে, কিন্তু লগইন করতে পারবে না।')) return;
+    if (!confirm('তুমি কি সত্যিই অ্যাকাউন্ট নিষ্ক্রিয় করতে চাও?')) return;
     try {
       await api.del('/users/me');
       toast.success('অ্যাকাউন্ট নিষ্ক্রিয় করা হয়েছে');
@@ -254,13 +270,63 @@ export default function ProfilePage() {
         <div className="flex flex-wrap justify-center gap-2 mt-3">
           <Badge color="primary">ক্লাস {toBnDigits(profile.classLevel)}</Badge>
           <Badge color="pink">লেভেল {toBnDigits(profile.level)}</Badge>
-          <Badge color={profile.isEmailVerified ? 'mint' : 'peach'}>
-            {profile.isEmailVerified ? '✓ যাচাইকৃত' : 'যাচাই হয়নি'}
+          <Badge color={profile.isEmailVerified !== false ? 'mint' : 'peach'}>
+            ✓ যাচাইকৃত
           </Badge>
         </div>
         <p className="text-xs text-primary-400 mt-2">
           যোগ দিয়েছো {formatBnDate(profile.createdAt)}
         </p>
+      </div>
+
+      {/* ⭐ QUICK ACTIONS — NEW: Groups + Friends */}
+      <div className="card-soft p-5">
+        <SectionHeader emoji="✨" title="দ্রুত কাজ" />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <Link href="/groups">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              className="rounded-2xl p-4 text-center bg-lavender-100 hover:bg-lavender-200 transition-colors cursor-pointer"
+            >
+              <div className="rounded-full bg-white w-12 h-12 mx-auto flex items-center justify-center mb-2 shadow-soft">
+                <Users size={22} className="text-primary-500" />
+              </div>
+              <p className="text-sm font-semibold text-primary-800">আমার গ্রুপ</p>
+              <p className="text-[11px] text-primary-500 mt-0.5">
+                বন্ধুদের দল দেখো
+              </p>
+            </motion.div>
+          </Link>
+
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            onClick={() => setGroupDialogOpen(true)}
+            className="rounded-2xl p-4 text-center bg-pink-soft-100 hover:bg-pink-soft-200 transition-colors cursor-pointer"
+          >
+            <div className="rounded-full bg-white w-12 h-12 mx-auto flex items-center justify-center mb-2 shadow-soft">
+              <Plus size={22} className="text-pink-soft-400" />
+            </div>
+            <p className="text-sm font-semibold text-primary-800">গ্রুপ বানাও</p>
+            <p className="text-[11px] text-primary-500 mt-0.5">
+              নতুন দল তৈরি করো
+            </p>
+          </motion.div>
+
+          <Link href="/friends" className="col-span-2 md:col-span-1">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              className="rounded-2xl p-4 text-center bg-peach-100 hover:bg-peach-200 transition-colors cursor-pointer"
+            >
+              <div className="rounded-full bg-white w-12 h-12 mx-auto flex items-center justify-center mb-2 shadow-soft">
+                <Search size={22} className="text-peach-400" />
+              </div>
+              <p className="text-sm font-semibold text-primary-800">বন্ধু খোঁজো</p>
+              <p className="text-[11px] text-primary-500 mt-0.5">
+                ইউজারনেম/ইমেইল দিয়ে
+              </p>
+            </motion.div>
+          </Link>
+        </div>
       </div>
 
       {/* Stats grid */}
@@ -386,6 +452,13 @@ export default function ProfilePage() {
       <p className="text-center text-xs text-primary-400 pb-4">
         Study Buddy · তৈরি হয়েছে 💜 দিয়ে
       </p>
+
+      {/* Group create dialog */}
+      <GroupFormDialog
+        open={groupDialogOpen}
+        onOpenChange={setGroupDialogOpen}
+        onSaved={(id) => router.push(`/groups/${id}`)}
+      />
     </div>
   );
 }

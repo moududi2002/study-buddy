@@ -80,7 +80,9 @@ export default function AchievementsPage() {
         setLoading(false);
       }
     })();
+    
   }, []);
+  
 
   if (loading || !level) {
     return (
@@ -99,6 +101,11 @@ export default function AchievementsPage() {
       </div>
     );
   }
+
+  if (earnedCount > prevEarnedCount) {
+  fire();
+  toast.success('নতুন ব্যাজ অর্জিত! 🏆');
+ }
 
   const earned = badges.filter((b) => b.earned);
   const locked = badges.filter((b) => !b.earned);

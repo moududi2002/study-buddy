@@ -28,7 +28,7 @@ export class RegisterDto {
   })
   username: string;
 
-  @ApiProperty({ example: 'রাফি আহমেদ' })
+  @ApiProperty({ example: 'সিরাজুম মুনিরা' })
   @IsString()
   @MinLength(2, { message: 'নাম কমপক্ষে ২ অক্ষরের হতে হবে' })
   @MaxLength(60)

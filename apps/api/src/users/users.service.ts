@@ -46,6 +46,7 @@ export class UsersService {
         longestStreak: true,
         lastStudyDate: true,
         isEmailVerified: true,
+        isProfilePublic: true,
         googleId: true,
         createdAt: true,
       },
@@ -96,6 +97,11 @@ export class UsersService {
         createdAt: true,
       },
     });
+
+      const data: any = {};
+      if (dto.fullName !== undefined) data.fullName = dto.fullName;
+      if (dto.classLevel !== undefined) data.classLevel = dto.classLevel;
+      if (dto.isProfilePublic !== undefined) data.isProfilePublic = dto.isProfilePublic;
 
     return {
       message: MESSAGES.PROFILE_UPDATED,

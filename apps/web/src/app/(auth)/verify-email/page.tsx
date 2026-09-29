@@ -138,7 +138,8 @@ export function VerifyEmailContent() {
           </h1>
 
           <p className="text-primary-600 mt-2 text-sm">
-            তোমার ইমেইলে একটি ৬-সংখ্যার কোড পাঠানো হয়েছে।
+            তোমার ইমেইলে একটি ৬-সংখ্যার কোড পাঠিয়েছি।
+          <p>📩 মেইলের ইনবক্স থেকে দৌড়ে গিয়ে নিয়ে আসো 🏃‍♀️</p>
           </p>
 
           <p className="text-primary-800 mt-1 text-sm font-semibold break-all">
