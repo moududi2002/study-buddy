@@ -288,6 +288,8 @@ exports.Prisma.MessageScalarFieldEnum = {
   type: 'type',
   content: 'content',
   imageUrl: 'imageUrl',
+  audioUrl: 'audioUrl',
+  audioDuration: 'audioDuration',
   createdAt: 'createdAt'
 };
 
@@ -377,7 +379,8 @@ exports.NotificationType = exports.$Enums.NotificationType = {
 
 exports.MessageType = exports.$Enums.MessageType = {
   TEXT: 'TEXT',
-  IMAGE: 'IMAGE'
+  IMAGE: 'IMAGE',
+  AUDIO: 'AUDIO'
 };
 
 exports.Prisma.ModelName = {

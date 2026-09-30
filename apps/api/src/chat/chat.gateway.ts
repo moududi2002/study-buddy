@@ -192,4 +192,274 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return { ok: false, error: (e as Error).message };
     }
   }
+  // ----------------------------------------------------------
+  // WebRTC CALL SIGNALING
+  // ----------------------------------------------------------
+
+  @SubscribeMessage('call_invite')
+  async onCallInvite(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+      callType: 'audio' | 'video';
+    },
+  ) {
+    try {
+      if (!client.userId) {
+        return { ok: false, error: 'unauthorized' };
+      }
+
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      client.to(`conv:${data.conversationId}`).emit('call_invite', {
+        conversationId: data.conversationId,
+        callId: data.callId,
+        callType: data.callType,
+        callerId: client.userId,
+        callerUsername: client.username,
+      });
+
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: (e as Error).message,
+      };
+    }
+  }
+
+  @SubscribeMessage('call_accept')
+  async onCallAccept(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+    },
+  ) {
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      client.to(`conv:${data.conversationId}`).emit('call_accept', {
+        conversationId: data.conversationId,
+        callId: data.callId,
+        userId: client.userId,
+      });
+
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: (e as Error).message,
+      };
+    }
+  }
+
+  @SubscribeMessage('call_reject')
+  async onCallReject(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+    },
+  ) {
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    client.to(`conv:${data.conversationId}`).emit('call_reject', {
+      conversationId: data.conversationId,
+      callId: data.callId,
+      userId: client.userId,
+    });
+
+    return { ok: true };
+  }
+
+  @SubscribeMessage('webrtc_offer')
+  async onWebrtcOffer(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+      targetUserId?: string;
+      offer: RTCSessionDescriptionInit;
+    },
+  ) {
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      const payload = {
+        conversationId: data.conversationId,
+        callId: data.callId,
+        fromUserId: client.userId,
+        offer: data.offer,
+      };
+
+      if (data.targetUserId) {
+        this.server.sockets.sockets.forEach((socket) => {
+          const target = socket as AuthSocket;
+
+          if (target.userId === data.targetUserId) {
+            target.emit('webrtc_offer', payload);
+          }
+        });
+      } else {
+        client.to(`conv:${data.conversationId}`).emit(
+          'webrtc_offer',
+          payload,
+        );
+      }
+
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: (e as Error).message,
+      };
+    }
+  }
+
+  @SubscribeMessage('webrtc_answer')
+  async onWebrtcAnswer(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+      targetUserId: string;
+      answer: RTCSessionDescriptionInit;
+    },
+  ) {
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      this.server.sockets.sockets.forEach((socket) => {
+        const target = socket as AuthSocket;
+
+        if (target.userId === data.targetUserId) {
+          target.emit('webrtc_answer', {
+            conversationId: data.conversationId,
+            callId: data.callId,
+            fromUserId: client.userId,
+            answer: data.answer,
+          });
+        }
+      });
+
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: (e as Error).message,
+      };
+    }
+  }
+
+  @SubscribeMessage('webrtc_ice_candidate')
+  async onIceCandidate(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+      targetUserId: string;
+      candidate: RTCIceCandidateInit;
+    },
+  ) {
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      this.server.sockets.sockets.forEach((socket) => {
+        const target = socket as AuthSocket;
+
+        if (target.userId === data.targetUserId) {
+          target.emit('webrtc_ice_candidate', {
+            conversationId: data.conversationId,
+            callId: data.callId,
+            fromUserId: client.userId,
+            candidate: data.candidate,
+          });
+        }
+      });
+
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: (e as Error).message,
+      };
+    }
+  }
+
+  @SubscribeMessage('call_end')
+  async onCallEnd(
+    @ConnectedSocket() client: AuthSocket,
+    @MessageBody()
+    data: {
+      conversationId: string;
+      callId: string;
+    },
+  ) {
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      client.to(`conv:${data.conversationId}`).emit('call_end', {
+        conversationId: data.conversationId,
+        callId: data.callId,
+        userId: client.userId,
+      });
+
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error: (e as Error).message,
+      };
+    }
+  }
+
+
 }

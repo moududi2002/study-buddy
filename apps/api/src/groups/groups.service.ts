@@ -336,12 +336,20 @@ export class GroupsService {
     const invitee = await this.prisma.user.findFirst({
       where: {
         OR: [
+          { id: identifier },
           { email: identifier.toLowerCase() },
           { username: identifier },
         ],
       },
-      select: { id: true, username: true, fullName: true, isActive: true },
+      select: {
+        id: true,
+        username: true,
+        fullName: true,
+        isActive: true,
+      },
     });
+
+
     if (!invitee || !invitee.isActive) throw new NotFoundException('ব্যবহারকারী খুঁজে পাওয়া যায়নি');
     if (invitee.id === userId) throw new BadRequestException('নিজেকে ইনভাইট করা যাবে না');
 

@@ -17,6 +17,11 @@ import {
   Wifi,
   WifiOff,
   Users,
+  Mic,
+  Phone,
+  Video,
+  PhoneOff,
+  MicOff,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { api, ApiError, API_URL } from '@/lib/api';
@@ -29,6 +34,9 @@ import { Button } from '@/components/ui/button';
 import { toBnDigits } from '@/lib/bn';
 import { cn } from '@/lib/utils';
 
+import { useVoiceRecorder } from '@/lib/hooks/use-voice-recorder';
+
+
 const PRESET_EMOJI: Record<string, string> = {
   cat_smile: '😺',
   cat_sleepy: '😴',
@@ -39,6 +47,10 @@ const PRESET_EMOJI: Record<string, string> = {
   bunny_happy: '🐰',
   bunny_reader: '📚',
 };
+
+const voiceRecorder = useVoiceRecorder();
+const [uploadingVoice, setUploadingVoice] = useState(false);
+
 
 export default function ChatRoomPage() {
   const params = useParams<{ conversationId: string }>();
@@ -172,6 +184,8 @@ export default function ChatRoomPage() {
       type: 'TEXT',
       content,
       imageUrl: null,
+      audioUrl: null,
+      audioDuration: null,
       createdAt: new Date().toISOString(),
       pending: true,
     };
@@ -256,6 +270,8 @@ export default function ChatRoomPage() {
       type: 'IMAGE',
       content: null,
       imageUrl: pendingImage.url,
+      audioUrl: null,
+      audioDuration: null,
       createdAt: new Date().toISOString(),
       pending: true,
     };
@@ -322,6 +338,120 @@ export default function ChatRoomPage() {
       </div>
     );
   }
+
+  const sendVoice = async () => {
+  if (!socket) return;
+
+  setUploadingVoice(true);
+
+  try {
+    const result = await voiceRecorder.stop();
+
+    if (result.blob.size > 10 * 1024 * 1024) {
+      toast.error('Voice message সর্বোচ্চ ১০MB');
+      return;
+    }
+
+    const extension =
+      result.blob.type.includes('ogg')
+        ? 'ogg'
+        : 'webm';
+
+    const file = new File(
+      [result.blob],
+      `voice-${Date.now()}.${extension}`,
+      {
+        type: result.blob.type || 'audio/webm',
+      },
+    );
+
+    const fd = new FormData();
+
+    fd.append('file', file);
+
+    const upload = await api.upload<{
+      audioUrl: string;
+    }>('/chat/audio', fd);
+
+    const audioUrl = upload.data.audioUrl;
+
+    const tempId = `temp-audio-${Date.now()}`;
+
+    const tempMsg: Message = {
+      id: tempId,
+      conversationId: params.conversationId,
+      senderId: me!.id,
+
+      sender: {
+        id: me!.id,
+        username: me!.username,
+        fullName: me!.fullName,
+        avatarUrl: me!.avatarUrl,
+      },
+
+      type: 'AUDIO',
+      content: null,
+      imageUrl: null,
+      audioUrl,
+      audioDuration: result.duration,
+
+      createdAt: new Date().toISOString(),
+      pending: true,
+    };
+
+    setMessages((prev) => [...prev, tempMsg]);
+
+    socket.emit(
+      'send_message',
+      {
+        conversationId: params.conversationId,
+        type: 'AUDIO',
+        audioUrl,
+        audioDuration: result.duration,
+      },
+      (ack: any) => {
+        if (!ack?.ok) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === tempId
+                ? {
+                    ...m,
+                    pending: false,
+                    failed: true,
+                  }
+                : m,
+            ),
+          );
+
+          toast.error(
+            ack?.error || 'Voice message পাঠানো যায়নি',
+          );
+        }
+      },
+    );
+    } catch (err) {
+      const e = err as Error;
+
+      toast.error(
+        e.message || 'Voice message পাঠানো যায়নি',
+      );
+    } finally {
+      setUploadingVoice(false);
+    }
+  };
+
+  const startVoice = async () => {
+    try {
+      await voiceRecorder.start();
+    } catch (err) {
+      toast.error(
+        (err as Error).message ||
+          'Microphone permission পাওয়া যায়নি',
+      );
+    }
+  };
+
+
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] md:h-[calc(100vh-6rem)] -mx-4 md:mx-0">
@@ -452,13 +582,37 @@ export default function ChatRoomPage() {
                       <p className="text-sm whitespace-pre-wrap break-words">
                         {m.content}
                       </p>
-                    ) : imageSrc ? (
-                      <img
-                        src={imageSrc}
-                        alt="ছবি"
-                        className="rounded-xl max-w-[240px] md:max-w-[300px] max-h-[320px] object-cover"
-                      />
+                    ) : m.type === 'IMAGE' ? (
+                      imageSrc ? (
+                        <img
+                          src={imageSrc}
+                          alt="ছবি"
+                          className="rounded-xl max-w-[240px] md:max-w-[300px] max-h-[320px] object-cover"
+                        />
+                      ) : null
+                    ) : m.audioUrl ? (
+                      <div className="flex items-center gap-2 px-2 py-1 min-w-[220px]">
+                        <span className="text-lg">🎙️</span>
+
+                        <audio
+                          controls
+                          preload="metadata"
+                          src={
+                            m.audioUrl.startsWith('http')
+                              ? m.audioUrl
+                              : `${API_URL.replace('/api/v1', '')}${m.audioUrl}`
+                          }
+                          className="h-9 max-w-[190px]"
+                        />
+
+                        {m.audioDuration && (
+                          <span className="text-[10px] opacity-70">
+                            {m.audioDuration}s
+                          </span>
+                        )}
+                      </div>
                     ) : null}
+
                   </div>
                   <div
                     className={cn(

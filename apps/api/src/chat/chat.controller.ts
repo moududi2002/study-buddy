@@ -127,4 +127,34 @@ export class ChatController {
   deleteMessage(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.chat.deleteMessage(user.id, id);
   }
+
+
+  // ----------------------------------------------------------
+  // POST /chat/audio
+  // ----------------------------------------------------------
+
+  @Post('audio')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+      required: ['file'],
+    },
+  })
+  @ApiOperation({ summary: 'চ্যাটের voice message upload' })
+  uploadAudio(
+    @CurrentUser() user: AuthUser,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.chat.uploadAudio(user.id, file);
+  }
+
 }

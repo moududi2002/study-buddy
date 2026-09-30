@@ -178,7 +178,8 @@ export type NotificationType = (typeof NotificationType)[keyof typeof Notificati
 
 export const MessageType: {
   TEXT: 'TEXT',
-  IMAGE: 'IMAGE'
+  IMAGE: 'IMAGE',
+  AUDIO: 'AUDIO'
 };
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -18911,8 +18912,18 @@ export namespace Prisma {
 
   export type AggregateMessage = {
     _count: MessageCountAggregateOutputType | null
+    _avg: MessageAvgAggregateOutputType | null
+    _sum: MessageSumAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
     _max: MessageMaxAggregateOutputType | null
+  }
+
+  export type MessageAvgAggregateOutputType = {
+    audioDuration: number | null
+  }
+
+  export type MessageSumAggregateOutputType = {
+    audioDuration: number | null
   }
 
   export type MessageMinAggregateOutputType = {
@@ -18922,6 +18933,8 @@ export namespace Prisma {
     type: $Enums.MessageType | null
     content: string | null
     imageUrl: string | null
+    audioUrl: string | null
+    audioDuration: number | null
     createdAt: Date | null
   }
 
@@ -18932,6 +18945,8 @@ export namespace Prisma {
     type: $Enums.MessageType | null
     content: string | null
     imageUrl: string | null
+    audioUrl: string | null
+    audioDuration: number | null
     createdAt: Date | null
   }
 
@@ -18942,10 +18957,20 @@ export namespace Prisma {
     type: number
     content: number
     imageUrl: number
+    audioUrl: number
+    audioDuration: number
     createdAt: number
     _all: number
   }
 
+
+  export type MessageAvgAggregateInputType = {
+    audioDuration?: true
+  }
+
+  export type MessageSumAggregateInputType = {
+    audioDuration?: true
+  }
 
   export type MessageMinAggregateInputType = {
     id?: true
@@ -18954,6 +18979,8 @@ export namespace Prisma {
     type?: true
     content?: true
     imageUrl?: true
+    audioUrl?: true
+    audioDuration?: true
     createdAt?: true
   }
 
@@ -18964,6 +18991,8 @@ export namespace Prisma {
     type?: true
     content?: true
     imageUrl?: true
+    audioUrl?: true
+    audioDuration?: true
     createdAt?: true
   }
 
@@ -18974,6 +19003,8 @@ export namespace Prisma {
     type?: true
     content?: true
     imageUrl?: true
+    audioUrl?: true
+    audioDuration?: true
     createdAt?: true
     _all?: true
   }
@@ -19016,6 +19047,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: MessageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MessageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: MessageMinAggregateInputType
@@ -19046,6 +19089,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: MessageCountAggregateInputType | true
+    _avg?: MessageAvgAggregateInputType
+    _sum?: MessageSumAggregateInputType
     _min?: MessageMinAggregateInputType
     _max?: MessageMaxAggregateInputType
   }
@@ -19057,8 +19102,12 @@ export namespace Prisma {
     type: $Enums.MessageType
     content: string | null
     imageUrl: string | null
+    audioUrl: string | null
+    audioDuration: number | null
     createdAt: Date
     _count: MessageCountAggregateOutputType | null
+    _avg: MessageAvgAggregateOutputType | null
+    _sum: MessageSumAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
     _max: MessageMaxAggregateOutputType | null
   }
@@ -19084,6 +19133,8 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     imageUrl?: boolean
+    audioUrl?: boolean
+    audioDuration?: boolean
     createdAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
@@ -19096,6 +19147,8 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     imageUrl?: boolean
+    audioUrl?: boolean
+    audioDuration?: boolean
     createdAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
@@ -19108,6 +19161,8 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     imageUrl?: boolean
+    audioUrl?: boolean
+    audioDuration?: boolean
     createdAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
@@ -19120,10 +19175,12 @@ export namespace Prisma {
     type?: boolean
     content?: boolean
     imageUrl?: boolean
+    audioUrl?: boolean
+    audioDuration?: boolean
     createdAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "senderId" | "type" | "content" | "imageUrl" | "createdAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "senderId" | "type" | "content" | "imageUrl" | "audioUrl" | "audioDuration" | "createdAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
@@ -19150,6 +19207,8 @@ export namespace Prisma {
       type: $Enums.MessageType
       content: string | null
       imageUrl: string | null
+      audioUrl: string | null
+      audioDuration: number | null
       createdAt: Date
     }, ExtArgs["result"]["message"]>
     composites: {}
@@ -19582,6 +19641,8 @@ export namespace Prisma {
     readonly type: FieldRef<"Message", 'MessageType'>
     readonly content: FieldRef<"Message", 'String'>
     readonly imageUrl: FieldRef<"Message", 'String'>
+    readonly audioUrl: FieldRef<"Message", 'String'>
+    readonly audioDuration: FieldRef<"Message", 'Int'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
   }
     
@@ -20226,6 +20287,8 @@ export namespace Prisma {
     type: 'type',
     content: 'content',
     imageUrl: 'imageUrl',
+    audioUrl: 'audioUrl',
+    audioDuration: 'audioDuration',
     createdAt: 'createdAt'
   };
 
@@ -21601,6 +21664,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFilter<"Message"> | $Enums.MessageType
     content?: StringNullableFilter<"Message"> | string | null
     imageUrl?: StringNullableFilter<"Message"> | string | null
+    audioUrl?: StringNullableFilter<"Message"> | string | null
+    audioDuration?: IntNullableFilter<"Message"> | number | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -21613,6 +21678,8 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
+    audioUrl?: SortOrderInput | SortOrder
+    audioDuration?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     conversation?: ConversationOrderByWithRelationInput
     sender?: UserOrderByWithRelationInput
@@ -21628,6 +21695,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFilter<"Message"> | $Enums.MessageType
     content?: StringNullableFilter<"Message"> | string | null
     imageUrl?: StringNullableFilter<"Message"> | string | null
+    audioUrl?: StringNullableFilter<"Message"> | string | null
+    audioDuration?: IntNullableFilter<"Message"> | number | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -21640,10 +21709,14 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
+    audioUrl?: SortOrderInput | SortOrder
+    audioDuration?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: MessageCountOrderByAggregateInput
+    _avg?: MessageAvgOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
     _min?: MessageMinOrderByAggregateInput
+    _sum?: MessageSumOrderByAggregateInput
   }
 
   export type MessageScalarWhereWithAggregatesInput = {
@@ -21656,6 +21729,8 @@ export namespace Prisma {
     type?: EnumMessageTypeWithAggregatesFilter<"Message"> | $Enums.MessageType
     content?: StringNullableWithAggregatesFilter<"Message"> | string | null
     imageUrl?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    audioUrl?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    audioDuration?: IntNullableWithAggregatesFilter<"Message"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
   }
 
@@ -22856,6 +22931,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     sender: UserCreateNestedOneWithoutMessagesInput
@@ -22868,6 +22945,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
   }
 
@@ -22876,6 +22955,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     sender?: UserUpdateOneRequiredWithoutMessagesNestedInput
@@ -22888,6 +22969,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22898,6 +22981,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
   }
 
@@ -22906,6 +22991,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22916,6 +23003,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -24029,7 +24118,13 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrder
     imageUrl?: SortOrder
+    audioUrl?: SortOrder
+    audioDuration?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type MessageAvgOrderByAggregateInput = {
+    audioDuration?: SortOrder
   }
 
   export type MessageMaxOrderByAggregateInput = {
@@ -24039,6 +24134,8 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrder
     imageUrl?: SortOrder
+    audioUrl?: SortOrder
+    audioDuration?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -24049,7 +24146,13 @@ export namespace Prisma {
     type?: SortOrder
     content?: SortOrder
     imageUrl?: SortOrder
+    audioUrl?: SortOrder
+    audioDuration?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type MessageSumOrderByAggregateInput = {
+    audioDuration?: SortOrder
   }
 
   export type EnumMessageTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -26088,6 +26191,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
   }
@@ -26098,6 +26203,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
   }
 
@@ -26513,6 +26620,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFilter<"Message"> | $Enums.MessageType
     content?: StringNullableFilter<"Message"> | string | null
     imageUrl?: StringNullableFilter<"Message"> | string | null
+    audioUrl?: StringNullableFilter<"Message"> | string | null
+    audioDuration?: IntNullableFilter<"Message"> | number | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
   }
 
@@ -28976,6 +29085,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
     sender: UserCreateNestedOneWithoutMessagesInput
   }
@@ -28986,6 +29097,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
   }
 
@@ -29617,6 +29730,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
   }
 
@@ -30028,6 +30143,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
   }
@@ -30038,6 +30155,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -30047,6 +30166,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -30247,6 +30368,8 @@ export namespace Prisma {
     type?: $Enums.MessageType
     content?: string | null
     imageUrl?: string | null
+    audioUrl?: string | null
+    audioDuration?: number | null
     createdAt?: Date | string
   }
 
@@ -30276,6 +30399,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sender?: UserUpdateOneRequiredWithoutMessagesNestedInput
   }
@@ -30286,6 +30411,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -30295,6 +30422,8 @@ export namespace Prisma {
     type?: EnumMessageTypeFieldUpdateOperationsInput | $Enums.MessageType
     content?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

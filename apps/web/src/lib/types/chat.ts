@@ -17,7 +17,7 @@ export interface ConversationListItem {
   } | null;
   lastMessage: {
     id: string;
-    type: 'TEXT' | 'IMAGE';
+    type: 'TEXT' | 'IMAGE' | 'AUDIO';
     content: string | null;
     imageUrl: string | null;
     senderId: string;
@@ -48,17 +48,24 @@ export interface Message {
   id: string;
   conversationId: string;
   senderId: string;
+
   sender: {
     id: string;
     username: string;
     fullName: string;
     avatarUrl: string | null;
   };
-  type: 'TEXT' | 'IMAGE';
+
+  type: 'TEXT' | 'IMAGE' | 'AUDIO';
+
   content: string | null;
   imageUrl: string | null;
+
+  audioUrl: string | null;
+  audioDuration: number | null;
+
   createdAt: string;
-  // Client-only
+
   pending?: boolean;
   failed?: boolean;
 }

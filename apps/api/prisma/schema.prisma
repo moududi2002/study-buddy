@@ -285,6 +285,7 @@ enum NotificationType {
 enum MessageType {
   TEXT
   IMAGE
+  AUDIO
 }
 
 // ============================================================
@@ -426,6 +427,8 @@ model Message {
   type           MessageType  @default(TEXT)
   content        String?      @db.Text   // text content (null if image-only)
   imageUrl       String?                 // image path
+  audioUrl String?
+  audioDuration Int? // seconds
   createdAt      DateTime     @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

@@ -20,8 +20,24 @@ import { QueryMessagesDto, SendMessageDto } from './dto';
 const MAX_MESSAGES_PER_CONVERSATION = 100;
 const MESSAGE_TTL_HOURS = 24;
 
-const ALLOWED_IMAGE_MIME = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5MB
+const ALLOWED_IMAGE_MIME = [
+  'image/jpeg', 
+  'image/png', 
+  'image/webp'
+];
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 5MB
+
+const ALLOWED_AUDIO_MIME = [
+  'audio/webm',
+  'audio/webm;codecs=opus',
+  'audio/ogg',
+  'audio/ogg;codecs=opus',
+  'audio/mp4',
+  'audio/mpeg',
+];
+
+const MAX_AUDIO_BYTES = 10 * 1024 * 1024;
+
 
 @Injectable()
 export class ChatService {
@@ -264,27 +280,57 @@ export class ChatService {
   // ----------------------------------------------------------
   // POST /chat/messages — send (REST fallback for non-socket)
   // ----------------------------------------------------------
-  async sendMessage(userId: string, dto: SendMessageDto) {
+    async sendMessage(userId: string, dto: SendMessageDto) {
     await this.ensureParticipant(userId, dto.conversationId);
 
     if (dto.type === 'TEXT' && !dto.content?.trim()) {
       throw new BadRequestException('মেসেজ খালি পাঠানো যাবে না');
     }
+
     if (dto.type === 'IMAGE' && !dto.imageUrl) {
       throw new BadRequestException('ছবি আপলোড করা হয়নি');
+    }
+
+    if (dto.type === 'AUDIO' && !dto.audioUrl) {
+      throw new BadRequestException('অডিও আপলোড করা হয়নি');
     }
 
     const message = await this.prisma.message.create({
       data: {
         conversationId: dto.conversationId,
         senderId: userId,
+
         type: dto.type as MessageType,
-        content: dto.type === 'TEXT' ? dto.content!.trim() : null,
-        imageUrl: dto.type === 'IMAGE' ? dto.imageUrl! : null,
+
+        content:
+          dto.type === 'TEXT'
+            ? dto.content!.trim()
+            : null,
+
+        imageUrl:
+          dto.type === 'IMAGE'
+            ? dto.imageUrl!
+            : null,
+
+        audioUrl:
+          dto.type === 'AUDIO'
+            ? dto.audioUrl!
+            : null,
+
+        audioDuration:
+          dto.type === 'AUDIO'
+            ? dto.audioDuration ?? null
+            : null,
       },
+
       include: {
         sender: {
-          select: { id: true, username: true, fullName: true, avatarUrl: true },
+          select: {
+            id: true,
+            username: true,
+            fullName: true,
+            avatarUrl: true,
+          },
         },
       },
     });
@@ -294,14 +340,20 @@ export class ChatService {
       data: { updatedAt: new Date() },
     });
 
-    // Enforce 100-msg cap (delete oldest)
     await this.enforceMessageCap(dto.conversationId);
 
-    // Notify other participants (excluding muted groups)
-    await this.notifyParticipants(userId, dto.conversationId, message);
+    await this.notifyParticipants(
+      userId,
+      dto.conversationId,
+      message,
+    );
 
-    return { message: MESSAGES.SUCCESS, data: this.serializeMessage(message) };
+    return {
+      message: MESSAGES.SUCCESS,
+      data: this.serializeMessage(message),
+    };
   }
+
 
   // ----------------------------------------------------------
   // POST /chat/messages/image — upload image
@@ -458,23 +510,86 @@ export class ChatService {
   // ----------------------------------------------------------
   // INTERNAL: serialize
   // ----------------------------------------------------------
-  serializeMessage(m: any) {
+    private serializeMessage(message: any) {
     return {
-      id: m.id,
-      conversationId: m.conversationId,
-      senderId: m.senderId,
-      sender: m.sender
-        ? {
-            id: m.sender.id,
-            username: m.sender.username,
-            fullName: m.sender.fullName,
-            avatarUrl: m.sender.avatarUrl,
-          }
-        : undefined,
-      type: m.type,
-      content: m.content,
-      imageUrl: m.imageUrl,
-      createdAt: m.createdAt.toISOString(),
+      id: message.id,
+      conversationId: message.conversationId,
+      senderId: message.senderId,
+
+      sender: {
+        id: message.sender.id,
+        username: message.sender.username,
+        fullName: message.sender.fullName,
+        avatarUrl: message.sender.avatarUrl,
+      },
+
+      type: message.type,
+
+      content: message.content,
+      imageUrl: message.imageUrl,
+
+      audioUrl: message.audioUrl ?? null,
+      audioDuration: message.audioDuration ?? null,
+
+      createdAt: message.createdAt.toISOString(),
     };
   }
+
+  // ----------------------------------------------------------
+  // Audio Service
+  // ----------------------------------------------------------
+
+  async uploadAudio(
+  userId: string,
+  file: Express.Multer.File,
+  ) {
+  if (!file) {
+    throw new BadRequestException('অডিও আপলোড করা হয়নি');
+  }
+
+  const mime = file.mimetype.split(';')[0];
+
+  if (!ALLOWED_AUDIO_MIME.some((x) => x.split(';')[0] === mime)) {
+    throw new BadRequestException('অডিও ফাইল সাপোর্টেড নয়');
+  }
+
+  if (file.size > MAX_AUDIO_BYTES) {
+    throw new BadRequestException(
+      'অডিওর আকার সর্বোচ্চ ১০ মেগাবাইট',
+    );
+  }
+
+  const ext =
+    mime === 'audio/ogg'
+      ? 'ogg'
+      : mime === 'audio/mp4'
+        ? 'm4a'
+        : mime === 'audio/mpeg'
+          ? 'mp3'
+          : 'webm';
+
+  const dir = join(
+    process.cwd(),
+    'uploads',
+    'chat',
+    'audio',
+  );
+
+  await fs.mkdir(dir, { recursive: true });
+
+  const filename = `${userId}-${Date.now()}.${ext}`;
+
+  const filepath = join(dir, filename);
+
+  await fs.writeFile(filepath, file.buffer);
+
+  return {
+    message: 'অডিও আপলোড হয়েছে',
+    data: {
+      audioUrl: `/uploads/chat/audio/${filename}`,
+    },
+  };
+}
+
+
 }
