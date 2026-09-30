@@ -4,7 +4,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, Trophy, Star, Crown, Flame, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import confetti from 'canvas-confetti';
 
 interface BadgeItem {
   code: string;
@@ -53,6 +54,17 @@ export default function AchievementsPage() {
   const [levelTable, setLevelTable] = useState<LevelRow[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardItem[]>([]);
   const [myRank, setMyRank] = useState<LeaderboardItem | null>(null);
+  const prevEarnedCount = useRef(0);
+
+      const fire = () => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    };
+
+
 
   useEffect(() => {
     (async () => {
@@ -73,6 +85,18 @@ export default function AchievementsPage() {
         setLevelTable(lt.data.levels);
         setLeaderboard(lb.data.items);
         setMyRank(lb.data.myRank);
+
+      if (
+          prevEarnedCount.current > 0 &&
+          b.data.earnedCount > prevEarnedCount.current
+        ) {
+          fire();
+          toast.success('নতুন ব্যাজ অর্জিত! 🏆');
+        }
+
+        prevEarnedCount.current = b.data.earnedCount;
+
+
       } catch (err) {
         const e = err as ApiError;
         toast.error(e.message || 'লোড করা যায়নি');
@@ -102,10 +126,7 @@ export default function AchievementsPage() {
     );
   }
 
-  if (earnedCount > prevEarnedCount) {
-  fire();
-  toast.success('নতুন ব্যাজ অর্জিত! 🏆');
- }
+  
 
   const earned = badges.filter((b) => b.earned);
   const locked = badges.filter((b) => !b.earned);

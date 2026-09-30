@@ -74,7 +74,7 @@ export default function FriendsSearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && search()}
-              placeholder="rafi অথবা rafi@example.com"
+              placeholder="munira অথবা munira@example.com"
               autoFocus
             />
           </div>

@@ -8,5 +8,5 @@ import { IsString } from 'class-validator';
 export class CreatePersonalConversationDto {
   @ApiProperty({ example: 'clx1234user' })
   @IsString()
-  userId: string;
+  userId!: string;
 }

@@ -9,7 +9,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { GroupRole, InvitationStatus, NotificationType } from '@prisma/client';
+import { GroupRole, InvitationStatus, NotificationType } from '../generated/prisma/client';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { MESSAGES } from '../common/messages';
@@ -142,9 +142,6 @@ export class GroupsService {
         select: { id: true },
         });
 
-        // return data তে:
-        conversationId: conv?.id ?? null,
-
     // Weekly summary for each member + group total
     const { start, end } = DateUtil.getWeekRange(new Date());
     const memberIds = group.members.map((m) => m.userId);
@@ -171,6 +168,7 @@ export class GroupsService {
 
     const members = group.members.map((m) => ({
       id: m.user.id,
+      conversationId: conv?.id ?? null,
       username: m.user.username,
       fullName: m.user.fullName,
       avatarUrl: m.user.avatarUrl,

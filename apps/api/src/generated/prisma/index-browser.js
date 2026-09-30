@@ -136,6 +136,7 @@ exports.Prisma.UserScalarFieldEnum = {
   lastStudyDate: 'lastStudyDate',
   isEmailVerified: 'isEmailVerified',
   isActive: 'isActive',
+  isProfilePublic: 'isProfilePublic',
   googleId: 'googleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -220,9 +221,84 @@ exports.Prisma.StudyDiaryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  ownerId: 'ownerId',
+  isMuted: 'isMuted',
+  weeklyTargetMinutes: 'weeklyTargetMinutes',
+  weeklyTargetChapters: 'weeklyTargetChapters',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GroupMemberScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  userId: 'userId',
+  role: 'role',
+  isMuted: 'isMuted',
+  joinedAt: 'joinedAt'
+};
+
+exports.Prisma.GroupInvitationScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  inviterId: 'inviterId',
+  inviteeId: 'inviteeId',
+  status: 'status',
+  message: 'message',
+  respondedAt: 'respondedAt',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  data: 'data',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
+  groupId: 'groupId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationParticipantScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId',
+  lastReadAt: 'lastReadAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  type: 'type',
+  content: 'content',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -233,6 +309,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.UserRole = exports.$Enums.UserRole = {
   STUDENT: 'STUDENT'
@@ -268,6 +350,36 @@ exports.BadgeCode = exports.$Enums.BadgeCode = {
   NIGHT_OWL: 'NIGHT_OWL'
 };
 
+exports.GroupRole = exports.$Enums.GroupRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
+};
+
+exports.InvitationStatus = exports.$Enums.InvitationStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  GROUP_INVITATION: 'GROUP_INVITATION',
+  GROUP_INVITATION_ACCEPTED: 'GROUP_INVITATION_ACCEPTED',
+  GROUP_JOINED: 'GROUP_JOINED',
+  GROUP_LEFT: 'GROUP_LEFT',
+  GROUP_MESSAGE: 'GROUP_MESSAGE',
+  PERSONAL_MESSAGE: 'PERSONAL_MESSAGE',
+  GROUP_TARGET_COMPLETED: 'GROUP_TARGET_COMPLETED',
+  GROUP_MEMBER_MILESTONE: 'GROUP_MEMBER_MILESTONE',
+  BADGE_EARNED: 'BADGE_EARNED'
+};
+
+exports.MessageType = exports.$Enums.MessageType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OtpToken: 'OtpToken',
@@ -276,7 +388,14 @@ exports.Prisma.ModelName = {
   StudyEntry: 'StudyEntry',
   Goal: 'Goal',
   UserBadge: 'UserBadge',
-  StudyDiary: 'StudyDiary'
+  StudyDiary: 'StudyDiary',
+  Group: 'Group',
+  GroupMember: 'GroupMember',
+  GroupInvitation: 'GroupInvitation',
+  Notification: 'Notification',
+  Conversation: 'Conversation',
+  ConversationParticipant: 'ConversationParticipant',
+  Message: 'Message'
 };
 
 /**

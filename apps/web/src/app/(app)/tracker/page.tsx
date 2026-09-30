@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import confetti from 'canvas-confetti';
 
 interface Subject {
   id: string;
@@ -72,6 +73,16 @@ export default function TrackerPage() {
   const [note, setNote] = useState('');
   const [mood, setMood] = useState<'HAPPY' | 'NEUTRAL' | 'SAD'>('HAPPY');
 
+
+  const fire = () => {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  };
+
+
   const loadToday = async () => {
     const res = await api.get<{ success: true; data: TodayResponse }>('/study-entries/today');
     setToday(res.data);
@@ -117,6 +128,11 @@ export default function TrackerPage() {
         },
       );
       toast.success(`${res.message} +${toBnDigits(res.data.xpGained)} XP 🌟`);
+
+        if (res.data.xpGained > 0) {
+          // optional: only big XP
+          fire();
+       }
       setChapter('');
       setNote('');
       setDuration(30);
@@ -127,13 +143,11 @@ export default function TrackerPage() {
     } finally {
       setSubmitting(false);
     }
+  };  
+    
    
    
-    if (res.data.xpGained > 0) {
-    // optional: only big XP
-     fire();
-}
-  };
+    
 
   const remove = async (id: string) => {
     if (!confirm('এই এন্ট্রি মুছে ফেলবে?')) return;
@@ -393,4 +407,4 @@ export default function TrackerPage() {
       </div>
     </div>
   );
-}
+ }

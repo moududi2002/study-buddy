@@ -66,6 +66,7 @@ model User {
 
   isEmailVerified Boolean @default(false)
   isActive        Boolean @default(true)
+  isProfilePublic Boolean @default(true)
 
   googleId String? @unique
 
@@ -80,6 +81,15 @@ model User {
   otpTokens     OtpToken[]
   refreshTokens RefreshToken[]
   diaries       StudyDiary[]
+
+  // === NEW relations (Step 19) ===
+  ownedGroups              Group[]                   @relation("GroupOwner")
+  groupMemberships         GroupMember[]
+  sentInvitations          GroupInvitation[]         @relation("Inviter")
+  receivedInvitations      GroupInvitation[]         @relation("Invitee")
+  notifications            Notification[]
+  conversationParticipants ConversationParticipant[]
+  messages                 Message[]
 
   @@index([email])
   @@index([username])
@@ -234,4 +244,191 @@ model StudyDiary {
 
   @@unique([userId, date])
   @@index([userId])
+}
+
+// ============================================================
+// Path: apps/api/prisma/schema.prisma
+// (existing schema এর শেষে যোগ করো — existing models/types মুছবে না)
+// ============================================================
+
+// ============================================================
+// ENUMS (new)
+// ============================================================
+
+enum GroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+enum NotificationType {
+  GROUP_INVITATION
+  GROUP_INVITATION_ACCEPTED
+  GROUP_JOINED
+  GROUP_LEFT
+  GROUP_MESSAGE
+  PERSONAL_MESSAGE
+  GROUP_TARGET_COMPLETED
+  GROUP_MEMBER_MILESTONE
+  BADGE_EARNED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+}
+
+// ============================================================
+// GROUP
+// ============================================================
+
+model Group {
+  id          String  @id @default(cuid())
+  name        String
+  description String? @db.Text
+  imageUrl    String?
+  ownerId     String
+  isMuted     Boolean @default(false) // owner global mute flag (optional use)
+
+  // Group-wide study target (optional)
+  weeklyTargetMinutes  Int?
+  weeklyTargetChapters Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner        User              @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members      GroupMember[]
+  invitations  GroupInvitation[]
+  conversation Conversation?
+
+  @@index([ownerId])
+}
+
+// ============================================================
+// GROUP MEMBER
+// ============================================================
+
+model GroupMember {
+  id       String    @id @default(cuid())
+  groupId  String
+  userId   String
+  role     GroupRole @default(MEMBER)
+  isMuted  Boolean   @default(false) // user-level mute in this group
+  joinedAt DateTime  @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+// ============================================================
+// GROUP INVITATION
+// ============================================================
+
+model GroupInvitation {
+  id          String           @id @default(cuid())
+  groupId     String
+  inviterId   String
+  inviteeId   String
+  status      InvitationStatus @default(PENDING)
+  message     String?          @db.Text
+  respondedAt DateTime?
+  createdAt   DateTime         @default(now())
+  expiresAt   DateTime
+
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  inviter User  @relation("Inviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  invitee User  @relation("Invitee", fields: [inviteeId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, inviteeId, status])
+  @@index([inviteeId, status])
+  @@index([groupId])
+}
+
+// ============================================================
+// NOTIFICATION
+// ============================================================
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String           @db.Text
+  data      Json? // extra context: { groupId, invitationId, senderId, conversationId, ... }
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+}
+
+// ============================================================
+// CONVERSATION (1-on-1 or group chat)
+// ============================================================
+
+model Conversation {
+  id        String   @id @default(cuid())
+  // null if personal (1-on-1), set if group chat
+  groupId   String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group        Group?                    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([updatedAt])
+}
+
+// ============================================================
+// CONVERSATION PARTICIPANT
+// ============================================================
+
+model ConversationParticipant {
+  id             String   @id @default(cuid())
+  conversationId String
+  userId         String
+  lastReadAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([conversationId])
+  @@index([userId])
+}
+
+// ============================================================
+// MESSAGE
+// ============================================================
+
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  senderId       String
+  type           MessageType @default(TEXT)
+  content        String?     @db.Text // text content (null if image-only)
+  imageUrl       String? // image path
+  createdAt      DateTime    @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
 }

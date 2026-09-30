@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="url(#bg)"/>
+
+  <!-- Ears -->
+  <path d="M130 205 L145 90 L225 165 Z" fill="#f9a8d4"/>
+  <path d="M382 205 L367 90 L287 165 Z" fill="#f9a8d4"/>
+
+  <!-- Cat head -->
+  <circle cx="256" cy="270" r="145" fill="#fff"/>
+
+  <!-- Eyes -->
+  <ellipse cx="205" cy="255" rx="18" ry="25" fill="#1f2937"/>
+  <ellipse cx="307" cy="255" rx="18" ry="25" fill="#1f2937"/>
+
+  <!-- Eye highlights -->
+  <circle cx="211" cy="247" r="5" fill="#fff"/>
+  <circle cx="313" cy="247" r="5" fill="#fff"/>
+
+  <!-- Nose -->
+  <path d="M244 285 Q256 275 268 285 Q256 300 244 285Z" fill="#f472b6"/>
+
+  <!-- Mouth -->
+  <path d="M256 298 Q245 315 230 308" fill="none"
+        stroke="#374151" stroke-width="7" stroke-linecap="round"/>
+  <path d="M256 298 Q267 315 282 308" fill="none"
+        stroke="#374151" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Whiskers -->
+  <path d="M150 285 L65 265" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M150 305 L60 310" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M362 285 L447 265" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M362 305 L452 310" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Collar -->
+  <path d="M145 380 Q256 425 367 380"
+        fill="none" stroke="#fbbf24" stroke-width="22"/>
+
+  <!-- Bell -->
+  <circle cx="256" cy="402" r="17" fill="#fbbf24"/>
+</svg>

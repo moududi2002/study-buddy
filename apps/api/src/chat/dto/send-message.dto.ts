@@ -8,7 +8,7 @@ import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 export class SendMessageDto {
   @ApiProperty({ example: 'clx1234conversation' })
   @IsString()
-  conversationId: string;
+  conversationId!: string;
 
   @ApiPropertyOptional({ example: 'কেমন আছো?' })
   @IsOptional()
@@ -18,7 +18,7 @@ export class SendMessageDto {
 
   @ApiProperty({ enum: ['TEXT', 'IMAGE'] })
   @IsIn(['TEXT', 'IMAGE'])
-  type: 'TEXT' | 'IMAGE';
+  type!: 'TEXT' | 'IMAGE';
 
   @ApiPropertyOptional({ example: '/uploads/chat/xyz.jpg' })
   @IsOptional()

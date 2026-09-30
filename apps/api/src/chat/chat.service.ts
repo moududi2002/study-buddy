@@ -9,7 +9,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { MessageType, NotificationType } from '@prisma/client';
+import { MessageType, NotificationType } from '../generated/prisma/client';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { MESSAGES } from '../common/messages';

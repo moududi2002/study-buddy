@@ -84,7 +84,7 @@ model User {
   refreshTokens   RefreshToken[]
   diaries         StudyDiary[]
 
-  / === NEW relations (Step 19) ===
+  // === NEW relations (Step 19) ===
   ownedGroups             Group[]                    @relation("GroupOwner")
   groupMemberships        GroupMember[]
   sentInvitations         GroupInvitation[]          @relation("Inviter")

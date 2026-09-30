@@ -200,11 +200,22 @@ export default function GroupDetailPage() {
 
         {/* Actions */}
         <div className="relative flex flex-wrap gap-2 mt-4">
-          <Button onClick={openChat} variant="primary" size="sm">
+          <Button
+            onClick={() => {
+                openChat();
+                router.push(
+                group.conversationId
+                    ? `/chat/${group.conversationId}`
+                    : `/chat/group/${params.id}`
+                );
+            }}
+            variant="primary"
+            size="sm"
+            >
             <MessageCircle size={14} />
             গ্রুপ চ্যাট
-            router.push(group.conversationId ? `/chat/${group.conversationId}` : `/chat/group/${params.id}`);
-          </Button>
+            </Button>
+
           {canManage && (
             <Button onClick={() => setInviteOpen(true)} variant="soft" size="sm">
               <UserPlus size={14} />

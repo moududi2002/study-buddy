@@ -6,11 +6,11 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class InviteMemberDto {
-  @ApiProperty({ example: 'rafi_2010 অথবা rafi@example.com' })
+  @ApiProperty({ example: 'munira_2010 অথবা munira@example.com' })
   @IsString()
   @MinLength(3, { message: 'ইউজারনেম অথবা ইমেইল দাও' })
   @MaxLength(120)
-  identifier: string;
+  identifier!: string;
 
   @ApiPropertyOptional({ example: 'চলো একসাথে পড়ি!' })
   @IsOptional()
