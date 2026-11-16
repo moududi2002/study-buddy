@@ -5,6 +5,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 
+import { IsEnum } from 'class-validator';
+import { AcademicGroup } from '../../generated/prisma/client';
+
 export class UpdateProfileDto {
   @ApiPropertyOptional({ example: 'সিরাজুম মুনিরা' })
   @IsOptional()
@@ -16,12 +19,21 @@ export class UpdateProfileDto {
   @ApiPropertyOptional({ example: 10 })
   @IsOptional()
   @IsInt()
-  @Min(6, { message: 'ক্লাস ৬ থেকে ১০ এর মধ্যে হতে হবে' })
-  @Max(10, { message: 'ক্লাস ৬ থেকে ১০ এর মধ্যে হতে হবে' })
+  @Min(6, { message: 'ক্লাস ৬ থেকে ১২ এর মধ্যে হতে হবে' })
+  @Max(12, { message: 'ক্লাস ৬ থেকে ১২ এর মধ্যে হতে হবে' })
   classLevel?: number;
 
   @ApiPropertyOptional({ example: true, description: 'প্রোফাইল পাবলিক রাখো?' })
   @IsOptional()
   @IsBoolean()
   isProfilePublic?: boolean;
+
+
+@ApiPropertyOptional({
+  enum: AcademicGroup,
+  description: 'Class 9–12-এর বিভাগ',
+})
+@IsOptional()
+@IsEnum(AcademicGroup)
+academicGroup?: AcademicGroup;
 }

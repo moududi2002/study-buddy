@@ -132,46 +132,100 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // ----------------------------------------------------------
   // typing indicator
   // ----------------------------------------------------------
+  
   @SubscribeMessage('typing')
-  onTyping(
+  async onTyping(
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() data: { conversationId: string },
   ) {
-    if (!client.userId) return;
-    client.to(`conv:${data.conversationId}`).emit('typing', {
-      conversationId: data.conversationId,
-      userId: client.userId,
-      username: client.username,
-    });
+    if (!client.userId) return { ok: false };
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      client.to(`conv:${data.conversationId}`).emit('typing', {
+        conversationId: data.conversationId,
+        userId: client.userId,
+        username: client.username,
+      });
+
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Friendship required' };
+    }
   }
 
   @SubscribeMessage('stop_typing')
-  onStopTyping(
+  async onStopTyping(
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() data: { conversationId: string },
   ) {
-    if (!client.userId) return;
-    client.to(`conv:${data.conversationId}`).emit('stop_typing', {
-      conversationId: data.conversationId,
-      userId: client.userId,
-    });
+    if (!client.userId) return { ok: false };
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      client
+        .to(`conv:${data.conversationId}`)
+        .emit('stop_typing', {
+          conversationId: data.conversationId,
+          userId: client.userId,
+        });
+
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'Friendship required' };
+    }
   }
+
 
   // ----------------------------------------------------------
   // mark_read
   // ----------------------------------------------------------
+  
   @SubscribeMessage('mark_read')
   async onMarkRead(
     @ConnectedSocket() client: AuthSocket,
     @MessageBody() data: { conversationId: string },
   ) {
-    if (!client.userId) return;
-    await this.chat.markRead(client.userId, data.conversationId);
-    client.to(`conv:${data.conversationId}`).emit('read_receipt', {
-      conversationId: data.conversationId,
-      userId: client.userId,
-    });
+    if (!client.userId) {
+      return { ok: false, error: 'unauthorized' };
+    }
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+      await this.chat.markRead(
+        client.userId,
+        data.conversationId,
+      );
+
+      client.to(`conv:${data.conversationId}`).emit(
+        'read_receipt',
+        {
+          conversationId: data.conversationId,
+          userId: client.userId,
+        },
+      );
+
+      return { ok: true };
+    } catch {
+      return {
+        ok: false,
+        error: 'Friendship required',
+      };
+    }
   }
+
 
   // ----------------------------------------------------------
   // delete_message
@@ -183,6 +237,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       if (!client.userId) return { ok: false, error: 'unauthorized' };
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
       await this.chat.deleteMessage(client.userId, data.messageId);
       this.server
         .to(`conv:${data.conversationId}`)
@@ -280,6 +338,50 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return { ok: false, error: 'unauthorized' };
     }
 
+
+    try {
+      await this.chat.ensureParticipant(
+        client.userId,
+        data.conversationId,
+      );
+
+        async ensurePeer(
+        userId: string,
+        conversationId: string,
+        targetUserId: string,
+      ) {
+        await this.ensureParticipant(userId, conversationId);
+
+        if (userId === targetUserId) {
+          throw new ForbiddenException('অবৈধ কল টার্গেট');
+        }
+
+        const peer =
+          await this.prisma.conversationParticipant.findUnique({
+            where: {
+              conversationId_userId: {
+                conversationId,
+                userId: targetUserId,
+              },
+            },
+            select: { id: true },
+          });
+
+        if (!peer) {
+          throw new ForbiddenException(
+            'টার্গেট ব্যবহারকারী এই চ্যাটের সদস্য নয়',
+          );
+        }
+      }
+
+    } catch {
+      return { ok: false, error: 'Friendship required' };
+    }
+
+
+  
+
+
     client.to(`conv:${data.conversationId}`).emit('call_reject', {
       conversationId: data.conversationId,
       callId: data.callId,
@@ -318,6 +420,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       };
 
       if (data.targetUserId) {
+      await this.chat.ensurePeer(
+        client.userId,
+        data.conversationId,
+        data.targetUserId,
+      );
+
         this.server.sockets.sockets.forEach((socket) => {
           const target = socket as AuthSocket;
 
@@ -357,6 +465,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     try {
+
+
+    await this.chat.ensurePeer(
+      client.userId,
+      data.conversationId,
+      data.targetUserId,
+    );
+
+
       await this.chat.ensureParticipant(
         client.userId,
         data.conversationId,
@@ -400,6 +517,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     try {
+
+
+      await this.chat.ensurePeer(
+        client.userId,
+        data.conversationId,
+        data.targetUserId,
+      );
+
       await this.chat.ensureParticipant(
         client.userId,
         data.conversationId,

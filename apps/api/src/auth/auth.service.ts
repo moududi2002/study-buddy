@@ -16,7 +16,12 @@ import { randomBytes, createHash } from 'crypto';
 import { MESSAGES } from '../common/messages';
 import { PasswordUtil } from '../common/utils';
 import { PrismaService } from '../prisma/prisma.service';
-import { DEFAULT_SUBJECTS } from '../../prisma/seed';
+
+import {
+  getAcademicSubjects,
+  validateAcademic,
+} from '../common/academic';
+
 import { LoginDto, RegisterDto, ResetPasswordDto, VerifyEmailDto } from './dto';
 import { JwtPayload } from './strategies/jwt.strategy';
 import { OtpService } from './otp.service';
@@ -41,6 +46,17 @@ export class AuthService {
   // REGISTER
   // ----------------------------------------------------------
   async register(dto: RegisterDto, meta: ClientMeta) {
+
+    const academicGroup = validateAcademic(
+      dto.classLevel,
+      dto.academicGroup ?? null,
+    );
+
+    const academicSubjects = getAcademicSubjects(
+      dto.classLevel,
+      academicGroup,
+    );
+
     const existing = await this.prisma.user.findFirst({
       where: {
         OR: [{ email: dto.email.toLowerCase() }, { username: dto.username }],
@@ -57,29 +73,35 @@ export class AuthService {
 
     const passwordHash = await PasswordUtil.hash(dto.password);
 
-    const user = await this.prisma.$transaction(async (tx) => {
-      const created = await tx.user.create({
-        data: {
-          email: dto.email.toLowerCase(),
-          username: dto.username,
-          fullName: dto.fullName,
-          passwordHash,
-          classLevel: dto.classLevel,
-        },
-      });
-
-      await tx.subject.createMany({
-        data: DEFAULT_SUBJECTS.map((s) => ({
-          userId: created.id,
-          name: s.name,
-          color: s.color,
-          icon: s.icon,
-          isCustom: false,
-        })),
-      });
-
-      return created;
+    
+  const user = await this.prisma.$transaction(async (tx) => {
+    const created = await tx.user.create({
+      data: {
+        email: dto.email.trim().toLowerCase(),
+        username: dto.username.trim(),
+        fullName: dto.fullName.trim(),
+        passwordHash,
+        classLevel: dto.classLevel,
+        academicGroup,
+        academicConfigured: true,
+      },
     });
+
+    await tx.subject.createMany({
+      data: academicSubjects.map((subject) => ({
+        userId: created.id,
+        name: subject.name,
+        color: subject.color,
+        icon: subject.icon,
+        isCustom: false,
+        isActive: true,
+      })),
+      skipDuplicates: true,
+    });
+
+    return created;
+  });
+
 
     // Auto-send email verification OTP
     await this.otp.issueOtp({
@@ -407,6 +429,10 @@ export class AuthService {
       username: user.username,
       fullName: user.fullName,
       classLevel: user.classLevel,
+      
+      academicGroup: user.academicGroup,
+      academicConfigured: user.academicConfigured,
+
       avatarUrl: user.avatarUrl,
       role: user.role,
       xp: user.xp,

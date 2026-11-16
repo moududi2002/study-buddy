@@ -14,6 +14,12 @@ import {
   MinLength,
 } from 'class-validator';
 
+
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsOptional } from 'class-validator';
+import { AcademicGroup } from '../../generated/prisma/client';
+
+
 export class RegisterDto {
   @ApiProperty({ example: 'munira@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
@@ -40,9 +46,16 @@ export class RegisterDto {
   @MaxLength(72)
   password: string;
 
-  @ApiProperty({ example: 9, description: '৬ থেকে ১০' })
-  @IsInt()
-  @Min(6, { message: 'ক্লাস ৬ থেকে ১০ এর মধ্যে হতে হবে' })
-  @Max(10, { message: 'ক্লাস ৬ থেকে ১০ এর মধ্যে হতে হবে' })
-  classLevel: number;
-}
+@ApiProperty({ example: 11, description: '৬ থেকে ১২' })
+@IsInt()
+@Min(6)
+@Max(12)
+classLevel: number;
+
+@ApiPropertyOptional({
+  enum: AcademicGroup,
+  description: 'Class 9–12-এর জন্য বাধ্যতামূলক',
+})
+@IsOptional()
+@IsEnum(AcademicGroup)
+academicGroup?: AcademicGroup;

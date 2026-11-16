@@ -49,6 +49,41 @@ export class GoalsService {
 
   // CREATE GOAL
   async create(userId: string, dto: CreateGoalDto) {
+
+
+    const academic = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { academicConfigured: true },
+    });
+
+    if (!academic?.academicConfigured) {
+      throw new BadRequestException(
+        'আগে প্রোফাইল থেকে ক্লাস ও বিভাগ নির্বাচন করো',
+      );
+    }
+
+    if (!dto.subjectId) {
+      throw new BadRequestException(
+        'লক্ষ্য তৈরি করতে একটি বিষয় নির্বাচন করো',
+      );
+    }
+
+    const selectedSubject = await this.prisma.subject.findFirst({
+      where: {
+        id: dto.subjectId,
+        userId,
+        isActive: true,
+      },
+      select: { id: true },
+    });
+
+    if (!selectedSubject) {
+      throw new BadRequestException(
+        'নির্বাচিত বিষয়টি বর্তমান ক্লাসের জন্য সক্রিয় নয়',
+      );
+    }
+
+
     const title = dto.title.trim();
 
     if (title.length < 2) {

@@ -2,9 +2,29 @@
 // Path: apps/api/src/friends/friends.controller.ts
 // ============================================================
 
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthUser, CurrentUser } from '../common/decorators';
+
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
+
+import {
+  ApiBearerAuth,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import {
+  AuthUser,
+  CurrentUser,
+} from '../common/decorators';
+
 import { SearchFriendsDto } from './dto';
 import { FriendsService } from './friends.service';
 
@@ -12,41 +32,83 @@ import { FriendsService } from './friends.service';
 @ApiBearerAuth('access-token')
 @Controller('friends')
 export class FriendsController {
-  constructor(private readonly friends: FriendsService) {}
+  constructor(
+    private readonly friends: FriendsService,
+  ) {}
 
-  // ----------------------------------------------------------
-  // GET /friends/search?q=...
-  // ----------------------------------------------------------
   @Get('search')
-  @ApiOperation({ summary: 'ইউজারনেম/ইমেইল দিয়ে বন্ধু খোঁজো' })
-  search(@CurrentUser() user: AuthUser, @Query() query: SearchFriendsDto) {
+  search(
+    @CurrentUser() user: AuthUser,
+    @Query() query: SearchFriendsDto,
+  ) {
     return this.friends.search(user.id, query);
   }
 
-  // ----------------------------------------------------------
-  // GET /friends/:userId/summary
-  // ----------------------------------------------------------
+  @Get('connections')
+  connections(@CurrentUser() user: AuthUser) {
+    return this.friends.connections(user.id);
+  }
+
+  @Get(':userId/profile')
+  profile(
+    @CurrentUser() user: AuthUser,
+    @Param('userId') targetId: string,
+  ) {
+    return this.friends.profile(user.id, targetId);
+  }
+
+  @Post('request/:userId')
+  request(
+    @CurrentUser() user: AuthUser,
+    @Param('userId') targetId: string,
+  ) {
+    return this.friends.request(user.id, targetId);
+  }
+
+  @Post('requests/:requestId/respond')
+  respond(
+    @CurrentUser() user: AuthUser,
+    @Param('requestId') requestId: string,
+    @Body() body: { accept: boolean },
+  ) {
+    if (typeof body?.accept !== 'boolean') {
+      throw new BadRequestException('ভুল Request');
+    }
+
+    return this.friends.respond(
+      user.id,
+      requestId,
+      body.accept,
+    );
+  }
+
+  @Delete('connections/:userId')
+  remove(
+    @CurrentUser() user: AuthUser,
+    @Param('userId') targetId: string,
+  ) {
+    return this.friends.remove(user.id, targetId);
+  }
+
+  // Old study-activity endpoints deliberately disabled.
   @Get(':userId/summary')
-  @ApiOperation({ summary: 'বন্ধুর পাবলিক ড্যাশবোর্ড (aggregate only)' })
-  summary(@CurrentUser() user: AuthUser, @Param('userId') id: string) {
-    return this.friends.getSummary(user.id, id);
+  summary() {
+    throw new ForbiddenException(
+      'অন্যের পড়াশোনার তথ্য ব্যক্তিগত',
+    );
   }
 
-  // ----------------------------------------------------------
-  // GET /friends/:userId/badges
-  // ----------------------------------------------------------
   @Get(':userId/badges')
-  @ApiOperation({ summary: 'বন্ধুর অর্জিত ব্যাজ' })
-  badges(@CurrentUser() user: AuthUser, @Param('userId') id: string) {
-    return this.friends.getBadges(user.id, id);
+  badges() {
+    throw new ForbiddenException(
+      'অন্যের অর্জন ব্যক্তিগত',
+    );
   }
 
-  // ----------------------------------------------------------
-  // GET /friends/:userId/weekly-trend
-  // ----------------------------------------------------------
   @Get(':userId/weekly-trend')
-  @ApiOperation({ summary: 'বন্ধুর ৭ দিনের ট্রেন্ড' })
-  weeklyTrend(@CurrentUser() user: AuthUser, @Param('userId') id: string) {
-    return this.friends.getWeeklyTrend(user.id, id);
+  weeklyTrend() {
+    throw new ForbiddenException(
+      'অন্যের পড়াশোনার তথ্য ব্যক্তিগত',
+    );
   }
 }

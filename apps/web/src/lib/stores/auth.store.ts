@@ -21,6 +21,10 @@ export interface AuthUser {
   longestStreak: number;
   isEmailVerified: boolean;
   createdAt: string;
+
+  academicGroup: 'SCIENCE' | 'HUMANITIES' | 'BUSINESS' | null;
+  academicConfigured: boolean;
+
 }
 
 interface AuthState {

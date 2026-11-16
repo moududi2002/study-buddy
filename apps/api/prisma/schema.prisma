@@ -33,6 +33,20 @@ enum GoalType {
   MONTHLY
 }
 
+
+enum AcademicGroup {
+  SCIENCE
+  HUMANITIES
+  BUSINESS
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+
 enum BadgeCode {
   FIRST_STUDY_ENTRY
   SEVEN_DAY_STREAK
@@ -57,6 +71,10 @@ model User {
   fullName        String
   passwordHash    String
   classLevel      Int
+
+  academicGroup      AcademicGroup?
+  academicConfigured Boolean @default(false)
+
   avatarUrl       String?
   role            UserRole  @default(STUDENT)
 
@@ -92,6 +110,10 @@ model User {
   notifications           Notification[]
   conversationParticipants ConversationParticipant[]
   messages                Message[]
+
+  friendshipsAsLow  Friendship[] @relation("FriendLow")
+  friendshipsAsHigh Friendship[] @relation("FriendHigh")
+
 
   @@index([email])
   @@index([username])
@@ -154,6 +176,8 @@ model Subject {
   isCustom  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive Boolean @default(true)
+
 
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   studyEntries StudyEntry[]
@@ -436,4 +460,33 @@ model Message {
 
   @@index([conversationId, createdAt])
   @@index([senderId])
+}
+
+
+model Friendship {
+  id            String           @id @default(cuid())
+  userLowId     String
+  userHighId    String
+  requestedById String
+  status        FriendshipStatus @default(PENDING)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  userLow  User @relation(
+    "FriendLow",
+    fields: [userLowId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  userHigh User @relation(
+    "FriendHigh",
+    fields: [userHighId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([userLowId, userHighId])
+  @@index([userLowId, status])
+  @@index([userHighId, status])
 }

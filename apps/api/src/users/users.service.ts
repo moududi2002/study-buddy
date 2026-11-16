@@ -16,6 +16,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { SelectAvatarDto } from './dto/select-avatar.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
+
+
+import {
+  getAcademicSubjects,
+  validateAcademic,
+} from '../common/academic';
+
+
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024; // 2MB
 
@@ -49,6 +57,8 @@ export class UsersService {
         isProfilePublic: true,
         googleId: true,
         createdAt: true,
+        academicGroup: true,
+        academicConfigured: true,
       },
     });
     if (!user) throw new NotFoundException(MESSAGES.USER_NOT_FOUND);
@@ -72,42 +82,125 @@ export class UsersService {
   // ----------------------------------------------------------
   // PATCH /users/me
   // ----------------------------------------------------------
+ 
   async updateProfile(userId: string, dto: UpdateProfileDto) {
-    await this.ensureUser(userId);
-
-    const updated = await this.prisma.user.update({
+    const existing = await this.prisma.user.findUnique({
       where: { id: userId },
-      data: {
-        fullName: dto.fullName,
-        classLevel: dto.classLevel,
-      },
       select: {
         id: true,
-        email: true,
-        username: true,
-        fullName: true,
         classLevel: true,
-        avatarUrl: true,
-        role: true,
-        xp: true,
-        level: true,
-        currentStreak: true,
-        longestStreak: true,
-        isEmailVerified: true,
-        createdAt: true,
+        academicGroup: true,
+        academicConfigured: true,
+        isActive: true,
       },
     });
 
-      const data: any = {};
-      if (dto.fullName !== undefined) data.fullName = dto.fullName;
-      if (dto.classLevel !== undefined) data.classLevel = dto.classLevel;
-      if (dto.isProfilePublic !== undefined) data.isProfilePublic = dto.isProfilePublic;
+    if (!existing || !existing.isActive) {
+      throw new NotFoundException(MESSAGES.USER_NOT_FOUND);
+    }
+
+    const academicUpdate =
+      dto.classLevel !== undefined ||
+      dto.academicGroup !== undefined;
+
+    const nextClass = dto.classLevel ?? existing.classLevel;
+
+    const requestedGroup =
+      nextClass <= 8
+        ? null
+        : dto.academicGroup ?? existing.academicGroup;
+
+    const nextGroup = academicUpdate
+      ? validateAcademic(nextClass, requestedGroup)
+      : existing.academicGroup;
+
+    const subjects = academicUpdate
+      ? getAcademicSubjects(nextClass, nextGroup)
+      : [];
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      if (academicUpdate) {
+        // Disable old curriculum subjects, preserve history.
+        await tx.subject.updateMany({
+          where: {
+            userId,
+            isCustom: false,
+          },
+          data: {
+            isActive: false,
+          },
+        });
+
+        // Activate/create the selected curriculum subjects.
+        for (const subject of subjects) {
+          await tx.subject.upsert({
+            where: {
+              userId_name: {
+                userId,
+                name: subject.name,
+              },
+            },
+            create: {
+              userId,
+              name: subject.name,
+              color: subject.color,
+              icon: subject.icon,
+              isCustom: false,
+              isActive: true,
+            },
+            update: {
+              isActive: true,
+              isCustom: false,
+            },
+          });
+        }
+      }
+
+      return tx.user.update({
+        where: { id: userId },
+        data: {
+          ...(dto.fullName !== undefined && {
+            fullName: dto.fullName.trim(),
+          }),
+          ...(academicUpdate && {
+            classLevel: nextClass,
+            academicGroup: nextGroup,
+            academicConfigured: true,
+          }),
+          ...(dto.isProfilePublic !== undefined && {
+            isProfilePublic: dto.isProfilePublic,
+          }),
+        },
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          fullName: true,
+          classLevel: true,
+          academicGroup: true,
+          academicConfigured: true,
+          isProfilePublic: true,
+          avatarUrl: true,
+          role: true,
+          xp: true,
+          level: true,
+          currentStreak: true,
+          longestStreak: true,
+          isEmailVerified: true,
+          createdAt: true,
+        },
+      });
+    });
 
     return {
       message: MESSAGES.PROFILE_UPDATED,
-      data: { ...updated, createdAt: updated.createdAt.toISOString() },
+      data: {
+        ...updated,
+        createdAt: updated.createdAt.toISOString(),
+      },
     };
   }
+
 
   // ----------------------------------------------------------
   // POST /users/me/avatar  (multipart upload)

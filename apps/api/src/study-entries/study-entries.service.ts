@@ -31,9 +31,21 @@ export class StudyEntriesService {
   // POST /study-entries
   // ----------------------------------------------------------
   async create(userId: string, dto: CreateStudyEntryDto) {
+
+  const academic = await this.prisma.user.findUnique({
+    where: { id: userId },
+    select: { academicConfigured: true },
+  });
+
+  if (!academic?.academicConfigured) {
+    throw new ForbiddenException(
+      'Tracker ব্যবহারের আগে প্রোফাইলে ক্লাস ও বিভাগ সেট করো',
+    );
+  }
+
     const subject = await this.prisma.subject.findUnique({
       where: { id: dto.subjectId },
-      select: { id: true, userId: true },
+      select: { id: true, userId: true, isActive: true },
     });
     if (!subject) throw new NotFoundException(MESSAGES.SUBJECT_NOT_FOUND);
     if (subject.userId !== userId) throw new ForbiddenException(MESSAGES.FORBIDDEN);
@@ -47,6 +59,14 @@ export class StudyEntriesService {
           'ভবিষ্যতের তারিখে পড়াশোনার এন্ট্রি করা যাবে না',
         );
       }
+
+
+      if (!subject.isActive) {
+        throw new BadRequestException(
+          'এই বিষয়টি তোমার বর্তমান ক্লাস বা বিভাগের অন্তর্ভুক্ত নয়',
+        );
+      }
+
 
 
     const entry = await this.prisma.studyEntry.create({

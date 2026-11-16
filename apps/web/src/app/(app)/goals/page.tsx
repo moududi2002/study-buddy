@@ -28,11 +28,14 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useConfetti } from '@/lib/hooks/use-confetti';
 
 
-interface Subject {
-  id: string;
-  name: string;
-  icon: string;
-}
+import {
+  SubjectPicker,
+  SubjectOption,
+} from '@/components/academic/subject-picker';
+
+
+type Subject = SubjectOption;
+
 
 interface Goal {
   id: string;
@@ -148,6 +151,19 @@ export default function GoalsPage() {
       toast.error('অধ্যায়ের লক্ষ্য ১ থেকে ৫০০ হতে হবে');
       return;
     }
+
+ 
+
+    if (subjects.length === 0) {
+      toast.error('আগে প্রোফাইলে ক্লাস ও বিভাগ নির্বাচন করো');
+      return;
+    }
+
+    if (!subjectId) {
+      toast.error('একটি বিষয় নির্বাচন করো');
+      return;
+    }
+
 
     setSaving(true);
 
@@ -511,39 +527,22 @@ export default function GoalsPage() {
               </div>
             </div>
 
-            <div>
-              <Label>বিষয় (ঐচ্ছিক)</Label>
-              <div className="flex flex-wrap gap-2 mt-1.5">
-                <button
-                  type="button"
-                  onClick={() => setSubjectId('')}
-                  className={
-                    'rounded-2xl border-2 px-3 py-1.5 text-sm font-medium ' +
-                    (!subjectId
-                      ? 'border-primary-400 bg-lavender-100 text-primary-700'
-                      : 'border-primary-100 bg-white text-primary-500')
-                  }
-                >
-                  সব বিষয়
-                </button>
-                {subjects.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSubjectId(s.id)}
-                    className={
-                      'rounded-2xl border-2 px-3 py-1.5 text-sm font-medium inline-flex items-center gap-1 ' +
-                      (subjectId === s.id
-                        ? 'border-primary-400 bg-lavender-100 text-primary-700'
-                        : 'border-primary-100 bg-white text-primary-500')
-                    }
-                  >
-                    <span>{s.icon}</span>
-                    {s.name}
-                  </button>
-                ))}
-              </div>
+            
+          <div>
+            <Label>লক্ষ্যের বিষয়</Label>
+
+            <div className="mt-2">
+              <SubjectPicker
+                subjects={subjects}
+                value={subjectId}
+                onChange={setSubjectId}
+                onCreated={(subject) => {
+                  setSubjects((previous) => [...previous, subject]);
+                }}
+              />
             </div>
+          </div>
+
 
             <div className="flex gap-2 pt-2">
               <DialogClose asChild>

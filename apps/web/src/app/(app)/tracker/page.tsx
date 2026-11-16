@@ -17,13 +17,14 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import confetti from 'canvas-confetti';
 
-interface Subject {
-  id: string;
-  name: string;
-  color: string;
-  icon: string;
-  isCustom: boolean;
-}
+
+import {
+  SubjectPicker,
+  SubjectOption,
+} from '@/components/academic/subject-picker';
+
+
+type Subject = SubjectOption;
 
 interface StudyEntry {
   id: string;
@@ -222,27 +223,21 @@ export default function TrackerPage() {
         <SectionHeader emoji="➕" title="নতুন এন্ট্রি" />
         <form onSubmit={submit} className="space-y-4">
           {/* Subject chips */}
-          <div>
-            <Label>বিষয়</Label>
-            <div className="flex flex-wrap gap-2 mt-1.5">
-              {subjects.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setSubjectId(s.id)}
-                  className={
-                    'inline-flex items-center gap-1.5 rounded-2xl border-2 px-3 py-1.5 text-sm font-medium transition-all ' +
-                    (subjectId === s.id
-                      ? 'border-primary-400 bg-lavender-100 text-primary-700 scale-105'
-                      : 'border-primary-100 bg-white text-primary-500 hover:border-primary-300')
-                  }
-                >
-                  <span>{s.icon}</span>
-                  {s.name}
-                </button>
-              ))}
+            <div>
+              <Label>বিষয়</Label>
+
+              <div className="mt-2">
+                <SubjectPicker
+                  subjects={subjects}
+                  value={subjectId}
+                  onChange={setSubjectId}
+                  onCreated={(subject) => {
+                    setSubjects((previous) => [...previous, subject]);
+                  }}
+                />
+              </div>
             </div>
-          </div>
+
 
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -333,6 +328,7 @@ export default function TrackerPage() {
           </div>
 
           <Button type="submit" loading={submitting} size="lg" className="w-full">
+            disabled={subjects.length === 0 || submitting}
             <Plus size={18} />
             এন্ট্রি যোগ করো
           </Button>

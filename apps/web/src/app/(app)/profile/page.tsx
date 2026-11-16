@@ -35,6 +35,13 @@ import { StatCard } from '@/components/dashboard/stat-card';
 import { Flame, Trophy, Star, Clock } from 'lucide-react';
 import { GroupFormDialog } from '@/components/groups/group-form-dialog';
 
+
+import {
+  AcademicSelector,
+  AcademicGroup,
+} from '@/components/academic/academic-selector';
+
+
 const PRESET_AVATARS = [
   { key: 'cat_smile', emoji: '😺', label: 'হাসিখুশি বিড়াল' },
   { key: 'cat_sleepy', emoji: '😴', label: 'ঘুমন্ত বিড়াল' },
@@ -74,6 +81,10 @@ interface Profile {
   hasGoogleLinked: boolean;
   isEmailVerified: boolean;
   isProfilePublic?: boolean;
+
+  academicGroup: AcademicGroup | null;
+  academicConfigured: boolean;
+
 }
 
 export default function ProfilePage() {
@@ -91,6 +102,10 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState('');
   const [classLevel, setClassLevel] = useState(9);
 
+  const [academicGroup, setAcademicGroup] =
+    useState<AcademicGroup | null>(null);
+
+
   const load = async () => {
     try {
       const [p, s] = await Promise.all([
@@ -101,6 +116,7 @@ export default function ProfilePage() {
       setStats(s.data);
       setFullName(p.data.fullName);
       setClassLevel(p.data.classLevel);
+      setAcademicGroup(p.data.academicGroup ?? null);
     } catch (err) {
       const e = err as ApiError;
       toast.error(e.message || 'লোড করা যায়নি');
@@ -114,25 +130,50 @@ export default function ProfilePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  
   const save = async () => {
+    if (classLevel >= 9 && !academicGroup) {
+      toast.error('তোমার বিভাগ নির্বাচন করো');
+      return;
+    }
+
     setSaving(true);
+
     try {
-      const res = await api.patch<{ success: true; message: string; data: Profile }>(
-        '/users/me',
-        { fullName, classLevel },
+      const res = await api.patch<{
+        success: true;
+        message: string;
+        data: Profile;
+      }>('/users/me', {
+        fullName,
+        classLevel,
+        ...(classLevel >= 9 && { academicGroup }),
+      });
+
+      setProfile((prev) =>
+        prev ? { ...prev, ...res.data } : res.data,
       );
-      toast.success(res.message);
-      setProfile({ ...profile!, ...res.data });
+
       if (user) {
-        setUser({ ...user, fullName: res.data.fullName, classLevel: res.data.classLevel });
+        setUser({
+          ...user,
+          fullName: res.data.fullName,
+          classLevel: res.data.classLevel,
+          academicGroup: res.data.academicGroup,
+          academicConfigured: res.data.academicConfigured,
+        });
       }
+
+      toast.success('একাডেমিক তথ্য সংরক্ষণ হয়েছে 🎉');
     } catch (err) {
-      const e = err as ApiError;
-      toast.error(e.message || 'আপডেট করা যায়নি');
+      toast.error(
+        (err as ApiError).message || 'তথ্য সংরক্ষণ করা যায়নি',
+      );
     } finally {
       setSaving(false);
     }
   };
+
 
   const uploadAvatar = async (file: File) => {
     if (file.size > 2 * 1024 * 1024) {
@@ -409,24 +450,28 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <Label>ক্লাস</Label>
-            <div className="grid grid-cols-5 gap-2">
-              {[6, 7, 8, 9, 10].map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setClassLevel(c)}
-                  className={
-                    'rounded-2xl border-2 py-2.5 font-semibold transition-all ' +
-                    (classLevel === c
-                      ? 'border-primary-400 bg-lavender-100 text-primary-700 scale-105'
-                      : 'border-primary-100 bg-white text-primary-500')
-                  }
-                >
-                  {['৬', '৭', '৮', '৯', '১০'][c - 6]}
-                </button>
-              ))}
-            </div>
+          <div className="rounded-3xl border border-violet-100 bg-violet-50/60 p-4">
+            <AcademicSelector
+              classLevel={classLevel}
+              academicGroup={academicGroup}
+              onClassChange={(value) => {
+                setClassLevel(value);
+
+                if (value <= 8) {
+                  setAcademicGroup(null);
+                }
+              }}
+              onGroupChange={setAcademicGroup}
+            />
+
+            {!profile.academicConfigured && (
+              <p className="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-700">
+                তোমার একাডেমিক তথ্য এখনো সম্পূর্ণ নয়।
+                ক্লাস ও বিভাগ নির্বাচন করে সংরক্ষণ করো।
+              </p>
+            )}
+          </div>
+
           </div>
 
           <Button onClick={save} loading={saving} className="w-full">

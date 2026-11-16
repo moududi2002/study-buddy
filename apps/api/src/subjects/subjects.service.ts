@@ -20,10 +20,32 @@ export class SubjectsService {
   // ----------------------------------------------------------
   // GET /subjects
   // ----------------------------------------------------------
+
   async list(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        academicConfigured: true,
+      },
+    });
+
+    // Existing users must complete academic setup first.
+    if (!user?.academicConfigured) {
+      return {
+        message: MESSAGES.SUCCESS,
+        data: [],
+      };
+    }
+
     const subjects = await this.prisma.subject.findMany({
-      where: { userId },
-      orderBy: [{ isCustom: 'asc' }, { name: 'asc' }],
+      where: {
+        userId,
+        isActive: true,
+      },
+      orderBy: [
+        { isCustom: 'asc' },
+        { name: 'asc' },
+      ],
       select: {
         id: true,
         name: true,
@@ -36,42 +58,111 @@ export class SubjectsService {
 
     return {
       message: MESSAGES.SUCCESS,
-      data: subjects.map((s) => ({
-        ...s,
-        createdAt: s.createdAt.toISOString(),
+      data: subjects.map((subject) => ({
+        ...subject,
+        createdAt: subject.createdAt.toISOString(),
       })),
     };
   }
+
 
   // ----------------------------------------------------------
   // POST /subjects
   // ----------------------------------------------------------
   async create(userId: string, dto: CreateSubjectDto) {
+
+
+  const user = await this.prisma.user.findUnique({
+    where: { id: userId },
+    select: { academicConfigured: true },
+  });
+
+  if (!user?.academicConfigured) {
+    throw new ForbiddenException(
+      'আগে প্রোফাইল থেকে ক্লাস ও বিভাগ নির্বাচন করো',
+    );
+  }
+
     const name = dto.name.trim();
 
-    const existing = await this.prisma.subject.findFirst({
-      where: { userId, name },
-      select: { id: true },
+    
+  async create(userId: string, dto: CreateSubjectDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { academicConfigured: true },
     });
-    if (existing) throw new ConflictException(MESSAGES.SUBJECT_ALREADY_EXISTS);
 
-    const subject = await this.prisma.subject.create({
-      data: {
-        userId,
-        name,
-        color: dto.color,
-        icon: dto.icon,
-        isCustom: true,
-      },
-      select: {
-        id: true,
-        name: true,
-        color: true,
-        icon: true,
-        isCustom: true,
-        createdAt: true,
+    if (!user?.academicConfigured) {
+      throw new ForbiddenException(
+        'আগে প্রোফাইলে ক্লাস ও বিভাগ নির্বাচন করো',
+      );
+    }
+
+    const name = dto.name
+      .normalize('NFKC')
+      .trim()
+      .replace(/\s+/g, ' ');
+
+    if (name.length < 2 || name.length > 40) {
+      throw new BadRequestException(
+        'বিষয়ের নাম ২ থেকে ৪০ অক্ষরের হতে হবে',
+      );
+    }
+
+    const existing = await this.prisma.subject.findUnique({
+      where: {
+        userId_name: { userId, name },
       },
     });
+
+    if (existing?.isActive) {
+      throw new ConflictException(
+        MESSAGES.SUBJECT_ALREADY_EXISTS,
+      );
+    }
+
+    const select = {
+      id: true,
+      name: true,
+      color: true,
+      icon: true,
+      isCustom: true,
+      createdAt: true,
+    } as const;
+
+    const subject = existing
+      ? await this.prisma.subject.update({
+          where: { id: existing.id },
+          data: {
+            isActive: true,
+            color: dto.color,
+            icon: dto.icon,
+          },
+          select,
+        })
+      : await this.prisma.subject.create({
+          data: {
+            userId,
+            name,
+            color: dto.color,
+            icon: dto.icon,
+            isCustom: true,
+            isActive: true,
+          },
+          select,
+        });
+
+    return {
+      message: existing
+        ? 'পুরোনো বিষয়টি আবার সক্রিয় হয়েছে'
+        : MESSAGES.SUBJECT_CREATED,
+      data: {
+        ...subject,
+        createdAt: subject.createdAt.toISOString(),
+      },
+    };
+  }
+
 
     return {
       message: MESSAGES.SUBJECT_CREATED,
@@ -130,27 +221,28 @@ export class SubjectsService {
   // ----------------------------------------------------------
   // DELETE /subjects/:id
   // ----------------------------------------------------------
-  async remove(userId: string, id: string) {
-    const subject = await this.ensureOwned(userId, id);
+  
+    async remove(userId: string, id: string) {
+      const subject = await this.ensureOwned(userId, id);
 
-    if (!subject.isCustom) {
-      throw new ForbiddenException(MESSAGES.CANNOT_DELETE_DEFAULT_SUBJECT);
+      if (!subject.isCustom) {
+        throw new ForbiddenException(
+          MESSAGES.CANNOT_DELETE_DEFAULT_SUBJECT,
+        );
+      }
+
+      await this.prisma.subject.update({
+        where: { id },
+        data: {
+          isActive: false,
+        },
+      });
+
+      return {
+        message: 'বিষয়টি তালিকা থেকে সরানো হয়েছে। পুরোনো পড়ার তথ্য সংরক্ষিত আছে।',
+        data: null,
+      };
     }
-
-    // Check if any study entries exist — prevent orphan data
-    const entryCount = await this.prisma.studyEntry.count({
-      where: { subjectId: id },
-    });
-    if (entryCount > 0) {
-      throw new BadRequestException(
-        `এই বিষয়ে ${entryCount}টি এন্ট্রি আছে, আগে সেগুলো মুছুন`,
-      );
-    }
-
-    await this.prisma.subject.delete({ where: { id } });
-
-    return { message: MESSAGES.SUBJECT_DELETED, data: null };
-  }
 
   // ----------------------------------------------------------
   // HELPER
