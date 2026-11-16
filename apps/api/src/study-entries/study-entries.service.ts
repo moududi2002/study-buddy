@@ -128,6 +128,12 @@ export class StudyEntriesService {
         subject: {
           select: { id: true, name: true, color: true, icon: true },
         },
+        focusSession: {
+          select: {
+            startedAt: true,
+            endedAt: true,
+          },
+        },
       },
       take: 500,
     });
@@ -157,6 +163,13 @@ export class StudyEntriesService {
         subject: {
           select: { id: true, name: true, color: true, icon: true },
         },
+        focusSession: {
+          select: {
+            startedAt: true,
+            endedAt: true,
+          },
+        },
+
       },
     });
 
@@ -201,10 +214,23 @@ export class StudyEntriesService {
   async update(userId: string, id: string, dto: UpdateStudyEntryDto) {
     const entry = await this.prisma.studyEntry.findUnique({
       where: { id },
-      select: { id: true, userId: true, date: true },
+      select: {
+      id: true,
+      userId: true,
+      date: true,
+      focusSessionId: true,
+    },
     });
     if (!entry) throw new NotFoundException(MESSAGES.STUDY_ENTRY_NOT_FOUND);
     if (entry.userId !== userId) throw new ForbiddenException(MESSAGES.FORBIDDEN);
+
+
+
+    if (entry.focusSessionId) {
+      throw new BadRequestException(
+        'Focus থেকে তৈরি এন্ট্রির সময় পরিবর্তন বা মুছে ফেলা যাবে না',
+      );
+    }
 
     const data: any = {};
     if (dto.durationMinutes !== undefined) data.durationMinutes = dto.durationMinutes;
@@ -240,10 +266,22 @@ export class StudyEntriesService {
   async remove(userId: string, id: string) {
     const entry = await this.prisma.studyEntry.findUnique({
       where: { id },
-      select: { id: true, userId: true, date: true },
+      select: {
+        id: true,
+        userId: true,
+        date: true,
+        focusSessionId: true,
+      },
     });
     if (!entry) throw new NotFoundException(MESSAGES.STUDY_ENTRY_NOT_FOUND);
     if (entry.userId !== userId) throw new ForbiddenException(MESSAGES.FORBIDDEN);
+
+
+    if (entry.focusSessionId) {
+      throw new BadRequestException(
+        'Focus থেকে তৈরি এন্ট্রির সময় পরিবর্তন বা মুছে ফেলা যাবে না',
+      );
+    }
 
     await this.prisma.studyEntry.delete({ where: { id } });
     await this.invalidateCache(userId, entry.date);
@@ -305,6 +343,18 @@ export class StudyEntriesService {
     });
   }
 
+
+  
+  async afterFocusCommit(userId: string, date: Date) {
+    // Update tracker cache as early as possible.
+    await this.invalidateCache(userId, date);
+
+    await this.updateStreak(userId, date);
+    await this.gamification.checkAndGrantBadges(userId);
+  }
+
+
+
   // ----------------------------------------------------------
   // HELPERS
   // ----------------------------------------------------------
@@ -333,6 +383,13 @@ export class StudyEntriesService {
       chapter: entry.chapter,
       note: entry.note,
       mood: entry.mood,
+
+      source: entry.focusSessionId ? 'FOCUS' : 'MANUAL',
+      focusStartedAt:
+        entry.focusSession?.startedAt?.toISOString() ?? null,
+      focusEndedAt:
+        entry.focusSession?.endedAt?.toISOString() ?? null,
+
       createdAt: entry.createdAt.toISOString(),
     };
   }

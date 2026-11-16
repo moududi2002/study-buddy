@@ -93,6 +93,16 @@ export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
  * 
  */
 export type Friendship = $Result.DefaultSelection<Prisma.$FriendshipPayload>
+/**
+ * Model FocusSession
+ * 
+ */
+export type FocusSession = $Result.DefaultSelection<Prisma.$FocusSessionPayload>
+/**
+ * Model FocusPushSubscription
+ * 
+ */
+export type FocusPushSubscription = $Result.DefaultSelection<Prisma.$FocusPushSubscriptionPayload>
 
 /**
  * Enums
@@ -139,6 +149,15 @@ export const FriendshipStatus: {
 };
 
 export type FriendshipStatus = (typeof FriendshipStatus)[keyof typeof FriendshipStatus]
+
+
+export const FocusStatus: {
+  RUNNING: 'RUNNING',
+  WAITING: 'WAITING',
+  COMPLETED: 'COMPLETED'
+};
+
+export type FocusStatus = (typeof FocusStatus)[keyof typeof FocusStatus]
 
 
 export const BadgeCode: {
@@ -228,6 +247,10 @@ export const AcademicGroup: typeof $Enums.AcademicGroup
 export type FriendshipStatus = $Enums.FriendshipStatus
 
 export const FriendshipStatus: typeof $Enums.FriendshipStatus
+
+export type FocusStatus = $Enums.FocusStatus
+
+export const FocusStatus: typeof $Enums.FocusStatus
 
 export type BadgeCode = $Enums.BadgeCode
 
@@ -533,6 +556,26 @@ export class PrismaClient<
     * ```
     */
   get friendship(): Prisma.FriendshipDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.focusSession`: Exposes CRUD operations for the **FocusSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FocusSessions
+    * const focusSessions = await prisma.focusSession.findMany()
+    * ```
+    */
+  get focusSession(): Prisma.FocusSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.focusPushSubscription`: Exposes CRUD operations for the **FocusPushSubscription** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FocusPushSubscriptions
+    * const focusPushSubscriptions = await prisma.focusPushSubscription.findMany()
+    * ```
+    */
+  get focusPushSubscription(): Prisma.FocusPushSubscriptionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -995,7 +1038,9 @@ export namespace Prisma {
     Conversation: 'Conversation',
     ConversationParticipant: 'ConversationParticipant',
     Message: 'Message',
-    Friendship: 'Friendship'
+    Friendship: 'Friendship',
+    FocusSession: 'FocusSession',
+    FocusPushSubscription: 'FocusPushSubscription'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1011,7 +1056,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "otpToken" | "refreshToken" | "subject" | "studyEntry" | "goal" | "userBadge" | "studyDiary" | "group" | "groupMember" | "groupInvitation" | "notification" | "conversation" | "conversationParticipant" | "message" | "friendship"
+      modelProps: "user" | "otpToken" | "refreshToken" | "subject" | "studyEntry" | "goal" | "userBadge" | "studyDiary" | "group" | "groupMember" | "groupInvitation" | "notification" | "conversation" | "conversationParticipant" | "message" | "friendship" | "focusSession" | "focusPushSubscription"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2199,6 +2244,154 @@ export namespace Prisma {
           }
         }
       }
+      FocusSession: {
+        payload: Prisma.$FocusSessionPayload<ExtArgs>
+        fields: Prisma.FocusSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FocusSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FocusSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.FocusSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FocusSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>
+          }
+          findMany: {
+            args: Prisma.FocusSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>[]
+          }
+          create: {
+            args: Prisma.FocusSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>
+          }
+          createMany: {
+            args: Prisma.FocusSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FocusSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.FocusSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>
+          }
+          update: {
+            args: Prisma.FocusSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.FocusSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FocusSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FocusSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.FocusSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.FocusSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFocusSession>
+          }
+          groupBy: {
+            args: Prisma.FocusSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FocusSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FocusSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<FocusSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      FocusPushSubscription: {
+        payload: Prisma.$FocusPushSubscriptionPayload<ExtArgs>
+        fields: Prisma.FocusPushSubscriptionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FocusPushSubscriptionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FocusPushSubscriptionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>
+          }
+          findFirst: {
+            args: Prisma.FocusPushSubscriptionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FocusPushSubscriptionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>
+          }
+          findMany: {
+            args: Prisma.FocusPushSubscriptionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>[]
+          }
+          create: {
+            args: Prisma.FocusPushSubscriptionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>
+          }
+          createMany: {
+            args: Prisma.FocusPushSubscriptionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FocusPushSubscriptionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>[]
+          }
+          delete: {
+            args: Prisma.FocusPushSubscriptionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>
+          }
+          update: {
+            args: Prisma.FocusPushSubscriptionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>
+          }
+          deleteMany: {
+            args: Prisma.FocusPushSubscriptionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FocusPushSubscriptionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FocusPushSubscriptionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>[]
+          }
+          upsert: {
+            args: Prisma.FocusPushSubscriptionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FocusPushSubscriptionPayload>
+          }
+          aggregate: {
+            args: Prisma.FocusPushSubscriptionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFocusPushSubscription>
+          }
+          groupBy: {
+            args: Prisma.FocusPushSubscriptionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FocusPushSubscriptionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FocusPushSubscriptionCountArgs<ExtArgs>
+            result: $Utils.Optional<FocusPushSubscriptionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2338,6 +2531,8 @@ export namespace Prisma {
     conversationParticipant?: ConversationParticipantOmit
     message?: MessageOmit
     friendship?: FriendshipOmit
+    focusSession?: FocusSessionOmit
+    focusPushSubscription?: FocusPushSubscriptionOmit
   }
 
   /* Types for Logging */
@@ -2434,6 +2629,8 @@ export namespace Prisma {
     messages: number
     friendshipsAsLow: number
     friendshipsAsHigh: number
+    focusSessions: number
+    focusSubscriptions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2453,6 +2650,8 @@ export namespace Prisma {
     messages?: boolean | UserCountOutputTypeCountMessagesArgs
     friendshipsAsLow?: boolean | UserCountOutputTypeCountFriendshipsAsLowArgs
     friendshipsAsHigh?: boolean | UserCountOutputTypeCountFriendshipsAsHighArgs
+    focusSessions?: boolean | UserCountOutputTypeCountFocusSessionsArgs
+    focusSubscriptions?: boolean | UserCountOutputTypeCountFocusSubscriptionsArgs
   }
 
   // Custom InputTypes
@@ -2578,6 +2777,20 @@ export namespace Prisma {
     where?: FriendshipWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFocusSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FocusSessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFocusSubscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FocusPushSubscriptionWhereInput
+  }
+
 
   /**
    * Count Type SubjectCountOutputType
@@ -2586,11 +2799,13 @@ export namespace Prisma {
   export type SubjectCountOutputType = {
     studyEntries: number
     goals: number
+    focusSessions: number
   }
 
   export type SubjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     studyEntries?: boolean | SubjectCountOutputTypeCountStudyEntriesArgs
     goals?: boolean | SubjectCountOutputTypeCountGoalsArgs
+    focusSessions?: boolean | SubjectCountOutputTypeCountFocusSessionsArgs
   }
 
   // Custom InputTypes
@@ -2616,6 +2831,13 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountGoalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GoalWhereInput
+  }
+
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeCountFocusSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FocusSessionWhereInput
   }
 
 
@@ -3061,6 +3283,8 @@ export namespace Prisma {
     messages?: boolean | User$messagesArgs<ExtArgs>
     friendshipsAsLow?: boolean | User$friendshipsAsLowArgs<ExtArgs>
     friendshipsAsHigh?: boolean | User$friendshipsAsHighArgs<ExtArgs>
+    focusSessions?: boolean | User$focusSessionsArgs<ExtArgs>
+    focusSubscriptions?: boolean | User$focusSubscriptionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3154,6 +3378,8 @@ export namespace Prisma {
     messages?: boolean | User$messagesArgs<ExtArgs>
     friendshipsAsLow?: boolean | User$friendshipsAsLowArgs<ExtArgs>
     friendshipsAsHigh?: boolean | User$friendshipsAsHighArgs<ExtArgs>
+    focusSessions?: boolean | User$focusSessionsArgs<ExtArgs>
+    focusSubscriptions?: boolean | User$focusSubscriptionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3178,6 +3404,8 @@ export namespace Prisma {
       messages: Prisma.$MessagePayload<ExtArgs>[]
       friendshipsAsLow: Prisma.$FriendshipPayload<ExtArgs>[]
       friendshipsAsHigh: Prisma.$FriendshipPayload<ExtArgs>[]
+      focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
+      focusSubscriptions: Prisma.$FocusPushSubscriptionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3611,6 +3839,8 @@ export namespace Prisma {
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friendshipsAsLow<T extends User$friendshipsAsLowArgs<ExtArgs> = {}>(args?: Subset<T, User$friendshipsAsLowArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friendshipsAsHigh<T extends User$friendshipsAsHighArgs<ExtArgs> = {}>(args?: Subset<T, User$friendshipsAsHighArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    focusSessions<T extends User$focusSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    focusSubscriptions<T extends User$focusSubscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$focusSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4435,6 +4665,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FriendshipScalarFieldEnum | FriendshipScalarFieldEnum[]
+  }
+
+  /**
+   * User.focusSessions
+   */
+  export type User$focusSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    where?: FocusSessionWhereInput
+    orderBy?: FocusSessionOrderByWithRelationInput | FocusSessionOrderByWithRelationInput[]
+    cursor?: FocusSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FocusSessionScalarFieldEnum | FocusSessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.focusSubscriptions
+   */
+  export type User$focusSubscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    where?: FocusPushSubscriptionWhereInput
+    orderBy?: FocusPushSubscriptionOrderByWithRelationInput | FocusPushSubscriptionOrderByWithRelationInput[]
+    cursor?: FocusPushSubscriptionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FocusPushSubscriptionScalarFieldEnum | FocusPushSubscriptionScalarFieldEnum[]
   }
 
   /**
@@ -6859,6 +7137,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     studyEntries?: boolean | Subject$studyEntriesArgs<ExtArgs>
     goals?: boolean | Subject$goalsArgs<ExtArgs>
+    focusSessions?: boolean | Subject$focusSessionsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
@@ -6905,6 +7184,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     studyEntries?: boolean | Subject$studyEntriesArgs<ExtArgs>
     goals?: boolean | Subject$goalsArgs<ExtArgs>
+    focusSessions?: boolean | Subject$focusSessionsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SubjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6920,6 +7200,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       studyEntries: Prisma.$StudyEntryPayload<ExtArgs>[]
       goals: Prisma.$GoalPayload<ExtArgs>[]
+      focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7328,6 +7609,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     studyEntries<T extends Subject$studyEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$studyEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudyEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     goals<T extends Subject$goalsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    focusSessions<T extends Subject$focusSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7815,6 +8097,30 @@ export namespace Prisma {
   }
 
   /**
+   * Subject.focusSessions
+   */
+  export type Subject$focusSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    where?: FocusSessionWhereInput
+    orderBy?: FocusSessionOrderByWithRelationInput | FocusSessionOrderByWithRelationInput[]
+    cursor?: FocusSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FocusSessionScalarFieldEnum | FocusSessionScalarFieldEnum[]
+  }
+
+  /**
    * Subject without action
    */
   export type SubjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7864,6 +8170,7 @@ export namespace Prisma {
     mood: $Enums.StudyMood | null
     createdAt: Date | null
     updatedAt: Date | null
+    focusSessionId: string | null
   }
 
   export type StudyEntryMaxAggregateOutputType = {
@@ -7877,6 +8184,7 @@ export namespace Prisma {
     mood: $Enums.StudyMood | null
     createdAt: Date | null
     updatedAt: Date | null
+    focusSessionId: string | null
   }
 
   export type StudyEntryCountAggregateOutputType = {
@@ -7890,6 +8198,7 @@ export namespace Prisma {
     mood: number
     createdAt: number
     updatedAt: number
+    focusSessionId: number
     _all: number
   }
 
@@ -7913,6 +8222,7 @@ export namespace Prisma {
     mood?: true
     createdAt?: true
     updatedAt?: true
+    focusSessionId?: true
   }
 
   export type StudyEntryMaxAggregateInputType = {
@@ -7926,6 +8236,7 @@ export namespace Prisma {
     mood?: true
     createdAt?: true
     updatedAt?: true
+    focusSessionId?: true
   }
 
   export type StudyEntryCountAggregateInputType = {
@@ -7939,6 +8250,7 @@ export namespace Prisma {
     mood?: true
     createdAt?: true
     updatedAt?: true
+    focusSessionId?: true
     _all?: true
   }
 
@@ -8039,6 +8351,7 @@ export namespace Prisma {
     mood: $Enums.StudyMood
     createdAt: Date
     updatedAt: Date
+    focusSessionId: string | null
     _count: StudyEntryCountAggregateOutputType | null
     _avg: StudyEntryAvgAggregateOutputType | null
     _sum: StudyEntrySumAggregateOutputType | null
@@ -8071,8 +8384,10 @@ export namespace Prisma {
     mood?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    focusSessionId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    focusSession?: boolean | StudyEntry$focusSessionArgs<ExtArgs>
   }, ExtArgs["result"]["studyEntry"]>
 
   export type StudyEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8086,8 +8401,10 @@ export namespace Prisma {
     mood?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    focusSessionId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    focusSession?: boolean | StudyEntry$focusSessionArgs<ExtArgs>
   }, ExtArgs["result"]["studyEntry"]>
 
   export type StudyEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8101,8 +8418,10 @@ export namespace Prisma {
     mood?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    focusSessionId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    focusSession?: boolean | StudyEntry$focusSessionArgs<ExtArgs>
   }, ExtArgs["result"]["studyEntry"]>
 
   export type StudyEntrySelectScalar = {
@@ -8116,20 +8435,24 @@ export namespace Prisma {
     mood?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    focusSessionId?: boolean
   }
 
-  export type StudyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "subjectId" | "date" | "durationMinutes" | "chapter" | "note" | "mood" | "createdAt" | "updatedAt", ExtArgs["result"]["studyEntry"]>
+  export type StudyEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "subjectId" | "date" | "durationMinutes" | "chapter" | "note" | "mood" | "createdAt" | "updatedAt" | "focusSessionId", ExtArgs["result"]["studyEntry"]>
   export type StudyEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    focusSession?: boolean | StudyEntry$focusSessionArgs<ExtArgs>
   }
   export type StudyEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    focusSession?: boolean | StudyEntry$focusSessionArgs<ExtArgs>
   }
   export type StudyEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    focusSession?: boolean | StudyEntry$focusSessionArgs<ExtArgs>
   }
 
   export type $StudyEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8137,6 +8460,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       subject: Prisma.$SubjectPayload<ExtArgs>
+      focusSession: Prisma.$FocusSessionPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8149,6 +8473,7 @@ export namespace Prisma {
       mood: $Enums.StudyMood
       createdAt: Date
       updatedAt: Date
+      focusSessionId: string | null
     }, ExtArgs["result"]["studyEntry"]>
     composites: {}
   }
@@ -8545,6 +8870,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    focusSession<T extends StudyEntry$focusSessionArgs<ExtArgs> = {}>(args?: Subset<T, StudyEntry$focusSessionArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8584,6 +8910,7 @@ export namespace Prisma {
     readonly mood: FieldRef<"StudyEntry", 'StudyMood'>
     readonly createdAt: FieldRef<"StudyEntry", 'DateTime'>
     readonly updatedAt: FieldRef<"StudyEntry", 'DateTime'>
+    readonly focusSessionId: FieldRef<"StudyEntry", 'String'>
   }
     
 
@@ -8982,6 +9309,25 @@ export namespace Prisma {
      * Limit how many StudyEntries to delete.
      */
     limit?: number
+  }
+
+  /**
+   * StudyEntry.focusSession
+   */
+  export type StudyEntry$focusSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    where?: FocusSessionWhereInput
   }
 
   /**
@@ -21391,6 +21737,2327 @@ export namespace Prisma {
 
 
   /**
+   * Model FocusSession
+   */
+
+  export type AggregateFocusSession = {
+    _count: FocusSessionCountAggregateOutputType | null
+    _avg: FocusSessionAvgAggregateOutputType | null
+    _sum: FocusSessionSumAggregateOutputType | null
+    _min: FocusSessionMinAggregateOutputType | null
+    _max: FocusSessionMaxAggregateOutputType | null
+  }
+
+  export type FocusSessionAvgAggregateOutputType = {
+    accumulatedSeconds: number | null
+  }
+
+  export type FocusSessionSumAggregateOutputType = {
+    accumulatedSeconds: number | null
+  }
+
+  export type FocusSessionMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    subjectId: string | null
+    chapter: string | null
+    status: $Enums.FocusStatus | null
+    startedAt: Date | null
+    segmentStartedAt: Date | null
+    checkpointAt: Date | null
+    accumulatedSeconds: number | null
+    lastStudiedAt: Date | null
+    endedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FocusSessionMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    subjectId: string | null
+    chapter: string | null
+    status: $Enums.FocusStatus | null
+    startedAt: Date | null
+    segmentStartedAt: Date | null
+    checkpointAt: Date | null
+    accumulatedSeconds: number | null
+    lastStudiedAt: Date | null
+    endedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FocusSessionCountAggregateOutputType = {
+    id: number
+    userId: number
+    subjectId: number
+    chapter: number
+    status: number
+    startedAt: number
+    segmentStartedAt: number
+    checkpointAt: number
+    accumulatedSeconds: number
+    lastStudiedAt: number
+    endedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FocusSessionAvgAggregateInputType = {
+    accumulatedSeconds?: true
+  }
+
+  export type FocusSessionSumAggregateInputType = {
+    accumulatedSeconds?: true
+  }
+
+  export type FocusSessionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    subjectId?: true
+    chapter?: true
+    status?: true
+    startedAt?: true
+    segmentStartedAt?: true
+    checkpointAt?: true
+    accumulatedSeconds?: true
+    lastStudiedAt?: true
+    endedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FocusSessionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    subjectId?: true
+    chapter?: true
+    status?: true
+    startedAt?: true
+    segmentStartedAt?: true
+    checkpointAt?: true
+    accumulatedSeconds?: true
+    lastStudiedAt?: true
+    endedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FocusSessionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    subjectId?: true
+    chapter?: true
+    status?: true
+    startedAt?: true
+    segmentStartedAt?: true
+    checkpointAt?: true
+    accumulatedSeconds?: true
+    lastStudiedAt?: true
+    endedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FocusSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FocusSession to aggregate.
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusSessions to fetch.
+     */
+    orderBy?: FocusSessionOrderByWithRelationInput | FocusSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FocusSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FocusSessions
+    **/
+    _count?: true | FocusSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FocusSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FocusSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FocusSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FocusSessionMaxAggregateInputType
+  }
+
+  export type GetFocusSessionAggregateType<T extends FocusSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateFocusSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFocusSession[P]>
+      : GetScalarType<T[P], AggregateFocusSession[P]>
+  }
+
+
+
+
+  export type FocusSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FocusSessionWhereInput
+    orderBy?: FocusSessionOrderByWithAggregationInput | FocusSessionOrderByWithAggregationInput[]
+    by: FocusSessionScalarFieldEnum[] | FocusSessionScalarFieldEnum
+    having?: FocusSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FocusSessionCountAggregateInputType | true
+    _avg?: FocusSessionAvgAggregateInputType
+    _sum?: FocusSessionSumAggregateInputType
+    _min?: FocusSessionMinAggregateInputType
+    _max?: FocusSessionMaxAggregateInputType
+  }
+
+  export type FocusSessionGroupByOutputType = {
+    id: string
+    userId: string
+    subjectId: string
+    chapter: string | null
+    status: $Enums.FocusStatus
+    startedAt: Date
+    segmentStartedAt: Date | null
+    checkpointAt: Date | null
+    accumulatedSeconds: number
+    lastStudiedAt: Date | null
+    endedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FocusSessionCountAggregateOutputType | null
+    _avg: FocusSessionAvgAggregateOutputType | null
+    _sum: FocusSessionSumAggregateOutputType | null
+    _min: FocusSessionMinAggregateOutputType | null
+    _max: FocusSessionMaxAggregateOutputType | null
+  }
+
+  type GetFocusSessionGroupByPayload<T extends FocusSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FocusSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FocusSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FocusSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], FocusSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FocusSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    subjectId?: boolean
+    chapter?: boolean
+    status?: boolean
+    startedAt?: boolean
+    segmentStartedAt?: boolean
+    checkpointAt?: boolean
+    accumulatedSeconds?: boolean
+    lastStudiedAt?: boolean
+    endedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    studyEntry?: boolean | FocusSession$studyEntryArgs<ExtArgs>
+  }, ExtArgs["result"]["focusSession"]>
+
+  export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    subjectId?: boolean
+    chapter?: boolean
+    status?: boolean
+    startedAt?: boolean
+    segmentStartedAt?: boolean
+    checkpointAt?: boolean
+    accumulatedSeconds?: boolean
+    lastStudiedAt?: boolean
+    endedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["focusSession"]>
+
+  export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    subjectId?: boolean
+    chapter?: boolean
+    status?: boolean
+    startedAt?: boolean
+    segmentStartedAt?: boolean
+    checkpointAt?: boolean
+    accumulatedSeconds?: boolean
+    lastStudiedAt?: boolean
+    endedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["focusSession"]>
+
+  export type FocusSessionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    subjectId?: boolean
+    chapter?: boolean
+    status?: boolean
+    startedAt?: boolean
+    segmentStartedAt?: boolean
+    checkpointAt?: boolean
+    accumulatedSeconds?: boolean
+    lastStudiedAt?: boolean
+    endedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FocusSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "subjectId" | "chapter" | "status" | "startedAt" | "segmentStartedAt" | "checkpointAt" | "accumulatedSeconds" | "lastStudiedAt" | "endedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["focusSession"]>
+  export type FocusSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    studyEntry?: boolean | FocusSession$studyEntryArgs<ExtArgs>
+  }
+  export type FocusSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }
+  export type FocusSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }
+
+  export type $FocusSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FocusSession"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      subject: Prisma.$SubjectPayload<ExtArgs>
+      studyEntry: Prisma.$StudyEntryPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      subjectId: string
+      chapter: string | null
+      status: $Enums.FocusStatus
+      startedAt: Date
+      segmentStartedAt: Date | null
+      checkpointAt: Date | null
+      accumulatedSeconds: number
+      lastStudiedAt: Date | null
+      endedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["focusSession"]>
+    composites: {}
+  }
+
+  type FocusSessionGetPayload<S extends boolean | null | undefined | FocusSessionDefaultArgs> = $Result.GetResult<Prisma.$FocusSessionPayload, S>
+
+  type FocusSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FocusSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FocusSessionCountAggregateInputType | true
+    }
+
+  export interface FocusSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FocusSession'], meta: { name: 'FocusSession' } }
+    /**
+     * Find zero or one FocusSession that matches the filter.
+     * @param {FocusSessionFindUniqueArgs} args - Arguments to find a FocusSession
+     * @example
+     * // Get one FocusSession
+     * const focusSession = await prisma.focusSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FocusSessionFindUniqueArgs>(args: SelectSubset<T, FocusSessionFindUniqueArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FocusSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FocusSessionFindUniqueOrThrowArgs} args - Arguments to find a FocusSession
+     * @example
+     * // Get one FocusSession
+     * const focusSession = await prisma.focusSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FocusSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, FocusSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FocusSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionFindFirstArgs} args - Arguments to find a FocusSession
+     * @example
+     * // Get one FocusSession
+     * const focusSession = await prisma.focusSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FocusSessionFindFirstArgs>(args?: SelectSubset<T, FocusSessionFindFirstArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FocusSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionFindFirstOrThrowArgs} args - Arguments to find a FocusSession
+     * @example
+     * // Get one FocusSession
+     * const focusSession = await prisma.focusSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FocusSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, FocusSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FocusSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FocusSessions
+     * const focusSessions = await prisma.focusSession.findMany()
+     * 
+     * // Get first 10 FocusSessions
+     * const focusSessions = await prisma.focusSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const focusSessionWithIdOnly = await prisma.focusSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FocusSessionFindManyArgs>(args?: SelectSubset<T, FocusSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FocusSession.
+     * @param {FocusSessionCreateArgs} args - Arguments to create a FocusSession.
+     * @example
+     * // Create one FocusSession
+     * const FocusSession = await prisma.focusSession.create({
+     *   data: {
+     *     // ... data to create a FocusSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends FocusSessionCreateArgs>(args: SelectSubset<T, FocusSessionCreateArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FocusSessions.
+     * @param {FocusSessionCreateManyArgs} args - Arguments to create many FocusSessions.
+     * @example
+     * // Create many FocusSessions
+     * const focusSession = await prisma.focusSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FocusSessionCreateManyArgs>(args?: SelectSubset<T, FocusSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FocusSessions and returns the data saved in the database.
+     * @param {FocusSessionCreateManyAndReturnArgs} args - Arguments to create many FocusSessions.
+     * @example
+     * // Create many FocusSessions
+     * const focusSession = await prisma.focusSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FocusSessions and only return the `id`
+     * const focusSessionWithIdOnly = await prisma.focusSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FocusSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, FocusSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FocusSession.
+     * @param {FocusSessionDeleteArgs} args - Arguments to delete one FocusSession.
+     * @example
+     * // Delete one FocusSession
+     * const FocusSession = await prisma.focusSession.delete({
+     *   where: {
+     *     // ... filter to delete one FocusSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FocusSessionDeleteArgs>(args: SelectSubset<T, FocusSessionDeleteArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FocusSession.
+     * @param {FocusSessionUpdateArgs} args - Arguments to update one FocusSession.
+     * @example
+     * // Update one FocusSession
+     * const focusSession = await prisma.focusSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FocusSessionUpdateArgs>(args: SelectSubset<T, FocusSessionUpdateArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FocusSessions.
+     * @param {FocusSessionDeleteManyArgs} args - Arguments to filter FocusSessions to delete.
+     * @example
+     * // Delete a few FocusSessions
+     * const { count } = await prisma.focusSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FocusSessionDeleteManyArgs>(args?: SelectSubset<T, FocusSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FocusSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FocusSessions
+     * const focusSession = await prisma.focusSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FocusSessionUpdateManyArgs>(args: SelectSubset<T, FocusSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FocusSessions and returns the data updated in the database.
+     * @param {FocusSessionUpdateManyAndReturnArgs} args - Arguments to update many FocusSessions.
+     * @example
+     * // Update many FocusSessions
+     * const focusSession = await prisma.focusSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FocusSessions and only return the `id`
+     * const focusSessionWithIdOnly = await prisma.focusSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FocusSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, FocusSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FocusSession.
+     * @param {FocusSessionUpsertArgs} args - Arguments to update or create a FocusSession.
+     * @example
+     * // Update or create a FocusSession
+     * const focusSession = await prisma.focusSession.upsert({
+     *   create: {
+     *     // ... data to create a FocusSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FocusSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FocusSessionUpsertArgs>(args: SelectSubset<T, FocusSessionUpsertArgs<ExtArgs>>): Prisma__FocusSessionClient<$Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FocusSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionCountArgs} args - Arguments to filter FocusSessions to count.
+     * @example
+     * // Count the number of FocusSessions
+     * const count = await prisma.focusSession.count({
+     *   where: {
+     *     // ... the filter for the FocusSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends FocusSessionCountArgs>(
+      args?: Subset<T, FocusSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FocusSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FocusSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FocusSessionAggregateArgs>(args: Subset<T, FocusSessionAggregateArgs>): Prisma.PrismaPromise<GetFocusSessionAggregateType<T>>
+
+    /**
+     * Group by FocusSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FocusSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FocusSessionGroupByArgs['orderBy'] }
+        : { orderBy?: FocusSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FocusSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFocusSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FocusSession model
+   */
+  readonly fields: FocusSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FocusSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FocusSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    studyEntry<T extends FocusSession$studyEntryArgs<ExtArgs> = {}>(args?: Subset<T, FocusSession$studyEntryArgs<ExtArgs>>): Prisma__StudyEntryClient<$Result.GetResult<Prisma.$StudyEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FocusSession model
+   */
+  interface FocusSessionFieldRefs {
+    readonly id: FieldRef<"FocusSession", 'String'>
+    readonly userId: FieldRef<"FocusSession", 'String'>
+    readonly subjectId: FieldRef<"FocusSession", 'String'>
+    readonly chapter: FieldRef<"FocusSession", 'String'>
+    readonly status: FieldRef<"FocusSession", 'FocusStatus'>
+    readonly startedAt: FieldRef<"FocusSession", 'DateTime'>
+    readonly segmentStartedAt: FieldRef<"FocusSession", 'DateTime'>
+    readonly checkpointAt: FieldRef<"FocusSession", 'DateTime'>
+    readonly accumulatedSeconds: FieldRef<"FocusSession", 'Int'>
+    readonly lastStudiedAt: FieldRef<"FocusSession", 'DateTime'>
+    readonly endedAt: FieldRef<"FocusSession", 'DateTime'>
+    readonly createdAt: FieldRef<"FocusSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"FocusSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FocusSession findUnique
+   */
+  export type FocusSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusSession to fetch.
+     */
+    where: FocusSessionWhereUniqueInput
+  }
+
+  /**
+   * FocusSession findUniqueOrThrow
+   */
+  export type FocusSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusSession to fetch.
+     */
+    where: FocusSessionWhereUniqueInput
+  }
+
+  /**
+   * FocusSession findFirst
+   */
+  export type FocusSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusSession to fetch.
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusSessions to fetch.
+     */
+    orderBy?: FocusSessionOrderByWithRelationInput | FocusSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FocusSessions.
+     */
+    cursor?: FocusSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FocusSessions.
+     */
+    distinct?: FocusSessionScalarFieldEnum | FocusSessionScalarFieldEnum[]
+  }
+
+  /**
+   * FocusSession findFirstOrThrow
+   */
+  export type FocusSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusSession to fetch.
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusSessions to fetch.
+     */
+    orderBy?: FocusSessionOrderByWithRelationInput | FocusSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FocusSessions.
+     */
+    cursor?: FocusSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FocusSessions.
+     */
+    distinct?: FocusSessionScalarFieldEnum | FocusSessionScalarFieldEnum[]
+  }
+
+  /**
+   * FocusSession findMany
+   */
+  export type FocusSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusSessions to fetch.
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusSessions to fetch.
+     */
+    orderBy?: FocusSessionOrderByWithRelationInput | FocusSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FocusSessions.
+     */
+    cursor?: FocusSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FocusSessions.
+     */
+    distinct?: FocusSessionScalarFieldEnum | FocusSessionScalarFieldEnum[]
+  }
+
+  /**
+   * FocusSession create
+   */
+  export type FocusSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FocusSession.
+     */
+    data: XOR<FocusSessionCreateInput, FocusSessionUncheckedCreateInput>
+  }
+
+  /**
+   * FocusSession createMany
+   */
+  export type FocusSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FocusSessions.
+     */
+    data: FocusSessionCreateManyInput | FocusSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FocusSession createManyAndReturn
+   */
+  export type FocusSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many FocusSessions.
+     */
+    data: FocusSessionCreateManyInput | FocusSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FocusSession update
+   */
+  export type FocusSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FocusSession.
+     */
+    data: XOR<FocusSessionUpdateInput, FocusSessionUncheckedUpdateInput>
+    /**
+     * Choose, which FocusSession to update.
+     */
+    where: FocusSessionWhereUniqueInput
+  }
+
+  /**
+   * FocusSession updateMany
+   */
+  export type FocusSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FocusSessions.
+     */
+    data: XOR<FocusSessionUpdateManyMutationInput, FocusSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which FocusSessions to update
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * Limit how many FocusSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FocusSession updateManyAndReturn
+   */
+  export type FocusSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update FocusSessions.
+     */
+    data: XOR<FocusSessionUpdateManyMutationInput, FocusSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which FocusSessions to update
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * Limit how many FocusSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FocusSession upsert
+   */
+  export type FocusSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FocusSession to update in case it exists.
+     */
+    where: FocusSessionWhereUniqueInput
+    /**
+     * In case the FocusSession found by the `where` argument doesn't exist, create a new FocusSession with this data.
+     */
+    create: XOR<FocusSessionCreateInput, FocusSessionUncheckedCreateInput>
+    /**
+     * In case the FocusSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FocusSessionUpdateInput, FocusSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * FocusSession delete
+   */
+  export type FocusSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+    /**
+     * Filter which FocusSession to delete.
+     */
+    where: FocusSessionWhereUniqueInput
+  }
+
+  /**
+   * FocusSession deleteMany
+   */
+  export type FocusSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FocusSessions to delete
+     */
+    where?: FocusSessionWhereInput
+    /**
+     * Limit how many FocusSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FocusSession.studyEntry
+   */
+  export type FocusSession$studyEntryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudyEntry
+     */
+    select?: StudyEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudyEntry
+     */
+    omit?: StudyEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudyEntryInclude<ExtArgs> | null
+    where?: StudyEntryWhereInput
+  }
+
+  /**
+   * FocusSession without action
+   */
+  export type FocusSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusSession
+     */
+    select?: FocusSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusSession
+     */
+    omit?: FocusSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FocusPushSubscription
+   */
+
+  export type AggregateFocusPushSubscription = {
+    _count: FocusPushSubscriptionCountAggregateOutputType | null
+    _min: FocusPushSubscriptionMinAggregateOutputType | null
+    _max: FocusPushSubscriptionMaxAggregateOutputType | null
+  }
+
+  export type FocusPushSubscriptionMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    endpoint: string | null
+    p256dh: string | null
+    auth: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FocusPushSubscriptionMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    endpoint: string | null
+    p256dh: string | null
+    auth: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FocusPushSubscriptionCountAggregateOutputType = {
+    id: number
+    userId: number
+    endpoint: number
+    p256dh: number
+    auth: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FocusPushSubscriptionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    endpoint?: true
+    p256dh?: true
+    auth?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FocusPushSubscriptionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    endpoint?: true
+    p256dh?: true
+    auth?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FocusPushSubscriptionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    endpoint?: true
+    p256dh?: true
+    auth?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FocusPushSubscriptionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FocusPushSubscription to aggregate.
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusPushSubscriptions to fetch.
+     */
+    orderBy?: FocusPushSubscriptionOrderByWithRelationInput | FocusPushSubscriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FocusPushSubscriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusPushSubscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusPushSubscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FocusPushSubscriptions
+    **/
+    _count?: true | FocusPushSubscriptionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FocusPushSubscriptionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FocusPushSubscriptionMaxAggregateInputType
+  }
+
+  export type GetFocusPushSubscriptionAggregateType<T extends FocusPushSubscriptionAggregateArgs> = {
+        [P in keyof T & keyof AggregateFocusPushSubscription]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFocusPushSubscription[P]>
+      : GetScalarType<T[P], AggregateFocusPushSubscription[P]>
+  }
+
+
+
+
+  export type FocusPushSubscriptionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FocusPushSubscriptionWhereInput
+    orderBy?: FocusPushSubscriptionOrderByWithAggregationInput | FocusPushSubscriptionOrderByWithAggregationInput[]
+    by: FocusPushSubscriptionScalarFieldEnum[] | FocusPushSubscriptionScalarFieldEnum
+    having?: FocusPushSubscriptionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FocusPushSubscriptionCountAggregateInputType | true
+    _min?: FocusPushSubscriptionMinAggregateInputType
+    _max?: FocusPushSubscriptionMaxAggregateInputType
+  }
+
+  export type FocusPushSubscriptionGroupByOutputType = {
+    id: string
+    userId: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt: Date
+    updatedAt: Date
+    _count: FocusPushSubscriptionCountAggregateOutputType | null
+    _min: FocusPushSubscriptionMinAggregateOutputType | null
+    _max: FocusPushSubscriptionMaxAggregateOutputType | null
+  }
+
+  type GetFocusPushSubscriptionGroupByPayload<T extends FocusPushSubscriptionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FocusPushSubscriptionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FocusPushSubscriptionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FocusPushSubscriptionGroupByOutputType[P]>
+            : GetScalarType<T[P], FocusPushSubscriptionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FocusPushSubscriptionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    endpoint?: boolean
+    p256dh?: boolean
+    auth?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["focusPushSubscription"]>
+
+  export type FocusPushSubscriptionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    endpoint?: boolean
+    p256dh?: boolean
+    auth?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["focusPushSubscription"]>
+
+  export type FocusPushSubscriptionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    endpoint?: boolean
+    p256dh?: boolean
+    auth?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["focusPushSubscription"]>
+
+  export type FocusPushSubscriptionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    endpoint?: boolean
+    p256dh?: boolean
+    auth?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FocusPushSubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "endpoint" | "p256dh" | "auth" | "createdAt" | "updatedAt", ExtArgs["result"]["focusPushSubscription"]>
+  export type FocusPushSubscriptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FocusPushSubscriptionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FocusPushSubscriptionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FocusPushSubscriptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FocusPushSubscription"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      endpoint: string
+      p256dh: string
+      auth: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["focusPushSubscription"]>
+    composites: {}
+  }
+
+  type FocusPushSubscriptionGetPayload<S extends boolean | null | undefined | FocusPushSubscriptionDefaultArgs> = $Result.GetResult<Prisma.$FocusPushSubscriptionPayload, S>
+
+  type FocusPushSubscriptionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FocusPushSubscriptionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FocusPushSubscriptionCountAggregateInputType | true
+    }
+
+  export interface FocusPushSubscriptionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FocusPushSubscription'], meta: { name: 'FocusPushSubscription' } }
+    /**
+     * Find zero or one FocusPushSubscription that matches the filter.
+     * @param {FocusPushSubscriptionFindUniqueArgs} args - Arguments to find a FocusPushSubscription
+     * @example
+     * // Get one FocusPushSubscription
+     * const focusPushSubscription = await prisma.focusPushSubscription.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FocusPushSubscriptionFindUniqueArgs>(args: SelectSubset<T, FocusPushSubscriptionFindUniqueArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FocusPushSubscription that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FocusPushSubscriptionFindUniqueOrThrowArgs} args - Arguments to find a FocusPushSubscription
+     * @example
+     * // Get one FocusPushSubscription
+     * const focusPushSubscription = await prisma.focusPushSubscription.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FocusPushSubscriptionFindUniqueOrThrowArgs>(args: SelectSubset<T, FocusPushSubscriptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FocusPushSubscription that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionFindFirstArgs} args - Arguments to find a FocusPushSubscription
+     * @example
+     * // Get one FocusPushSubscription
+     * const focusPushSubscription = await prisma.focusPushSubscription.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FocusPushSubscriptionFindFirstArgs>(args?: SelectSubset<T, FocusPushSubscriptionFindFirstArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FocusPushSubscription that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionFindFirstOrThrowArgs} args - Arguments to find a FocusPushSubscription
+     * @example
+     * // Get one FocusPushSubscription
+     * const focusPushSubscription = await prisma.focusPushSubscription.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FocusPushSubscriptionFindFirstOrThrowArgs>(args?: SelectSubset<T, FocusPushSubscriptionFindFirstOrThrowArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FocusPushSubscriptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FocusPushSubscriptions
+     * const focusPushSubscriptions = await prisma.focusPushSubscription.findMany()
+     * 
+     * // Get first 10 FocusPushSubscriptions
+     * const focusPushSubscriptions = await prisma.focusPushSubscription.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const focusPushSubscriptionWithIdOnly = await prisma.focusPushSubscription.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FocusPushSubscriptionFindManyArgs>(args?: SelectSubset<T, FocusPushSubscriptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FocusPushSubscription.
+     * @param {FocusPushSubscriptionCreateArgs} args - Arguments to create a FocusPushSubscription.
+     * @example
+     * // Create one FocusPushSubscription
+     * const FocusPushSubscription = await prisma.focusPushSubscription.create({
+     *   data: {
+     *     // ... data to create a FocusPushSubscription
+     *   }
+     * })
+     * 
+     */
+    create<T extends FocusPushSubscriptionCreateArgs>(args: SelectSubset<T, FocusPushSubscriptionCreateArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FocusPushSubscriptions.
+     * @param {FocusPushSubscriptionCreateManyArgs} args - Arguments to create many FocusPushSubscriptions.
+     * @example
+     * // Create many FocusPushSubscriptions
+     * const focusPushSubscription = await prisma.focusPushSubscription.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FocusPushSubscriptionCreateManyArgs>(args?: SelectSubset<T, FocusPushSubscriptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FocusPushSubscriptions and returns the data saved in the database.
+     * @param {FocusPushSubscriptionCreateManyAndReturnArgs} args - Arguments to create many FocusPushSubscriptions.
+     * @example
+     * // Create many FocusPushSubscriptions
+     * const focusPushSubscription = await prisma.focusPushSubscription.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FocusPushSubscriptions and only return the `id`
+     * const focusPushSubscriptionWithIdOnly = await prisma.focusPushSubscription.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FocusPushSubscriptionCreateManyAndReturnArgs>(args?: SelectSubset<T, FocusPushSubscriptionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FocusPushSubscription.
+     * @param {FocusPushSubscriptionDeleteArgs} args - Arguments to delete one FocusPushSubscription.
+     * @example
+     * // Delete one FocusPushSubscription
+     * const FocusPushSubscription = await prisma.focusPushSubscription.delete({
+     *   where: {
+     *     // ... filter to delete one FocusPushSubscription
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FocusPushSubscriptionDeleteArgs>(args: SelectSubset<T, FocusPushSubscriptionDeleteArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FocusPushSubscription.
+     * @param {FocusPushSubscriptionUpdateArgs} args - Arguments to update one FocusPushSubscription.
+     * @example
+     * // Update one FocusPushSubscription
+     * const focusPushSubscription = await prisma.focusPushSubscription.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FocusPushSubscriptionUpdateArgs>(args: SelectSubset<T, FocusPushSubscriptionUpdateArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FocusPushSubscriptions.
+     * @param {FocusPushSubscriptionDeleteManyArgs} args - Arguments to filter FocusPushSubscriptions to delete.
+     * @example
+     * // Delete a few FocusPushSubscriptions
+     * const { count } = await prisma.focusPushSubscription.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FocusPushSubscriptionDeleteManyArgs>(args?: SelectSubset<T, FocusPushSubscriptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FocusPushSubscriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FocusPushSubscriptions
+     * const focusPushSubscription = await prisma.focusPushSubscription.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FocusPushSubscriptionUpdateManyArgs>(args: SelectSubset<T, FocusPushSubscriptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FocusPushSubscriptions and returns the data updated in the database.
+     * @param {FocusPushSubscriptionUpdateManyAndReturnArgs} args - Arguments to update many FocusPushSubscriptions.
+     * @example
+     * // Update many FocusPushSubscriptions
+     * const focusPushSubscription = await prisma.focusPushSubscription.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FocusPushSubscriptions and only return the `id`
+     * const focusPushSubscriptionWithIdOnly = await prisma.focusPushSubscription.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FocusPushSubscriptionUpdateManyAndReturnArgs>(args: SelectSubset<T, FocusPushSubscriptionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FocusPushSubscription.
+     * @param {FocusPushSubscriptionUpsertArgs} args - Arguments to update or create a FocusPushSubscription.
+     * @example
+     * // Update or create a FocusPushSubscription
+     * const focusPushSubscription = await prisma.focusPushSubscription.upsert({
+     *   create: {
+     *     // ... data to create a FocusPushSubscription
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FocusPushSubscription we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FocusPushSubscriptionUpsertArgs>(args: SelectSubset<T, FocusPushSubscriptionUpsertArgs<ExtArgs>>): Prisma__FocusPushSubscriptionClient<$Result.GetResult<Prisma.$FocusPushSubscriptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FocusPushSubscriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionCountArgs} args - Arguments to filter FocusPushSubscriptions to count.
+     * @example
+     * // Count the number of FocusPushSubscriptions
+     * const count = await prisma.focusPushSubscription.count({
+     *   where: {
+     *     // ... the filter for the FocusPushSubscriptions we want to count
+     *   }
+     * })
+    **/
+    count<T extends FocusPushSubscriptionCountArgs>(
+      args?: Subset<T, FocusPushSubscriptionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FocusPushSubscriptionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FocusPushSubscription.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FocusPushSubscriptionAggregateArgs>(args: Subset<T, FocusPushSubscriptionAggregateArgs>): Prisma.PrismaPromise<GetFocusPushSubscriptionAggregateType<T>>
+
+    /**
+     * Group by FocusPushSubscription.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FocusPushSubscriptionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FocusPushSubscriptionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FocusPushSubscriptionGroupByArgs['orderBy'] }
+        : { orderBy?: FocusPushSubscriptionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FocusPushSubscriptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFocusPushSubscriptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FocusPushSubscription model
+   */
+  readonly fields: FocusPushSubscriptionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FocusPushSubscription.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FocusPushSubscriptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FocusPushSubscription model
+   */
+  interface FocusPushSubscriptionFieldRefs {
+    readonly id: FieldRef<"FocusPushSubscription", 'String'>
+    readonly userId: FieldRef<"FocusPushSubscription", 'String'>
+    readonly endpoint: FieldRef<"FocusPushSubscription", 'String'>
+    readonly p256dh: FieldRef<"FocusPushSubscription", 'String'>
+    readonly auth: FieldRef<"FocusPushSubscription", 'String'>
+    readonly createdAt: FieldRef<"FocusPushSubscription", 'DateTime'>
+    readonly updatedAt: FieldRef<"FocusPushSubscription", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FocusPushSubscription findUnique
+   */
+  export type FocusPushSubscriptionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusPushSubscription to fetch.
+     */
+    where: FocusPushSubscriptionWhereUniqueInput
+  }
+
+  /**
+   * FocusPushSubscription findUniqueOrThrow
+   */
+  export type FocusPushSubscriptionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusPushSubscription to fetch.
+     */
+    where: FocusPushSubscriptionWhereUniqueInput
+  }
+
+  /**
+   * FocusPushSubscription findFirst
+   */
+  export type FocusPushSubscriptionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusPushSubscription to fetch.
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusPushSubscriptions to fetch.
+     */
+    orderBy?: FocusPushSubscriptionOrderByWithRelationInput | FocusPushSubscriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FocusPushSubscriptions.
+     */
+    cursor?: FocusPushSubscriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusPushSubscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusPushSubscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FocusPushSubscriptions.
+     */
+    distinct?: FocusPushSubscriptionScalarFieldEnum | FocusPushSubscriptionScalarFieldEnum[]
+  }
+
+  /**
+   * FocusPushSubscription findFirstOrThrow
+   */
+  export type FocusPushSubscriptionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusPushSubscription to fetch.
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusPushSubscriptions to fetch.
+     */
+    orderBy?: FocusPushSubscriptionOrderByWithRelationInput | FocusPushSubscriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FocusPushSubscriptions.
+     */
+    cursor?: FocusPushSubscriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusPushSubscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusPushSubscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FocusPushSubscriptions.
+     */
+    distinct?: FocusPushSubscriptionScalarFieldEnum | FocusPushSubscriptionScalarFieldEnum[]
+  }
+
+  /**
+   * FocusPushSubscription findMany
+   */
+  export type FocusPushSubscriptionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * Filter, which FocusPushSubscriptions to fetch.
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FocusPushSubscriptions to fetch.
+     */
+    orderBy?: FocusPushSubscriptionOrderByWithRelationInput | FocusPushSubscriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FocusPushSubscriptions.
+     */
+    cursor?: FocusPushSubscriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FocusPushSubscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FocusPushSubscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FocusPushSubscriptions.
+     */
+    distinct?: FocusPushSubscriptionScalarFieldEnum | FocusPushSubscriptionScalarFieldEnum[]
+  }
+
+  /**
+   * FocusPushSubscription create
+   */
+  export type FocusPushSubscriptionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FocusPushSubscription.
+     */
+    data: XOR<FocusPushSubscriptionCreateInput, FocusPushSubscriptionUncheckedCreateInput>
+  }
+
+  /**
+   * FocusPushSubscription createMany
+   */
+  export type FocusPushSubscriptionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FocusPushSubscriptions.
+     */
+    data: FocusPushSubscriptionCreateManyInput | FocusPushSubscriptionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FocusPushSubscription createManyAndReturn
+   */
+  export type FocusPushSubscriptionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * The data used to create many FocusPushSubscriptions.
+     */
+    data: FocusPushSubscriptionCreateManyInput | FocusPushSubscriptionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FocusPushSubscription update
+   */
+  export type FocusPushSubscriptionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FocusPushSubscription.
+     */
+    data: XOR<FocusPushSubscriptionUpdateInput, FocusPushSubscriptionUncheckedUpdateInput>
+    /**
+     * Choose, which FocusPushSubscription to update.
+     */
+    where: FocusPushSubscriptionWhereUniqueInput
+  }
+
+  /**
+   * FocusPushSubscription updateMany
+   */
+  export type FocusPushSubscriptionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FocusPushSubscriptions.
+     */
+    data: XOR<FocusPushSubscriptionUpdateManyMutationInput, FocusPushSubscriptionUncheckedUpdateManyInput>
+    /**
+     * Filter which FocusPushSubscriptions to update
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * Limit how many FocusPushSubscriptions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FocusPushSubscription updateManyAndReturn
+   */
+  export type FocusPushSubscriptionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * The data used to update FocusPushSubscriptions.
+     */
+    data: XOR<FocusPushSubscriptionUpdateManyMutationInput, FocusPushSubscriptionUncheckedUpdateManyInput>
+    /**
+     * Filter which FocusPushSubscriptions to update
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * Limit how many FocusPushSubscriptions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FocusPushSubscription upsert
+   */
+  export type FocusPushSubscriptionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FocusPushSubscription to update in case it exists.
+     */
+    where: FocusPushSubscriptionWhereUniqueInput
+    /**
+     * In case the FocusPushSubscription found by the `where` argument doesn't exist, create a new FocusPushSubscription with this data.
+     */
+    create: XOR<FocusPushSubscriptionCreateInput, FocusPushSubscriptionUncheckedCreateInput>
+    /**
+     * In case the FocusPushSubscription was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FocusPushSubscriptionUpdateInput, FocusPushSubscriptionUncheckedUpdateInput>
+  }
+
+  /**
+   * FocusPushSubscription delete
+   */
+  export type FocusPushSubscriptionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+    /**
+     * Filter which FocusPushSubscription to delete.
+     */
+    where: FocusPushSubscriptionWhereUniqueInput
+  }
+
+  /**
+   * FocusPushSubscription deleteMany
+   */
+  export type FocusPushSubscriptionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FocusPushSubscriptions to delete
+     */
+    where?: FocusPushSubscriptionWhereInput
+    /**
+     * Limit how many FocusPushSubscriptions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FocusPushSubscription without action
+   */
+  export type FocusPushSubscriptionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FocusPushSubscription
+     */
+    select?: FocusPushSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FocusPushSubscription
+     */
+    omit?: FocusPushSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FocusPushSubscriptionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -21484,7 +24151,8 @@ export namespace Prisma {
     note: 'note',
     mood: 'mood',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    focusSessionId: 'focusSessionId'
   };
 
   export type StudyEntryScalarFieldEnum = (typeof StudyEntryScalarFieldEnum)[keyof typeof StudyEntryScalarFieldEnum]
@@ -21636,6 +24304,38 @@ export namespace Prisma {
   };
 
   export type FriendshipScalarFieldEnum = (typeof FriendshipScalarFieldEnum)[keyof typeof FriendshipScalarFieldEnum]
+
+
+  export const FocusSessionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    subjectId: 'subjectId',
+    chapter: 'chapter',
+    status: 'status',
+    startedAt: 'startedAt',
+    segmentStartedAt: 'segmentStartedAt',
+    checkpointAt: 'checkpointAt',
+    accumulatedSeconds: 'accumulatedSeconds',
+    lastStudiedAt: 'lastStudiedAt',
+    endedAt: 'endedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum]
+
+
+  export const FocusPushSubscriptionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    endpoint: 'endpoint',
+    p256dh: 'p256dh',
+    auth: 'auth',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FocusPushSubscriptionScalarFieldEnum = (typeof FocusPushSubscriptionScalarFieldEnum)[keyof typeof FocusPushSubscriptionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -21902,6 +24602,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FocusStatus'
+   */
+  export type EnumFocusStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FocusStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'FocusStatus[]'
+   */
+  export type ListEnumFocusStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FocusStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -21959,6 +24673,8 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     friendshipsAsLow?: FriendshipListRelationFilter
     friendshipsAsHigh?: FriendshipListRelationFilter
+    focusSessions?: FocusSessionListRelationFilter
+    focusSubscriptions?: FocusPushSubscriptionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -21999,6 +24715,8 @@ export namespace Prisma {
     messages?: MessageOrderByRelationAggregateInput
     friendshipsAsLow?: FriendshipOrderByRelationAggregateInput
     friendshipsAsHigh?: FriendshipOrderByRelationAggregateInput
+    focusSessions?: FocusSessionOrderByRelationAggregateInput
+    focusSubscriptions?: FocusPushSubscriptionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -22042,6 +24760,8 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     friendshipsAsLow?: FriendshipListRelationFilter
     friendshipsAsHigh?: FriendshipListRelationFilter
+    focusSessions?: FocusSessionListRelationFilter
+    focusSubscriptions?: FocusPushSubscriptionListRelationFilter
   }, "id" | "email" | "username" | "googleId">
 
   export type UserOrderByWithAggregationInput = {
@@ -22256,6 +24976,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     studyEntries?: StudyEntryListRelationFilter
     goals?: GoalListRelationFilter
+    focusSessions?: FocusSessionListRelationFilter
   }
 
   export type SubjectOrderByWithRelationInput = {
@@ -22271,6 +24992,7 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     studyEntries?: StudyEntryOrderByRelationAggregateInput
     goals?: GoalOrderByRelationAggregateInput
+    focusSessions?: FocusSessionOrderByRelationAggregateInput
   }
 
   export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -22290,6 +25012,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     studyEntries?: StudyEntryListRelationFilter
     goals?: GoalListRelationFilter
+    focusSessions?: FocusSessionListRelationFilter
   }, "id" | "userId_name">
 
   export type SubjectOrderByWithAggregationInput = {
@@ -22336,8 +25059,10 @@ export namespace Prisma {
     mood?: EnumStudyMoodFilter<"StudyEntry"> | $Enums.StudyMood
     createdAt?: DateTimeFilter<"StudyEntry"> | Date | string
     updatedAt?: DateTimeFilter<"StudyEntry"> | Date | string
+    focusSessionId?: StringNullableFilter<"StudyEntry"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    focusSession?: XOR<FocusSessionNullableScalarRelationFilter, FocusSessionWhereInput> | null
   }
 
   export type StudyEntryOrderByWithRelationInput = {
@@ -22351,12 +25076,15 @@ export namespace Prisma {
     mood?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    focusSessionId?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
+    focusSession?: FocusSessionOrderByWithRelationInput
   }
 
   export type StudyEntryWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    focusSessionId?: string
     AND?: StudyEntryWhereInput | StudyEntryWhereInput[]
     OR?: StudyEntryWhereInput[]
     NOT?: StudyEntryWhereInput | StudyEntryWhereInput[]
@@ -22371,7 +25099,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"StudyEntry"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
-  }, "id">
+    focusSession?: XOR<FocusSessionNullableScalarRelationFilter, FocusSessionWhereInput> | null
+  }, "id" | "focusSessionId">
 
   export type StudyEntryOrderByWithAggregationInput = {
     id?: SortOrder
@@ -22384,6 +25113,7 @@ export namespace Prisma {
     mood?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    focusSessionId?: SortOrderInput | SortOrder
     _count?: StudyEntryCountOrderByAggregateInput
     _avg?: StudyEntryAvgOrderByAggregateInput
     _max?: StudyEntryMaxOrderByAggregateInput
@@ -22405,6 +25135,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodWithAggregatesFilter<"StudyEntry"> | $Enums.StudyMood
     createdAt?: DateTimeWithAggregatesFilter<"StudyEntry"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"StudyEntry"> | Date | string
+    focusSessionId?: StringNullableWithAggregatesFilter<"StudyEntry"> | string | null
   }
 
   export type GoalWhereInput = {
@@ -23195,6 +25926,174 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Friendship"> | Date | string
   }
 
+  export type FocusSessionWhereInput = {
+    AND?: FocusSessionWhereInput | FocusSessionWhereInput[]
+    OR?: FocusSessionWhereInput[]
+    NOT?: FocusSessionWhereInput | FocusSessionWhereInput[]
+    id?: StringFilter<"FocusSession"> | string
+    userId?: StringFilter<"FocusSession"> | string
+    subjectId?: StringFilter<"FocusSession"> | string
+    chapter?: StringNullableFilter<"FocusSession"> | string | null
+    status?: EnumFocusStatusFilter<"FocusSession"> | $Enums.FocusStatus
+    startedAt?: DateTimeFilter<"FocusSession"> | Date | string
+    segmentStartedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    checkpointAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    accumulatedSeconds?: IntFilter<"FocusSession"> | number
+    lastStudiedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    endedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    createdAt?: DateTimeFilter<"FocusSession"> | Date | string
+    updatedAt?: DateTimeFilter<"FocusSession"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    studyEntry?: XOR<StudyEntryNullableScalarRelationFilter, StudyEntryWhereInput> | null
+  }
+
+  export type FocusSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subjectId?: SortOrder
+    chapter?: SortOrderInput | SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    segmentStartedAt?: SortOrderInput | SortOrder
+    checkpointAt?: SortOrderInput | SortOrder
+    accumulatedSeconds?: SortOrder
+    lastStudiedAt?: SortOrderInput | SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    subject?: SubjectOrderByWithRelationInput
+    studyEntry?: StudyEntryOrderByWithRelationInput
+  }
+
+  export type FocusSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FocusSessionWhereInput | FocusSessionWhereInput[]
+    OR?: FocusSessionWhereInput[]
+    NOT?: FocusSessionWhereInput | FocusSessionWhereInput[]
+    userId?: StringFilter<"FocusSession"> | string
+    subjectId?: StringFilter<"FocusSession"> | string
+    chapter?: StringNullableFilter<"FocusSession"> | string | null
+    status?: EnumFocusStatusFilter<"FocusSession"> | $Enums.FocusStatus
+    startedAt?: DateTimeFilter<"FocusSession"> | Date | string
+    segmentStartedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    checkpointAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    accumulatedSeconds?: IntFilter<"FocusSession"> | number
+    lastStudiedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    endedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    createdAt?: DateTimeFilter<"FocusSession"> | Date | string
+    updatedAt?: DateTimeFilter<"FocusSession"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    studyEntry?: XOR<StudyEntryNullableScalarRelationFilter, StudyEntryWhereInput> | null
+  }, "id">
+
+  export type FocusSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subjectId?: SortOrder
+    chapter?: SortOrderInput | SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    segmentStartedAt?: SortOrderInput | SortOrder
+    checkpointAt?: SortOrderInput | SortOrder
+    accumulatedSeconds?: SortOrder
+    lastStudiedAt?: SortOrderInput | SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FocusSessionCountOrderByAggregateInput
+    _avg?: FocusSessionAvgOrderByAggregateInput
+    _max?: FocusSessionMaxOrderByAggregateInput
+    _min?: FocusSessionMinOrderByAggregateInput
+    _sum?: FocusSessionSumOrderByAggregateInput
+  }
+
+  export type FocusSessionScalarWhereWithAggregatesInput = {
+    AND?: FocusSessionScalarWhereWithAggregatesInput | FocusSessionScalarWhereWithAggregatesInput[]
+    OR?: FocusSessionScalarWhereWithAggregatesInput[]
+    NOT?: FocusSessionScalarWhereWithAggregatesInput | FocusSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FocusSession"> | string
+    userId?: StringWithAggregatesFilter<"FocusSession"> | string
+    subjectId?: StringWithAggregatesFilter<"FocusSession"> | string
+    chapter?: StringNullableWithAggregatesFilter<"FocusSession"> | string | null
+    status?: EnumFocusStatusWithAggregatesFilter<"FocusSession"> | $Enums.FocusStatus
+    startedAt?: DateTimeWithAggregatesFilter<"FocusSession"> | Date | string
+    segmentStartedAt?: DateTimeNullableWithAggregatesFilter<"FocusSession"> | Date | string | null
+    checkpointAt?: DateTimeNullableWithAggregatesFilter<"FocusSession"> | Date | string | null
+    accumulatedSeconds?: IntWithAggregatesFilter<"FocusSession"> | number
+    lastStudiedAt?: DateTimeNullableWithAggregatesFilter<"FocusSession"> | Date | string | null
+    endedAt?: DateTimeNullableWithAggregatesFilter<"FocusSession"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FocusSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FocusSession"> | Date | string
+  }
+
+  export type FocusPushSubscriptionWhereInput = {
+    AND?: FocusPushSubscriptionWhereInput | FocusPushSubscriptionWhereInput[]
+    OR?: FocusPushSubscriptionWhereInput[]
+    NOT?: FocusPushSubscriptionWhereInput | FocusPushSubscriptionWhereInput[]
+    id?: StringFilter<"FocusPushSubscription"> | string
+    userId?: StringFilter<"FocusPushSubscription"> | string
+    endpoint?: StringFilter<"FocusPushSubscription"> | string
+    p256dh?: StringFilter<"FocusPushSubscription"> | string
+    auth?: StringFilter<"FocusPushSubscription"> | string
+    createdAt?: DateTimeFilter<"FocusPushSubscription"> | Date | string
+    updatedAt?: DateTimeFilter<"FocusPushSubscription"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FocusPushSubscriptionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    endpoint?: SortOrder
+    p256dh?: SortOrder
+    auth?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type FocusPushSubscriptionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    endpoint?: string
+    AND?: FocusPushSubscriptionWhereInput | FocusPushSubscriptionWhereInput[]
+    OR?: FocusPushSubscriptionWhereInput[]
+    NOT?: FocusPushSubscriptionWhereInput | FocusPushSubscriptionWhereInput[]
+    userId?: StringFilter<"FocusPushSubscription"> | string
+    p256dh?: StringFilter<"FocusPushSubscription"> | string
+    auth?: StringFilter<"FocusPushSubscription"> | string
+    createdAt?: DateTimeFilter<"FocusPushSubscription"> | Date | string
+    updatedAt?: DateTimeFilter<"FocusPushSubscription"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "endpoint">
+
+  export type FocusPushSubscriptionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    endpoint?: SortOrder
+    p256dh?: SortOrder
+    auth?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FocusPushSubscriptionCountOrderByAggregateInput
+    _max?: FocusPushSubscriptionMaxOrderByAggregateInput
+    _min?: FocusPushSubscriptionMinOrderByAggregateInput
+  }
+
+  export type FocusPushSubscriptionScalarWhereWithAggregatesInput = {
+    AND?: FocusPushSubscriptionScalarWhereWithAggregatesInput | FocusPushSubscriptionScalarWhereWithAggregatesInput[]
+    OR?: FocusPushSubscriptionScalarWhereWithAggregatesInput[]
+    NOT?: FocusPushSubscriptionScalarWhereWithAggregatesInput | FocusPushSubscriptionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FocusPushSubscription"> | string
+    userId?: StringWithAggregatesFilter<"FocusPushSubscription"> | string
+    endpoint?: StringWithAggregatesFilter<"FocusPushSubscription"> | string
+    p256dh?: StringWithAggregatesFilter<"FocusPushSubscription"> | string
+    auth?: StringWithAggregatesFilter<"FocusPushSubscription"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FocusPushSubscription"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FocusPushSubscription"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -23233,6 +26132,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -23273,6 +26174,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -23313,6 +26216,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -23353,6 +26258,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -23591,6 +26498,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSubjectsInput
     studyEntries?: StudyEntryCreateNestedManyWithoutSubjectInput
     goals?: GoalCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateInput = {
@@ -23605,6 +26513,7 @@ export namespace Prisma {
     isActive?: boolean
     studyEntries?: StudyEntryUncheckedCreateNestedManyWithoutSubjectInput
     goals?: GoalUncheckedCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUpdateInput = {
@@ -23619,6 +26528,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSubjectsNestedInput
     studyEntries?: StudyEntryUpdateManyWithoutSubjectNestedInput
     goals?: GoalUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateInput = {
@@ -23633,6 +26543,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     studyEntries?: StudyEntryUncheckedUpdateManyWithoutSubjectNestedInput
     goals?: GoalUncheckedUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectCreateManyInput = {
@@ -23681,6 +26592,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutStudyEntriesInput
     subject: SubjectCreateNestedOneWithoutStudyEntriesInput
+    focusSession?: FocusSessionCreateNestedOneWithoutStudyEntryInput
   }
 
   export type StudyEntryUncheckedCreateInput = {
@@ -23694,6 +26606,7 @@ export namespace Prisma {
     mood?: $Enums.StudyMood
     createdAt?: Date | string
     updatedAt?: Date | string
+    focusSessionId?: string | null
   }
 
   export type StudyEntryUpdateInput = {
@@ -23707,6 +26620,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutStudyEntriesNestedInput
     subject?: SubjectUpdateOneRequiredWithoutStudyEntriesNestedInput
+    focusSession?: FocusSessionUpdateOneWithoutStudyEntryNestedInput
   }
 
   export type StudyEntryUncheckedUpdateInput = {
@@ -23720,6 +26634,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    focusSessionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StudyEntryCreateManyInput = {
@@ -23733,6 +26648,7 @@ export namespace Prisma {
     mood?: $Enums.StudyMood
     createdAt?: Date | string
     updatedAt?: Date | string
+    focusSessionId?: string | null
   }
 
   export type StudyEntryUpdateManyMutationInput = {
@@ -23757,6 +26673,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    focusSessionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoalCreateInput = {
@@ -24566,6 +27483,189 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FocusSessionCreateInput = {
+    id?: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFocusSessionsInput
+    subject: SubjectCreateNestedOneWithoutFocusSessionsInput
+    studyEntry?: StudyEntryCreateNestedOneWithoutFocusSessionInput
+  }
+
+  export type FocusSessionUncheckedCreateInput = {
+    id?: string
+    userId: string
+    subjectId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    studyEntry?: StudyEntryUncheckedCreateNestedOneWithoutFocusSessionInput
+  }
+
+  export type FocusSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFocusSessionsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutFocusSessionsNestedInput
+    studyEntry?: StudyEntryUpdateOneWithoutFocusSessionNestedInput
+  }
+
+  export type FocusSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studyEntry?: StudyEntryUncheckedUpdateOneWithoutFocusSessionNestedInput
+  }
+
+  export type FocusSessionCreateManyInput = {
+    id?: string
+    userId: string
+    subjectId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusPushSubscriptionCreateInput = {
+    id?: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFocusSubscriptionsInput
+  }
+
+  export type FocusPushSubscriptionUncheckedCreateInput = {
+    id?: string
+    userId: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusPushSubscriptionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFocusSubscriptionsNestedInput
+  }
+
+  export type FocusPushSubscriptionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusPushSubscriptionCreateManyInput = {
+    id?: string
+    userId: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusPushSubscriptionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusPushSubscriptionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -24732,6 +27832,18 @@ export namespace Prisma {
     none?: FriendshipWhereInput
   }
 
+  export type FocusSessionListRelationFilter = {
+    every?: FocusSessionWhereInput
+    some?: FocusSessionWhereInput
+    none?: FocusSessionWhereInput
+  }
+
+  export type FocusPushSubscriptionListRelationFilter = {
+    every?: FocusPushSubscriptionWhereInput
+    some?: FocusPushSubscriptionWhereInput
+    none?: FocusPushSubscriptionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -24790,6 +27902,14 @@ export namespace Prisma {
   }
 
   export type FriendshipOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FocusSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FocusPushSubscriptionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -25130,6 +28250,11 @@ export namespace Prisma {
     isNot?: SubjectWhereInput
   }
 
+  export type FocusSessionNullableScalarRelationFilter = {
+    is?: FocusSessionWhereInput | null
+    isNot?: FocusSessionWhereInput | null
+  }
+
   export type StudyEntryCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -25141,6 +28266,7 @@ export namespace Prisma {
     mood?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    focusSessionId?: SortOrder
   }
 
   export type StudyEntryAvgOrderByAggregateInput = {
@@ -25158,6 +28284,7 @@ export namespace Prisma {
     mood?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    focusSessionId?: SortOrder
   }
 
   export type StudyEntryMinOrderByAggregateInput = {
@@ -25171,6 +28298,7 @@ export namespace Prisma {
     mood?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    focusSessionId?: SortOrder
   }
 
   export type StudyEntrySumOrderByAggregateInput = {
@@ -25811,6 +28939,114 @@ export namespace Prisma {
     _max?: NestedEnumFriendshipStatusFilter<$PrismaModel>
   }
 
+  export type EnumFocusStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FocusStatus | EnumFocusStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFocusStatusFilter<$PrismaModel> | $Enums.FocusStatus
+  }
+
+  export type StudyEntryNullableScalarRelationFilter = {
+    is?: StudyEntryWhereInput | null
+    isNot?: StudyEntryWhereInput | null
+  }
+
+  export type FocusSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subjectId?: SortOrder
+    chapter?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    segmentStartedAt?: SortOrder
+    checkpointAt?: SortOrder
+    accumulatedSeconds?: SortOrder
+    lastStudiedAt?: SortOrder
+    endedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FocusSessionAvgOrderByAggregateInput = {
+    accumulatedSeconds?: SortOrder
+  }
+
+  export type FocusSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subjectId?: SortOrder
+    chapter?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    segmentStartedAt?: SortOrder
+    checkpointAt?: SortOrder
+    accumulatedSeconds?: SortOrder
+    lastStudiedAt?: SortOrder
+    endedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FocusSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    subjectId?: SortOrder
+    chapter?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    segmentStartedAt?: SortOrder
+    checkpointAt?: SortOrder
+    accumulatedSeconds?: SortOrder
+    lastStudiedAt?: SortOrder
+    endedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FocusSessionSumOrderByAggregateInput = {
+    accumulatedSeconds?: SortOrder
+  }
+
+  export type EnumFocusStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FocusStatus | EnumFocusStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFocusStatusWithAggregatesFilter<$PrismaModel> | $Enums.FocusStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFocusStatusFilter<$PrismaModel>
+    _max?: NestedEnumFocusStatusFilter<$PrismaModel>
+  }
+
+  export type FocusPushSubscriptionCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    endpoint?: SortOrder
+    p256dh?: SortOrder
+    auth?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FocusPushSubscriptionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    endpoint?: SortOrder
+    p256dh?: SortOrder
+    auth?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FocusPushSubscriptionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    endpoint?: SortOrder
+    p256dh?: SortOrder
+    auth?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type SubjectCreateNestedManyWithoutUserInput = {
     create?: XOR<SubjectCreateWithoutUserInput, SubjectUncheckedCreateWithoutUserInput> | SubjectCreateWithoutUserInput[] | SubjectUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutUserInput | SubjectCreateOrConnectWithoutUserInput[]
@@ -25923,6 +29159,20 @@ export namespace Prisma {
     connect?: FriendshipWhereUniqueInput | FriendshipWhereUniqueInput[]
   }
 
+  export type FocusSessionCreateNestedManyWithoutUserInput = {
+    create?: XOR<FocusSessionCreateWithoutUserInput, FocusSessionUncheckedCreateWithoutUserInput> | FocusSessionCreateWithoutUserInput[] | FocusSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutUserInput | FocusSessionCreateOrConnectWithoutUserInput[]
+    createMany?: FocusSessionCreateManyUserInputEnvelope
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+  }
+
+  export type FocusPushSubscriptionCreateNestedManyWithoutUserInput = {
+    create?: XOR<FocusPushSubscriptionCreateWithoutUserInput, FocusPushSubscriptionUncheckedCreateWithoutUserInput> | FocusPushSubscriptionCreateWithoutUserInput[] | FocusPushSubscriptionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusPushSubscriptionCreateOrConnectWithoutUserInput | FocusPushSubscriptionCreateOrConnectWithoutUserInput[]
+    createMany?: FocusPushSubscriptionCreateManyUserInputEnvelope
+    connect?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+  }
+
   export type SubjectUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SubjectCreateWithoutUserInput, SubjectUncheckedCreateWithoutUserInput> | SubjectCreateWithoutUserInput[] | SubjectUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutUserInput | SubjectCreateOrConnectWithoutUserInput[]
@@ -26033,6 +29283,20 @@ export namespace Prisma {
     connectOrCreate?: FriendshipCreateOrConnectWithoutUserHighInput | FriendshipCreateOrConnectWithoutUserHighInput[]
     createMany?: FriendshipCreateManyUserHighInputEnvelope
     connect?: FriendshipWhereUniqueInput | FriendshipWhereUniqueInput[]
+  }
+
+  export type FocusSessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FocusSessionCreateWithoutUserInput, FocusSessionUncheckedCreateWithoutUserInput> | FocusSessionCreateWithoutUserInput[] | FocusSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutUserInput | FocusSessionCreateOrConnectWithoutUserInput[]
+    createMany?: FocusSessionCreateManyUserInputEnvelope
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+  }
+
+  export type FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FocusPushSubscriptionCreateWithoutUserInput, FocusPushSubscriptionUncheckedCreateWithoutUserInput> | FocusPushSubscriptionCreateWithoutUserInput[] | FocusPushSubscriptionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusPushSubscriptionCreateOrConnectWithoutUserInput | FocusPushSubscriptionCreateOrConnectWithoutUserInput[]
+    createMany?: FocusPushSubscriptionCreateManyUserInputEnvelope
+    connect?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -26295,6 +29559,34 @@ export namespace Prisma {
     deleteMany?: FriendshipScalarWhereInput | FriendshipScalarWhereInput[]
   }
 
+  export type FocusSessionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FocusSessionCreateWithoutUserInput, FocusSessionUncheckedCreateWithoutUserInput> | FocusSessionCreateWithoutUserInput[] | FocusSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutUserInput | FocusSessionCreateOrConnectWithoutUserInput[]
+    upsert?: FocusSessionUpsertWithWhereUniqueWithoutUserInput | FocusSessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FocusSessionCreateManyUserInputEnvelope
+    set?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    disconnect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    delete?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    update?: FocusSessionUpdateWithWhereUniqueWithoutUserInput | FocusSessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FocusSessionUpdateManyWithWhereWithoutUserInput | FocusSessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FocusSessionScalarWhereInput | FocusSessionScalarWhereInput[]
+  }
+
+  export type FocusPushSubscriptionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FocusPushSubscriptionCreateWithoutUserInput, FocusPushSubscriptionUncheckedCreateWithoutUserInput> | FocusPushSubscriptionCreateWithoutUserInput[] | FocusPushSubscriptionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusPushSubscriptionCreateOrConnectWithoutUserInput | FocusPushSubscriptionCreateOrConnectWithoutUserInput[]
+    upsert?: FocusPushSubscriptionUpsertWithWhereUniqueWithoutUserInput | FocusPushSubscriptionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FocusPushSubscriptionCreateManyUserInputEnvelope
+    set?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    disconnect?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    delete?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    connect?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    update?: FocusPushSubscriptionUpdateWithWhereUniqueWithoutUserInput | FocusPushSubscriptionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FocusPushSubscriptionUpdateManyWithWhereWithoutUserInput | FocusPushSubscriptionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FocusPushSubscriptionScalarWhereInput | FocusPushSubscriptionScalarWhereInput[]
+  }
+
   export type SubjectUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SubjectCreateWithoutUserInput, SubjectUncheckedCreateWithoutUserInput> | SubjectCreateWithoutUserInput[] | SubjectUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutUserInput | SubjectCreateOrConnectWithoutUserInput[]
@@ -26519,6 +29811,34 @@ export namespace Prisma {
     deleteMany?: FriendshipScalarWhereInput | FriendshipScalarWhereInput[]
   }
 
+  export type FocusSessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FocusSessionCreateWithoutUserInput, FocusSessionUncheckedCreateWithoutUserInput> | FocusSessionCreateWithoutUserInput[] | FocusSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutUserInput | FocusSessionCreateOrConnectWithoutUserInput[]
+    upsert?: FocusSessionUpsertWithWhereUniqueWithoutUserInput | FocusSessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FocusSessionCreateManyUserInputEnvelope
+    set?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    disconnect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    delete?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    update?: FocusSessionUpdateWithWhereUniqueWithoutUserInput | FocusSessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FocusSessionUpdateManyWithWhereWithoutUserInput | FocusSessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FocusSessionScalarWhereInput | FocusSessionScalarWhereInput[]
+  }
+
+  export type FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FocusPushSubscriptionCreateWithoutUserInput, FocusPushSubscriptionUncheckedCreateWithoutUserInput> | FocusPushSubscriptionCreateWithoutUserInput[] | FocusPushSubscriptionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FocusPushSubscriptionCreateOrConnectWithoutUserInput | FocusPushSubscriptionCreateOrConnectWithoutUserInput[]
+    upsert?: FocusPushSubscriptionUpsertWithWhereUniqueWithoutUserInput | FocusPushSubscriptionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FocusPushSubscriptionCreateManyUserInputEnvelope
+    set?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    disconnect?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    delete?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    connect?: FocusPushSubscriptionWhereUniqueInput | FocusPushSubscriptionWhereUniqueInput[]
+    update?: FocusPushSubscriptionUpdateWithWhereUniqueWithoutUserInput | FocusPushSubscriptionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FocusPushSubscriptionUpdateManyWithWhereWithoutUserInput | FocusPushSubscriptionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FocusPushSubscriptionScalarWhereInput | FocusPushSubscriptionScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutOtpTokensInput = {
     create?: XOR<UserCreateWithoutOtpTokensInput, UserUncheckedCreateWithoutOtpTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutOtpTokensInput
@@ -26571,6 +29891,13 @@ export namespace Prisma {
     connect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
   }
 
+  export type FocusSessionCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<FocusSessionCreateWithoutSubjectInput, FocusSessionUncheckedCreateWithoutSubjectInput> | FocusSessionCreateWithoutSubjectInput[] | FocusSessionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutSubjectInput | FocusSessionCreateOrConnectWithoutSubjectInput[]
+    createMany?: FocusSessionCreateManySubjectInputEnvelope
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+  }
+
   export type StudyEntryUncheckedCreateNestedManyWithoutSubjectInput = {
     create?: XOR<StudyEntryCreateWithoutSubjectInput, StudyEntryUncheckedCreateWithoutSubjectInput> | StudyEntryCreateWithoutSubjectInput[] | StudyEntryUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: StudyEntryCreateOrConnectWithoutSubjectInput | StudyEntryCreateOrConnectWithoutSubjectInput[]
@@ -26583,6 +29910,13 @@ export namespace Prisma {
     connectOrCreate?: GoalCreateOrConnectWithoutSubjectInput | GoalCreateOrConnectWithoutSubjectInput[]
     createMany?: GoalCreateManySubjectInputEnvelope
     connect?: GoalWhereUniqueInput | GoalWhereUniqueInput[]
+  }
+
+  export type FocusSessionUncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<FocusSessionCreateWithoutSubjectInput, FocusSessionUncheckedCreateWithoutSubjectInput> | FocusSessionCreateWithoutSubjectInput[] | FocusSessionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutSubjectInput | FocusSessionCreateOrConnectWithoutSubjectInput[]
+    createMany?: FocusSessionCreateManySubjectInputEnvelope
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutSubjectsNestedInput = {
@@ -26621,6 +29955,20 @@ export namespace Prisma {
     deleteMany?: GoalScalarWhereInput | GoalScalarWhereInput[]
   }
 
+  export type FocusSessionUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<FocusSessionCreateWithoutSubjectInput, FocusSessionUncheckedCreateWithoutSubjectInput> | FocusSessionCreateWithoutSubjectInput[] | FocusSessionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutSubjectInput | FocusSessionCreateOrConnectWithoutSubjectInput[]
+    upsert?: FocusSessionUpsertWithWhereUniqueWithoutSubjectInput | FocusSessionUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: FocusSessionCreateManySubjectInputEnvelope
+    set?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    disconnect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    delete?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    update?: FocusSessionUpdateWithWhereUniqueWithoutSubjectInput | FocusSessionUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: FocusSessionUpdateManyWithWhereWithoutSubjectInput | FocusSessionUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: FocusSessionScalarWhereInput | FocusSessionScalarWhereInput[]
+  }
+
   export type StudyEntryUncheckedUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<StudyEntryCreateWithoutSubjectInput, StudyEntryUncheckedCreateWithoutSubjectInput> | StudyEntryCreateWithoutSubjectInput[] | StudyEntryUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: StudyEntryCreateOrConnectWithoutSubjectInput | StudyEntryCreateOrConnectWithoutSubjectInput[]
@@ -26649,6 +29997,20 @@ export namespace Prisma {
     deleteMany?: GoalScalarWhereInput | GoalScalarWhereInput[]
   }
 
+  export type FocusSessionUncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<FocusSessionCreateWithoutSubjectInput, FocusSessionUncheckedCreateWithoutSubjectInput> | FocusSessionCreateWithoutSubjectInput[] | FocusSessionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutSubjectInput | FocusSessionCreateOrConnectWithoutSubjectInput[]
+    upsert?: FocusSessionUpsertWithWhereUniqueWithoutSubjectInput | FocusSessionUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: FocusSessionCreateManySubjectInputEnvelope
+    set?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    disconnect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    delete?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    connect?: FocusSessionWhereUniqueInput | FocusSessionWhereUniqueInput[]
+    update?: FocusSessionUpdateWithWhereUniqueWithoutSubjectInput | FocusSessionUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: FocusSessionUpdateManyWithWhereWithoutSubjectInput | FocusSessionUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: FocusSessionScalarWhereInput | FocusSessionScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutStudyEntriesInput = {
     create?: XOR<UserCreateWithoutStudyEntriesInput, UserUncheckedCreateWithoutStudyEntriesInput>
     connectOrCreate?: UserCreateOrConnectWithoutStudyEntriesInput
@@ -26659,6 +30021,12 @@ export namespace Prisma {
     create?: XOR<SubjectCreateWithoutStudyEntriesInput, SubjectUncheckedCreateWithoutStudyEntriesInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutStudyEntriesInput
     connect?: SubjectWhereUniqueInput
+  }
+
+  export type FocusSessionCreateNestedOneWithoutStudyEntryInput = {
+    create?: XOR<FocusSessionCreateWithoutStudyEntryInput, FocusSessionUncheckedCreateWithoutStudyEntryInput>
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutStudyEntryInput
+    connect?: FocusSessionWhereUniqueInput
   }
 
   export type EnumStudyMoodFieldUpdateOperationsInput = {
@@ -26679,6 +30047,16 @@ export namespace Prisma {
     upsert?: SubjectUpsertWithoutStudyEntriesInput
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutStudyEntriesInput, SubjectUpdateWithoutStudyEntriesInput>, SubjectUncheckedUpdateWithoutStudyEntriesInput>
+  }
+
+  export type FocusSessionUpdateOneWithoutStudyEntryNestedInput = {
+    create?: XOR<FocusSessionCreateWithoutStudyEntryInput, FocusSessionUncheckedCreateWithoutStudyEntryInput>
+    connectOrCreate?: FocusSessionCreateOrConnectWithoutStudyEntryInput
+    upsert?: FocusSessionUpsertWithoutStudyEntryInput
+    disconnect?: FocusSessionWhereInput | boolean
+    delete?: FocusSessionWhereInput | boolean
+    connect?: FocusSessionWhereUniqueInput
+    update?: XOR<XOR<FocusSessionUpdateToOneWithWhereWithoutStudyEntryInput, FocusSessionUpdateWithoutStudyEntryInput>, FocusSessionUncheckedUpdateWithoutStudyEntryInput>
   }
 
   export type UserCreateNestedOneWithoutGoalsInput = {
@@ -27173,6 +30551,84 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFriendshipsAsHighInput, UserUpdateWithoutFriendshipsAsHighInput>, UserUncheckedUpdateWithoutFriendshipsAsHighInput>
   }
 
+  export type UserCreateNestedOneWithoutFocusSessionsInput = {
+    create?: XOR<UserCreateWithoutFocusSessionsInput, UserUncheckedCreateWithoutFocusSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFocusSessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SubjectCreateNestedOneWithoutFocusSessionsInput = {
+    create?: XOR<SubjectCreateWithoutFocusSessionsInput, SubjectUncheckedCreateWithoutFocusSessionsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutFocusSessionsInput
+    connect?: SubjectWhereUniqueInput
+  }
+
+  export type StudyEntryCreateNestedOneWithoutFocusSessionInput = {
+    create?: XOR<StudyEntryCreateWithoutFocusSessionInput, StudyEntryUncheckedCreateWithoutFocusSessionInput>
+    connectOrCreate?: StudyEntryCreateOrConnectWithoutFocusSessionInput
+    connect?: StudyEntryWhereUniqueInput
+  }
+
+  export type StudyEntryUncheckedCreateNestedOneWithoutFocusSessionInput = {
+    create?: XOR<StudyEntryCreateWithoutFocusSessionInput, StudyEntryUncheckedCreateWithoutFocusSessionInput>
+    connectOrCreate?: StudyEntryCreateOrConnectWithoutFocusSessionInput
+    connect?: StudyEntryWhereUniqueInput
+  }
+
+  export type EnumFocusStatusFieldUpdateOperationsInput = {
+    set?: $Enums.FocusStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutFocusSessionsNestedInput = {
+    create?: XOR<UserCreateWithoutFocusSessionsInput, UserUncheckedCreateWithoutFocusSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFocusSessionsInput
+    upsert?: UserUpsertWithoutFocusSessionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFocusSessionsInput, UserUpdateWithoutFocusSessionsInput>, UserUncheckedUpdateWithoutFocusSessionsInput>
+  }
+
+  export type SubjectUpdateOneRequiredWithoutFocusSessionsNestedInput = {
+    create?: XOR<SubjectCreateWithoutFocusSessionsInput, SubjectUncheckedCreateWithoutFocusSessionsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutFocusSessionsInput
+    upsert?: SubjectUpsertWithoutFocusSessionsInput
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutFocusSessionsInput, SubjectUpdateWithoutFocusSessionsInput>, SubjectUncheckedUpdateWithoutFocusSessionsInput>
+  }
+
+  export type StudyEntryUpdateOneWithoutFocusSessionNestedInput = {
+    create?: XOR<StudyEntryCreateWithoutFocusSessionInput, StudyEntryUncheckedCreateWithoutFocusSessionInput>
+    connectOrCreate?: StudyEntryCreateOrConnectWithoutFocusSessionInput
+    upsert?: StudyEntryUpsertWithoutFocusSessionInput
+    disconnect?: StudyEntryWhereInput | boolean
+    delete?: StudyEntryWhereInput | boolean
+    connect?: StudyEntryWhereUniqueInput
+    update?: XOR<XOR<StudyEntryUpdateToOneWithWhereWithoutFocusSessionInput, StudyEntryUpdateWithoutFocusSessionInput>, StudyEntryUncheckedUpdateWithoutFocusSessionInput>
+  }
+
+  export type StudyEntryUncheckedUpdateOneWithoutFocusSessionNestedInput = {
+    create?: XOR<StudyEntryCreateWithoutFocusSessionInput, StudyEntryUncheckedCreateWithoutFocusSessionInput>
+    connectOrCreate?: StudyEntryCreateOrConnectWithoutFocusSessionInput
+    upsert?: StudyEntryUpsertWithoutFocusSessionInput
+    disconnect?: StudyEntryWhereInput | boolean
+    delete?: StudyEntryWhereInput | boolean
+    connect?: StudyEntryWhereUniqueInput
+    update?: XOR<XOR<StudyEntryUpdateToOneWithWhereWithoutFocusSessionInput, StudyEntryUpdateWithoutFocusSessionInput>, StudyEntryUncheckedUpdateWithoutFocusSessionInput>
+  }
+
+  export type UserCreateNestedOneWithoutFocusSubscriptionsInput = {
+    create?: XOR<UserCreateWithoutFocusSubscriptionsInput, UserUncheckedCreateWithoutFocusSubscriptionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFocusSubscriptionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutFocusSubscriptionsNestedInput = {
+    create?: XOR<UserCreateWithoutFocusSubscriptionsInput, UserUncheckedCreateWithoutFocusSubscriptionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFocusSubscriptionsInput
+    upsert?: UserUpsertWithoutFocusSubscriptionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFocusSubscriptionsInput, UserUpdateWithoutFocusSubscriptionsInput>, UserUncheckedUpdateWithoutFocusSubscriptionsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -27584,6 +31040,23 @@ export namespace Prisma {
     _max?: NestedEnumFriendshipStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumFocusStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FocusStatus | EnumFocusStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFocusStatusFilter<$PrismaModel> | $Enums.FocusStatus
+  }
+
+  export type NestedEnumFocusStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FocusStatus | EnumFocusStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FocusStatus[] | ListEnumFocusStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFocusStatusWithAggregatesFilter<$PrismaModel> | $Enums.FocusStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFocusStatusFilter<$PrismaModel>
+    _max?: NestedEnumFocusStatusFilter<$PrismaModel>
+  }
+
   export type SubjectCreateWithoutUserInput = {
     id?: string
     name: string
@@ -27595,6 +31068,7 @@ export namespace Prisma {
     isActive?: boolean
     studyEntries?: StudyEntryCreateNestedManyWithoutSubjectInput
     goals?: GoalCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutUserInput = {
@@ -27608,6 +31082,7 @@ export namespace Prisma {
     isActive?: boolean
     studyEntries?: StudyEntryUncheckedCreateNestedManyWithoutSubjectInput
     goals?: GoalUncheckedCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutUserInput = {
@@ -27630,6 +31105,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutStudyEntriesInput
+    focusSession?: FocusSessionCreateNestedOneWithoutStudyEntryInput
   }
 
   export type StudyEntryUncheckedCreateWithoutUserInput = {
@@ -27642,6 +31118,7 @@ export namespace Prisma {
     mood?: $Enums.StudyMood
     createdAt?: Date | string
     updatedAt?: Date | string
+    focusSessionId?: string | null
   }
 
   export type StudyEntryCreateOrConnectWithoutUserInput = {
@@ -28076,6 +31553,76 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FocusSessionCreateWithoutUserInput = {
+    id?: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutFocusSessionsInput
+    studyEntry?: StudyEntryCreateNestedOneWithoutFocusSessionInput
+  }
+
+  export type FocusSessionUncheckedCreateWithoutUserInput = {
+    id?: string
+    subjectId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    studyEntry?: StudyEntryUncheckedCreateNestedOneWithoutFocusSessionInput
+  }
+
+  export type FocusSessionCreateOrConnectWithoutUserInput = {
+    where: FocusSessionWhereUniqueInput
+    create: XOR<FocusSessionCreateWithoutUserInput, FocusSessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type FocusSessionCreateManyUserInputEnvelope = {
+    data: FocusSessionCreateManyUserInput | FocusSessionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FocusPushSubscriptionCreateWithoutUserInput = {
+    id?: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusPushSubscriptionUncheckedCreateWithoutUserInput = {
+    id?: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusPushSubscriptionCreateOrConnectWithoutUserInput = {
+    where: FocusPushSubscriptionWhereUniqueInput
+    create: XOR<FocusPushSubscriptionCreateWithoutUserInput, FocusPushSubscriptionUncheckedCreateWithoutUserInput>
+  }
+
+  export type FocusPushSubscriptionCreateManyUserInputEnvelope = {
+    data: FocusPushSubscriptionCreateManyUserInput | FocusPushSubscriptionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SubjectUpsertWithWhereUniqueWithoutUserInput = {
     where: SubjectWhereUniqueInput
     update: XOR<SubjectUpdateWithoutUserInput, SubjectUncheckedUpdateWithoutUserInput>
@@ -28137,6 +31684,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFilter<"StudyEntry"> | $Enums.StudyMood
     createdAt?: DateTimeFilter<"StudyEntry"> | Date | string
     updatedAt?: DateTimeFilter<"StudyEntry"> | Date | string
+    focusSessionId?: StringNullableFilter<"StudyEntry"> | string | null
   }
 
   export type GoalUpsertWithWhereUniqueWithoutUserInput = {
@@ -28529,6 +32077,70 @@ export namespace Prisma {
     data: XOR<FriendshipUpdateManyMutationInput, FriendshipUncheckedUpdateManyWithoutUserHighInput>
   }
 
+  export type FocusSessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: FocusSessionWhereUniqueInput
+    update: XOR<FocusSessionUpdateWithoutUserInput, FocusSessionUncheckedUpdateWithoutUserInput>
+    create: XOR<FocusSessionCreateWithoutUserInput, FocusSessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type FocusSessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: FocusSessionWhereUniqueInput
+    data: XOR<FocusSessionUpdateWithoutUserInput, FocusSessionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FocusSessionUpdateManyWithWhereWithoutUserInput = {
+    where: FocusSessionScalarWhereInput
+    data: XOR<FocusSessionUpdateManyMutationInput, FocusSessionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FocusSessionScalarWhereInput = {
+    AND?: FocusSessionScalarWhereInput | FocusSessionScalarWhereInput[]
+    OR?: FocusSessionScalarWhereInput[]
+    NOT?: FocusSessionScalarWhereInput | FocusSessionScalarWhereInput[]
+    id?: StringFilter<"FocusSession"> | string
+    userId?: StringFilter<"FocusSession"> | string
+    subjectId?: StringFilter<"FocusSession"> | string
+    chapter?: StringNullableFilter<"FocusSession"> | string | null
+    status?: EnumFocusStatusFilter<"FocusSession"> | $Enums.FocusStatus
+    startedAt?: DateTimeFilter<"FocusSession"> | Date | string
+    segmentStartedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    checkpointAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    accumulatedSeconds?: IntFilter<"FocusSession"> | number
+    lastStudiedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    endedAt?: DateTimeNullableFilter<"FocusSession"> | Date | string | null
+    createdAt?: DateTimeFilter<"FocusSession"> | Date | string
+    updatedAt?: DateTimeFilter<"FocusSession"> | Date | string
+  }
+
+  export type FocusPushSubscriptionUpsertWithWhereUniqueWithoutUserInput = {
+    where: FocusPushSubscriptionWhereUniqueInput
+    update: XOR<FocusPushSubscriptionUpdateWithoutUserInput, FocusPushSubscriptionUncheckedUpdateWithoutUserInput>
+    create: XOR<FocusPushSubscriptionCreateWithoutUserInput, FocusPushSubscriptionUncheckedCreateWithoutUserInput>
+  }
+
+  export type FocusPushSubscriptionUpdateWithWhereUniqueWithoutUserInput = {
+    where: FocusPushSubscriptionWhereUniqueInput
+    data: XOR<FocusPushSubscriptionUpdateWithoutUserInput, FocusPushSubscriptionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FocusPushSubscriptionUpdateManyWithWhereWithoutUserInput = {
+    where: FocusPushSubscriptionScalarWhereInput
+    data: XOR<FocusPushSubscriptionUpdateManyMutationInput, FocusPushSubscriptionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FocusPushSubscriptionScalarWhereInput = {
+    AND?: FocusPushSubscriptionScalarWhereInput | FocusPushSubscriptionScalarWhereInput[]
+    OR?: FocusPushSubscriptionScalarWhereInput[]
+    NOT?: FocusPushSubscriptionScalarWhereInput | FocusPushSubscriptionScalarWhereInput[]
+    id?: StringFilter<"FocusPushSubscription"> | string
+    userId?: StringFilter<"FocusPushSubscription"> | string
+    endpoint?: StringFilter<"FocusPushSubscription"> | string
+    p256dh?: StringFilter<"FocusPushSubscription"> | string
+    auth?: StringFilter<"FocusPushSubscription"> | string
+    createdAt?: DateTimeFilter<"FocusPushSubscription"> | Date | string
+    updatedAt?: DateTimeFilter<"FocusPushSubscription"> | Date | string
+  }
+
   export type UserCreateWithoutOtpTokensInput = {
     id?: string
     email: string
@@ -28566,6 +32178,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOtpTokensInput = {
@@ -28605,6 +32219,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOtpTokensInput = {
@@ -28660,6 +32276,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOtpTokensInput = {
@@ -28699,6 +32317,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutRefreshTokensInput = {
@@ -28738,6 +32358,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -28777,6 +32399,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -28832,6 +32456,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -28871,6 +32497,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSubjectsInput = {
@@ -28910,6 +32538,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubjectsInput = {
@@ -28949,6 +32579,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubjectsInput = {
@@ -28966,6 +32598,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutStudyEntriesInput
+    focusSession?: FocusSessionCreateNestedOneWithoutStudyEntryInput
   }
 
   export type StudyEntryUncheckedCreateWithoutSubjectInput = {
@@ -28978,6 +32611,7 @@ export namespace Prisma {
     mood?: $Enums.StudyMood
     createdAt?: Date | string
     updatedAt?: Date | string
+    focusSessionId?: string | null
   }
 
   export type StudyEntryCreateOrConnectWithoutSubjectInput = {
@@ -29030,6 +32664,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FocusSessionCreateWithoutSubjectInput = {
+    id?: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFocusSessionsInput
+    studyEntry?: StudyEntryCreateNestedOneWithoutFocusSessionInput
+  }
+
+  export type FocusSessionUncheckedCreateWithoutSubjectInput = {
+    id?: string
+    userId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    studyEntry?: StudyEntryUncheckedCreateNestedOneWithoutFocusSessionInput
+  }
+
+  export type FocusSessionCreateOrConnectWithoutSubjectInput = {
+    where: FocusSessionWhereUniqueInput
+    create: XOR<FocusSessionCreateWithoutSubjectInput, FocusSessionUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type FocusSessionCreateManySubjectInputEnvelope = {
+    data: FocusSessionCreateManySubjectInput | FocusSessionCreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutSubjectsInput = {
     update: XOR<UserUpdateWithoutSubjectsInput, UserUncheckedUpdateWithoutSubjectsInput>
     create: XOR<UserCreateWithoutSubjectsInput, UserUncheckedCreateWithoutSubjectsInput>
@@ -29078,6 +32754,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubjectsInput = {
@@ -29117,6 +32795,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudyEntryUpsertWithWhereUniqueWithoutSubjectInput = {
@@ -29149,6 +32829,22 @@ export namespace Prisma {
   export type GoalUpdateManyWithWhereWithoutSubjectInput = {
     where: GoalScalarWhereInput
     data: XOR<GoalUpdateManyMutationInput, GoalUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type FocusSessionUpsertWithWhereUniqueWithoutSubjectInput = {
+    where: FocusSessionWhereUniqueInput
+    update: XOR<FocusSessionUpdateWithoutSubjectInput, FocusSessionUncheckedUpdateWithoutSubjectInput>
+    create: XOR<FocusSessionCreateWithoutSubjectInput, FocusSessionUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type FocusSessionUpdateWithWhereUniqueWithoutSubjectInput = {
+    where: FocusSessionWhereUniqueInput
+    data: XOR<FocusSessionUpdateWithoutSubjectInput, FocusSessionUncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type FocusSessionUpdateManyWithWhereWithoutSubjectInput = {
+    where: FocusSessionScalarWhereInput
+    data: XOR<FocusSessionUpdateManyMutationInput, FocusSessionUncheckedUpdateManyWithoutSubjectInput>
   }
 
   export type UserCreateWithoutStudyEntriesInput = {
@@ -29188,6 +32884,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudyEntriesInput = {
@@ -29227,6 +32925,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudyEntriesInput = {
@@ -29245,6 +32945,7 @@ export namespace Prisma {
     isActive?: boolean
     user: UserCreateNestedOneWithoutSubjectsInput
     goals?: GoalCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutStudyEntriesInput = {
@@ -29258,11 +32959,49 @@ export namespace Prisma {
     updatedAt?: Date | string
     isActive?: boolean
     goals?: GoalUncheckedCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutStudyEntriesInput = {
     where: SubjectWhereUniqueInput
     create: XOR<SubjectCreateWithoutStudyEntriesInput, SubjectUncheckedCreateWithoutStudyEntriesInput>
+  }
+
+  export type FocusSessionCreateWithoutStudyEntryInput = {
+    id?: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFocusSessionsInput
+    subject: SubjectCreateNestedOneWithoutFocusSessionsInput
+  }
+
+  export type FocusSessionUncheckedCreateWithoutStudyEntryInput = {
+    id?: string
+    userId: string
+    subjectId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusSessionCreateOrConnectWithoutStudyEntryInput = {
+    where: FocusSessionWhereUniqueInput
+    create: XOR<FocusSessionCreateWithoutStudyEntryInput, FocusSessionUncheckedCreateWithoutStudyEntryInput>
   }
 
   export type UserUpsertWithoutStudyEntriesInput = {
@@ -29313,6 +33052,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudyEntriesInput = {
@@ -29352,6 +33093,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectUpsertWithoutStudyEntriesInput = {
@@ -29376,6 +33119,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     user?: UserUpdateOneRequiredWithoutSubjectsNestedInput
     goals?: GoalUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutStudyEntriesInput = {
@@ -29389,6 +33133,50 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     goals?: GoalUncheckedUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type FocusSessionUpsertWithoutStudyEntryInput = {
+    update: XOR<FocusSessionUpdateWithoutStudyEntryInput, FocusSessionUncheckedUpdateWithoutStudyEntryInput>
+    create: XOR<FocusSessionCreateWithoutStudyEntryInput, FocusSessionUncheckedCreateWithoutStudyEntryInput>
+    where?: FocusSessionWhereInput
+  }
+
+  export type FocusSessionUpdateToOneWithWhereWithoutStudyEntryInput = {
+    where?: FocusSessionWhereInput
+    data: XOR<FocusSessionUpdateWithoutStudyEntryInput, FocusSessionUncheckedUpdateWithoutStudyEntryInput>
+  }
+
+  export type FocusSessionUpdateWithoutStudyEntryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFocusSessionsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutFocusSessionsNestedInput
+  }
+
+  export type FocusSessionUncheckedUpdateWithoutStudyEntryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutGoalsInput = {
@@ -29428,6 +33216,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGoalsInput = {
@@ -29467,6 +33257,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGoalsInput = {
@@ -29485,6 +33277,7 @@ export namespace Prisma {
     isActive?: boolean
     user: UserCreateNestedOneWithoutSubjectsInput
     studyEntries?: StudyEntryCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutGoalsInput = {
@@ -29498,6 +33291,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isActive?: boolean
     studyEntries?: StudyEntryUncheckedCreateNestedManyWithoutSubjectInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutGoalsInput = {
@@ -29553,6 +33347,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGoalsInput = {
@@ -29592,6 +33388,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectUpsertWithoutGoalsInput = {
@@ -29616,6 +33414,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     user?: UserUpdateOneRequiredWithoutSubjectsNestedInput
     studyEntries?: StudyEntryUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutGoalsInput = {
@@ -29629,6 +33428,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     studyEntries?: StudyEntryUncheckedUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type UserCreateWithoutBadgesInput = {
@@ -29668,6 +33468,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBadgesInput = {
@@ -29707,6 +33509,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBadgesInput = {
@@ -29762,6 +33566,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBadgesInput = {
@@ -29801,6 +33607,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDiariesInput = {
@@ -29840,6 +33648,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDiariesInput = {
@@ -29879,6 +33689,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDiariesInput = {
@@ -29934,6 +33746,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDiariesInput = {
@@ -29973,6 +33787,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutOwnedGroupsInput = {
@@ -30012,6 +33828,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOwnedGroupsInput = {
@@ -30051,6 +33869,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOwnedGroupsInput = {
@@ -30185,6 +34005,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOwnedGroupsInput = {
@@ -30224,6 +34046,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GroupMemberUpsertWithWhereUniqueWithoutGroupInput = {
@@ -30357,6 +34181,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -30396,6 +34222,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -30492,6 +34320,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -30531,6 +34361,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GroupCreateWithoutInvitationsInput = {
@@ -30605,6 +34437,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSentInvitationsInput = {
@@ -30644,6 +34478,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSentInvitationsInput = {
@@ -30688,6 +34524,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReceivedInvitationsInput = {
@@ -30727,6 +34565,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReceivedInvitationsInput = {
@@ -30823,6 +34663,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentInvitationsInput = {
@@ -30862,6 +34704,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReceivedInvitationsInput = {
@@ -30912,6 +34756,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedInvitationsInput = {
@@ -30951,6 +34797,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -30990,6 +34838,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -31029,6 +34879,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -31084,6 +34936,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -31123,6 +34977,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GroupCreateWithoutConversationInput = {
@@ -31347,6 +35203,8 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutConversationParticipantsInput = {
@@ -31386,6 +35244,8 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutConversationParticipantsInput = {
@@ -31468,6 +35328,8 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
@@ -31507,6 +35369,8 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -31567,6 +35431,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -31606,6 +35472,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -31688,6 +35556,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -31727,6 +35597,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutFriendshipsAsLowInput = {
@@ -31766,6 +35638,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendshipsAsLowInput = {
@@ -31805,6 +35679,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendshipsAsLowInput = {
@@ -31849,6 +35725,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFriendshipsAsHighInput = {
@@ -31888,6 +35766,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFriendshipsAsHighInput = {
@@ -31943,6 +35823,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendshipsAsLowInput = {
@@ -31982,6 +35864,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutFriendshipsAsHighInput = {
@@ -32032,6 +35916,8 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFriendshipsAsHighInput = {
@@ -32071,6 +35957,508 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutFocusSessionsInput = {
+    id?: string
+    email: string
+    username: string
+    fullName: string
+    passwordHash: string
+    classLevel: number
+    academicGroup?: $Enums.AcademicGroup | null
+    academicConfigured?: boolean
+    avatarUrl?: string | null
+    role?: $Enums.UserRole
+    xp?: number
+    level?: number
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    isEmailVerified?: boolean
+    isActive?: boolean
+    isProfilePublic?: boolean
+    googleId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectCreateNestedManyWithoutUserInput
+    studyEntries?: StudyEntryCreateNestedManyWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    badges?: UserBadgeCreateNestedManyWithoutUserInput
+    otpTokens?: OtpTokenCreateNestedManyWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    diaries?: StudyDiaryCreateNestedManyWithoutUserInput
+    ownedGroups?: GroupCreateNestedManyWithoutOwnerInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: GroupInvitationCreateNestedManyWithoutInviterInput
+    receivedInvitations?: GroupInvitationCreateNestedManyWithoutInviteeInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutSenderInput
+    friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
+    friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSubscriptions?: FocusPushSubscriptionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFocusSessionsInput = {
+    id?: string
+    email: string
+    username: string
+    fullName: string
+    passwordHash: string
+    classLevel: number
+    academicGroup?: $Enums.AcademicGroup | null
+    academicConfigured?: boolean
+    avatarUrl?: string | null
+    role?: $Enums.UserRole
+    xp?: number
+    level?: number
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    isEmailVerified?: boolean
+    isActive?: boolean
+    isProfilePublic?: boolean
+    googleId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectUncheckedCreateNestedManyWithoutUserInput
+    studyEntries?: StudyEntryUncheckedCreateNestedManyWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    badges?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
+    otpTokens?: OtpTokenUncheckedCreateNestedManyWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    diaries?: StudyDiaryUncheckedCreateNestedManyWithoutUserInput
+    ownedGroups?: GroupUncheckedCreateNestedManyWithoutOwnerInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: GroupInvitationUncheckedCreateNestedManyWithoutInviterInput
+    receivedInvitations?: GroupInvitationUncheckedCreateNestedManyWithoutInviteeInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
+    friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFocusSessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFocusSessionsInput, UserUncheckedCreateWithoutFocusSessionsInput>
+  }
+
+  export type SubjectCreateWithoutFocusSessionsInput = {
+    id?: string
+    name: string
+    color?: string
+    icon?: string
+    isCustom?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    user: UserCreateNestedOneWithoutSubjectsInput
+    studyEntries?: StudyEntryCreateNestedManyWithoutSubjectInput
+    goals?: GoalCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectUncheckedCreateWithoutFocusSessionsInput = {
+    id?: string
+    userId: string
+    name: string
+    color?: string
+    icon?: string
+    isCustom?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    studyEntries?: StudyEntryUncheckedCreateNestedManyWithoutSubjectInput
+    goals?: GoalUncheckedCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectCreateOrConnectWithoutFocusSessionsInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutFocusSessionsInput, SubjectUncheckedCreateWithoutFocusSessionsInput>
+  }
+
+  export type StudyEntryCreateWithoutFocusSessionInput = {
+    id?: string
+    date: Date | string
+    durationMinutes: number
+    chapter?: string | null
+    note?: string | null
+    mood?: $Enums.StudyMood
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutStudyEntriesInput
+    subject: SubjectCreateNestedOneWithoutStudyEntriesInput
+  }
+
+  export type StudyEntryUncheckedCreateWithoutFocusSessionInput = {
+    id?: string
+    userId: string
+    subjectId: string
+    date: Date | string
+    durationMinutes: number
+    chapter?: string | null
+    note?: string | null
+    mood?: $Enums.StudyMood
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudyEntryCreateOrConnectWithoutFocusSessionInput = {
+    where: StudyEntryWhereUniqueInput
+    create: XOR<StudyEntryCreateWithoutFocusSessionInput, StudyEntryUncheckedCreateWithoutFocusSessionInput>
+  }
+
+  export type UserUpsertWithoutFocusSessionsInput = {
+    update: XOR<UserUpdateWithoutFocusSessionsInput, UserUncheckedUpdateWithoutFocusSessionsInput>
+    create: XOR<UserCreateWithoutFocusSessionsInput, UserUncheckedCreateWithoutFocusSessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFocusSessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFocusSessionsInput, UserUncheckedUpdateWithoutFocusSessionsInput>
+  }
+
+  export type UserUpdateWithoutFocusSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    classLevel?: IntFieldUpdateOperationsInput | number
+    academicGroup?: NullableEnumAcademicGroupFieldUpdateOperationsInput | $Enums.AcademicGroup | null
+    academicConfigured?: BoolFieldUpdateOperationsInput | boolean
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    xp?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isProfilePublic?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUpdateManyWithoutUserNestedInput
+    studyEntries?: StudyEntryUpdateManyWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    badges?: UserBadgeUpdateManyWithoutUserNestedInput
+    otpTokens?: OtpTokenUpdateManyWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    diaries?: StudyDiaryUpdateManyWithoutUserNestedInput
+    ownedGroups?: GroupUpdateManyWithoutOwnerNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: GroupInvitationUpdateManyWithoutInviterNestedInput
+    receivedInvitations?: GroupInvitationUpdateManyWithoutInviteeNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutSenderNestedInput
+    friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
+    friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFocusSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    classLevel?: IntFieldUpdateOperationsInput | number
+    academicGroup?: NullableEnumAcademicGroupFieldUpdateOperationsInput | $Enums.AcademicGroup | null
+    academicConfigured?: BoolFieldUpdateOperationsInput | boolean
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    xp?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isProfilePublic?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUncheckedUpdateManyWithoutUserNestedInput
+    studyEntries?: StudyEntryUncheckedUpdateManyWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    badges?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
+    otpTokens?: OtpTokenUncheckedUpdateManyWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    diaries?: StudyDiaryUncheckedUpdateManyWithoutUserNestedInput
+    ownedGroups?: GroupUncheckedUpdateManyWithoutOwnerNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: GroupInvitationUncheckedUpdateManyWithoutInviterNestedInput
+    receivedInvitations?: GroupInvitationUncheckedUpdateManyWithoutInviteeNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
+    friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSubscriptions?: FocusPushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type SubjectUpsertWithoutFocusSessionsInput = {
+    update: XOR<SubjectUpdateWithoutFocusSessionsInput, SubjectUncheckedUpdateWithoutFocusSessionsInput>
+    create: XOR<SubjectCreateWithoutFocusSessionsInput, SubjectUncheckedCreateWithoutFocusSessionsInput>
+    where?: SubjectWhereInput
+  }
+
+  export type SubjectUpdateToOneWithWhereWithoutFocusSessionsInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutFocusSessionsInput, SubjectUncheckedUpdateWithoutFocusSessionsInput>
+  }
+
+  export type SubjectUpdateWithoutFocusSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    isCustom?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutSubjectsNestedInput
+    studyEntries?: StudyEntryUpdateManyWithoutSubjectNestedInput
+    goals?: GoalUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type SubjectUncheckedUpdateWithoutFocusSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    isCustom?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    studyEntries?: StudyEntryUncheckedUpdateManyWithoutSubjectNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type StudyEntryUpsertWithoutFocusSessionInput = {
+    update: XOR<StudyEntryUpdateWithoutFocusSessionInput, StudyEntryUncheckedUpdateWithoutFocusSessionInput>
+    create: XOR<StudyEntryCreateWithoutFocusSessionInput, StudyEntryUncheckedCreateWithoutFocusSessionInput>
+    where?: StudyEntryWhereInput
+  }
+
+  export type StudyEntryUpdateToOneWithWhereWithoutFocusSessionInput = {
+    where?: StudyEntryWhereInput
+    data: XOR<StudyEntryUpdateWithoutFocusSessionInput, StudyEntryUncheckedUpdateWithoutFocusSessionInput>
+  }
+
+  export type StudyEntryUpdateWithoutFocusSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutStudyEntriesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutStudyEntriesNestedInput
+  }
+
+  export type StudyEntryUncheckedUpdateWithoutFocusSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutFocusSubscriptionsInput = {
+    id?: string
+    email: string
+    username: string
+    fullName: string
+    passwordHash: string
+    classLevel: number
+    academicGroup?: $Enums.AcademicGroup | null
+    academicConfigured?: boolean
+    avatarUrl?: string | null
+    role?: $Enums.UserRole
+    xp?: number
+    level?: number
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    isEmailVerified?: boolean
+    isActive?: boolean
+    isProfilePublic?: boolean
+    googleId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectCreateNestedManyWithoutUserInput
+    studyEntries?: StudyEntryCreateNestedManyWithoutUserInput
+    goals?: GoalCreateNestedManyWithoutUserInput
+    badges?: UserBadgeCreateNestedManyWithoutUserInput
+    otpTokens?: OtpTokenCreateNestedManyWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    diaries?: StudyDiaryCreateNestedManyWithoutUserInput
+    ownedGroups?: GroupCreateNestedManyWithoutOwnerInput
+    groupMemberships?: GroupMemberCreateNestedManyWithoutUserInput
+    sentInvitations?: GroupInvitationCreateNestedManyWithoutInviterInput
+    receivedInvitations?: GroupInvitationCreateNestedManyWithoutInviteeInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutSenderInput
+    friendshipsAsLow?: FriendshipCreateNestedManyWithoutUserLowInput
+    friendshipsAsHigh?: FriendshipCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFocusSubscriptionsInput = {
+    id?: string
+    email: string
+    username: string
+    fullName: string
+    passwordHash: string
+    classLevel: number
+    academicGroup?: $Enums.AcademicGroup | null
+    academicConfigured?: boolean
+    avatarUrl?: string | null
+    role?: $Enums.UserRole
+    xp?: number
+    level?: number
+    currentStreak?: number
+    longestStreak?: number
+    lastStudyDate?: Date | string | null
+    isEmailVerified?: boolean
+    isActive?: boolean
+    isProfilePublic?: boolean
+    googleId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectUncheckedCreateNestedManyWithoutUserInput
+    studyEntries?: StudyEntryUncheckedCreateNestedManyWithoutUserInput
+    goals?: GoalUncheckedCreateNestedManyWithoutUserInput
+    badges?: UserBadgeUncheckedCreateNestedManyWithoutUserInput
+    otpTokens?: OtpTokenUncheckedCreateNestedManyWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    diaries?: StudyDiaryUncheckedCreateNestedManyWithoutUserInput
+    ownedGroups?: GroupUncheckedCreateNestedManyWithoutOwnerInput
+    groupMemberships?: GroupMemberUncheckedCreateNestedManyWithoutUserInput
+    sentInvitations?: GroupInvitationUncheckedCreateNestedManyWithoutInviterInput
+    receivedInvitations?: GroupInvitationUncheckedCreateNestedManyWithoutInviteeInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    friendshipsAsLow?: FriendshipUncheckedCreateNestedManyWithoutUserLowInput
+    friendshipsAsHigh?: FriendshipUncheckedCreateNestedManyWithoutUserHighInput
+    focusSessions?: FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFocusSubscriptionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFocusSubscriptionsInput, UserUncheckedCreateWithoutFocusSubscriptionsInput>
+  }
+
+  export type UserUpsertWithoutFocusSubscriptionsInput = {
+    update: XOR<UserUpdateWithoutFocusSubscriptionsInput, UserUncheckedUpdateWithoutFocusSubscriptionsInput>
+    create: XOR<UserCreateWithoutFocusSubscriptionsInput, UserUncheckedCreateWithoutFocusSubscriptionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFocusSubscriptionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFocusSubscriptionsInput, UserUncheckedUpdateWithoutFocusSubscriptionsInput>
+  }
+
+  export type UserUpdateWithoutFocusSubscriptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    classLevel?: IntFieldUpdateOperationsInput | number
+    academicGroup?: NullableEnumAcademicGroupFieldUpdateOperationsInput | $Enums.AcademicGroup | null
+    academicConfigured?: BoolFieldUpdateOperationsInput | boolean
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    xp?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isProfilePublic?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUpdateManyWithoutUserNestedInput
+    studyEntries?: StudyEntryUpdateManyWithoutUserNestedInput
+    goals?: GoalUpdateManyWithoutUserNestedInput
+    badges?: UserBadgeUpdateManyWithoutUserNestedInput
+    otpTokens?: OtpTokenUpdateManyWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    diaries?: StudyDiaryUpdateManyWithoutUserNestedInput
+    ownedGroups?: GroupUpdateManyWithoutOwnerNestedInput
+    groupMemberships?: GroupMemberUpdateManyWithoutUserNestedInput
+    sentInvitations?: GroupInvitationUpdateManyWithoutInviterNestedInput
+    receivedInvitations?: GroupInvitationUpdateManyWithoutInviteeNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutSenderNestedInput
+    friendshipsAsLow?: FriendshipUpdateManyWithoutUserLowNestedInput
+    friendshipsAsHigh?: FriendshipUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFocusSubscriptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    classLevel?: IntFieldUpdateOperationsInput | number
+    academicGroup?: NullableEnumAcademicGroupFieldUpdateOperationsInput | $Enums.AcademicGroup | null
+    academicConfigured?: BoolFieldUpdateOperationsInput | boolean
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    xp?: IntFieldUpdateOperationsInput | number
+    level?: IntFieldUpdateOperationsInput | number
+    currentStreak?: IntFieldUpdateOperationsInput | number
+    longestStreak?: IntFieldUpdateOperationsInput | number
+    lastStudyDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isProfilePublic?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUncheckedUpdateManyWithoutUserNestedInput
+    studyEntries?: StudyEntryUncheckedUpdateManyWithoutUserNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutUserNestedInput
+    badges?: UserBadgeUncheckedUpdateManyWithoutUserNestedInput
+    otpTokens?: OtpTokenUncheckedUpdateManyWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    diaries?: StudyDiaryUncheckedUpdateManyWithoutUserNestedInput
+    ownedGroups?: GroupUncheckedUpdateManyWithoutOwnerNestedInput
+    groupMemberships?: GroupMemberUncheckedUpdateManyWithoutUserNestedInput
+    sentInvitations?: GroupInvitationUncheckedUpdateManyWithoutInviterNestedInput
+    receivedInvitations?: GroupInvitationUncheckedUpdateManyWithoutInviteeNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    friendshipsAsLow?: FriendshipUncheckedUpdateManyWithoutUserLowNestedInput
+    friendshipsAsHigh?: FriendshipUncheckedUpdateManyWithoutUserHighNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectCreateManyUserInput = {
@@ -32094,6 +36482,7 @@ export namespace Prisma {
     mood?: $Enums.StudyMood
     createdAt?: Date | string
     updatedAt?: Date | string
+    focusSessionId?: string | null
   }
 
   export type GoalCreateManyUserInput = {
@@ -32234,6 +36623,30 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FocusSessionCreateManyUserInput = {
+    id?: string
+    subjectId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FocusPushSubscriptionCreateManyUserInput = {
+    id?: string
+    endpoint: string
+    p256dh: string
+    auth: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SubjectUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -32245,6 +36658,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     studyEntries?: StudyEntryUpdateManyWithoutSubjectNestedInput
     goals?: GoalUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutUserInput = {
@@ -32258,6 +36672,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     studyEntries?: StudyEntryUncheckedUpdateManyWithoutSubjectNestedInput
     goals?: GoalUncheckedUpdateManyWithoutSubjectNestedInput
+    focusSessions?: FocusSessionUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateManyWithoutUserInput = {
@@ -32281,6 +36696,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutStudyEntriesNestedInput
+    focusSession?: FocusSessionUpdateOneWithoutStudyEntryNestedInput
   }
 
   export type StudyEntryUncheckedUpdateWithoutUserInput = {
@@ -32293,6 +36709,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    focusSessionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StudyEntryUncheckedUpdateManyWithoutUserInput = {
@@ -32305,6 +36722,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    focusSessionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoalUpdateWithoutUserInput = {
@@ -32727,6 +37145,80 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FocusSessionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutFocusSessionsNestedInput
+    studyEntry?: StudyEntryUpdateOneWithoutFocusSessionNestedInput
+  }
+
+  export type FocusSessionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studyEntry?: StudyEntryUncheckedUpdateOneWithoutFocusSessionNestedInput
+  }
+
+  export type FocusSessionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusPushSubscriptionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusPushSubscriptionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusPushSubscriptionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    p256dh?: StringFieldUpdateOperationsInput | string
+    auth?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StudyEntryCreateManySubjectInput = {
     id?: string
     userId: string
@@ -32737,6 +37229,7 @@ export namespace Prisma {
     mood?: $Enums.StudyMood
     createdAt?: Date | string
     updatedAt?: Date | string
+    focusSessionId?: string | null
   }
 
   export type GoalCreateManySubjectInput = {
@@ -32754,6 +37247,21 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FocusSessionCreateManySubjectInput = {
+    id?: string
+    userId: string
+    chapter?: string | null
+    status?: $Enums.FocusStatus
+    startedAt?: Date | string
+    segmentStartedAt?: Date | string | null
+    checkpointAt?: Date | string | null
+    accumulatedSeconds?: number
+    lastStudiedAt?: Date | string | null
+    endedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type StudyEntryUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32764,6 +37272,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutStudyEntriesNestedInput
+    focusSession?: FocusSessionUpdateOneWithoutStudyEntryNestedInput
   }
 
   export type StudyEntryUncheckedUpdateWithoutSubjectInput = {
@@ -32776,6 +37285,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    focusSessionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StudyEntryUncheckedUpdateManyWithoutSubjectInput = {
@@ -32788,6 +37298,7 @@ export namespace Prisma {
     mood?: EnumStudyMoodFieldUpdateOperationsInput | $Enums.StudyMood
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    focusSessionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoalUpdateWithoutSubjectInput = {
@@ -32831,6 +37342,53 @@ export namespace Prisma {
     isCompleted?: BoolFieldUpdateOperationsInput | boolean
     startsAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endsAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FocusSessionUpdateWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFocusSessionsNestedInput
+    studyEntry?: StudyEntryUpdateOneWithoutFocusSessionNestedInput
+  }
+
+  export type FocusSessionUncheckedUpdateWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studyEntry?: StudyEntryUncheckedUpdateOneWithoutFocusSessionNestedInput
+  }
+
+  export type FocusSessionUncheckedUpdateManyWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    chapter?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFocusStatusFieldUpdateOperationsInput | $Enums.FocusStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmentStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkpointAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulatedSeconds?: IntFieldUpdateOperationsInput | number
+    lastStudiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

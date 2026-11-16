@@ -24,6 +24,9 @@ import { GroupsModule } from './groups/groups.module';
 import { FriendsModule } from './friends/friends.module';
 import { ChatModule } from './chat/chat.module';
 
+import { FocusModule } from './focus/focus.module';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -44,6 +47,8 @@ import { ChatModule } from './chat/chat.module';
     GroupsModule,
     FriendsModule,
     ChatModule,
+    FocusModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],

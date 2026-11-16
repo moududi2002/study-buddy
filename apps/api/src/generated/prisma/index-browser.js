@@ -188,7 +188,8 @@ exports.Prisma.StudyEntryScalarFieldEnum = {
   note: 'note',
   mood: 'mood',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  focusSessionId: 'focusSessionId'
 };
 
 exports.Prisma.GoalScalarFieldEnum = {
@@ -306,6 +307,32 @@ exports.Prisma.FriendshipScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FocusSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subjectId: 'subjectId',
+  chapter: 'chapter',
+  status: 'status',
+  startedAt: 'startedAt',
+  segmentStartedAt: 'segmentStartedAt',
+  checkpointAt: 'checkpointAt',
+  accumulatedSeconds: 'accumulatedSeconds',
+  lastStudiedAt: 'lastStudiedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FocusPushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -408,6 +435,12 @@ exports.FriendshipStatus = exports.$Enums.FriendshipStatus = {
   DECLINED: 'DECLINED'
 };
 
+exports.FocusStatus = exports.$Enums.FocusStatus = {
+  RUNNING: 'RUNNING',
+  WAITING: 'WAITING',
+  COMPLETED: 'COMPLETED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OtpToken: 'OtpToken',
@@ -424,7 +457,9 @@ exports.Prisma.ModelName = {
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
-  Friendship: 'Friendship'
+  Friendship: 'Friendship',
+  FocusSession: 'FocusSession',
+  FocusPushSubscription: 'FocusPushSubscription'
 };
 
 /**

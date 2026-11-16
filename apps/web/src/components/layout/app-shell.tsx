@@ -28,6 +28,10 @@ import { toBnDigits } from '@/lib/bn';
 import { cn } from '@/lib/utils';
 import { NotificationBell } from '@/components/notifications/notification-bell';
 import { useSocket } from '@/lib/hooks/use-socket';
+import { disableFocusNotifications } from '@/lib/focus-notification';
+
+import { Timer } from 'lucide-react';
+
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'হোম', icon: Home },
@@ -35,6 +39,8 @@ const NAV_ITEMS = [
   { href: '/analytics', label: 'রিপোর্ট', icon: BarChart3 },
   { href: '/goals', label: 'লক্ষ্য', icon: Target },
   { href: '/achievements', label: 'ব্যাজ', icon: Trophy },
+  { href: '/focus', label: 'ফোকাস', icon: Timer },
+
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -70,10 +76,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     };
   }, [socket]);
 
+
   const handleLogout = async () => {
+    try {
+      await disableFocusNotifications();
+    } catch {
+      // Logout must still work if push service is unavailable.
+    }
+
     await logout();
     router.replace('/login');
   };
+
 
   if (!user) return null;
 
@@ -160,7 +174,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="mx-auto max-w-5xl px-4 py-6">{children}</main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/90 backdrop-blur-lg border-t border-lavender-200 pb-safe">
-        <div className="mx-auto max-w-md grid grid-cols-5">
+        <div className="mx-auto max-w-xl grid grid-cols-6">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + '/');
             return (

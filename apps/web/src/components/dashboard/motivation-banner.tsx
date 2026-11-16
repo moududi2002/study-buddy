@@ -12,7 +12,7 @@ export function MotivationBanner({ message }: { message: string }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="relative overflow-hidden rounded-3xl gradient-primary p-5 shadow-soft-lg"
+      className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 p-5 shadow-lg shadow-purple-200/40"
     >
       {/* Floating sparkles */}
       <motion.div

@@ -43,6 +43,12 @@ enum FriendshipStatus {
   DECLINED
 }
 
+enum FocusStatus {
+  RUNNING
+  WAITING
+  COMPLETED
+}
+
 enum BadgeCode {
   FIRST_STUDY_ENTRY
   SEVEN_DAY_STREAK
@@ -109,6 +115,9 @@ model User {
 
   friendshipsAsLow  Friendship[] @relation("FriendLow")
   friendshipsAsHigh Friendship[] @relation("FriendHigh")
+
+  focusSessions      FocusSession[]
+  focusSubscriptions FocusPushSubscription[]
 
   @@index([email])
   @@index([username])
@@ -177,6 +186,8 @@ model Subject {
   studyEntries StudyEntry[]
   goals        Goal[]
 
+  focusSessions FocusSession[]
+
   @@unique([userId, name])
   @@index([userId])
 }
@@ -196,9 +207,12 @@ model StudyEntry {
   mood            StudyMood @default(NEUTRAL)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  focusSessionId  String?   @unique
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  focusSession FocusSession? @relation(fields: [focusSessionId], references: [id], onDelete: SetNull)
 
   @@index([userId, date])
   @@index([userId, subjectId])
@@ -471,4 +485,46 @@ model Friendship {
   @@unique([userLowId, userHighId])
   @@index([userLowId, status])
   @@index([userHighId, status])
+}
+
+model FocusSession {
+  id        String @id @default(cuid())
+  userId    String
+  subjectId String
+
+  chapter String?
+
+  status FocusStatus @default(RUNNING)
+
+  startedAt          DateTime  @default(now())
+  segmentStartedAt   DateTime?
+  checkpointAt       DateTime?
+  accumulatedSeconds Int       @default(0)
+  lastStudiedAt      DateTime?
+  endedAt            DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject    Subject     @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  studyEntry StudyEntry?
+
+  @@index([userId, status])
+  @@index([status, checkpointAt])
+  @@index([userId, startedAt])
+}
+
+model FocusPushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique @db.Text
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

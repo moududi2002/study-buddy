@@ -36,6 +36,11 @@ interface StudyEntry {
   note: string | null;
   mood: 'HAPPY' | 'NEUTRAL' | 'SAD';
   createdAt: string;
+
+  source?: 'FOCUS' | 'MANUAL';
+  focusStartedAt?: string | null;
+  focusEndedAt?: string | null;
+
 }
 
 interface TodayResponse {
@@ -386,6 +391,41 @@ export default function TrackerPage() {
                           "{e.note}"
                         </p>
                       )}
+
+                      {e.source === 'FOCUS' &&
+                        e.focusStartedAt &&
+                        e.focusEndedAt && (
+                          <div className="mt-3 rounded-xl border border-violet-100 bg-violet-50 p-3">
+                            <p className="text-xs font-bold text-violet-800">
+                              🎯 Auto Focus Session
+                            </p>
+
+                            <p className="mt-1 text-xs text-violet-600">
+                              {new Intl.DateTimeFormat('bn-BD', {
+                                timeZone: 'Asia/Dhaka',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                              }).format(new Date(e.focusStartedAt))}
+                            </p>
+
+                            <p className="mt-1 text-sm font-semibold text-violet-800">
+                              {new Intl.DateTimeFormat('bn-BD', {
+                                timeZone: 'Asia/Dhaka',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              }).format(new Date(e.focusStartedAt))}
+                              {' থেকে '}
+                              {new Intl.DateTimeFormat('bn-BD', {
+                                timeZone: 'Asia/Dhaka',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              }).format(new Date(e.focusEndedAt))}
+                            </p>
+                          </div>
+                        )}
+
+
                     </div>
                     <button
                       onClick={() => remove(e.id)}

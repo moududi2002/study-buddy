@@ -213,6 +213,93 @@ export default function DashboardPage() {
       {/* Motivation banner */}
       <MotivationBanner message={dashboard.motivation} />
 
+
+    {/* Focus Mode shortcut */}
+    
+    <Link href="/focus" className="block">
+      <motion.div
+        whileHover={{ y: -4, scale: 1.01 }}
+        whileTap={{ scale: 0.985 }}
+        className="group relative isolate overflow-hidden rounded-3xl
+          bg-gradient-to-r from-violet-700 via-purple-700 to-fuchsia-700
+          p-5 text-white shadow-xl shadow-purple-300/40
+          transition-all duration-300 hover:shadow-2xl
+          hover:shadow-purple-400/40 sm:p-6"
+      >
+        {/* Decorative background */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -right-12 -top-16 h-48 w-48 rounded-full bg-fuchsia-400/20 blur-3xl" />
+          <div className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-blue-400/20 blur-3xl" />
+        </div>
+
+        {/* Floating target icon */}
+        <motion.div
+          animate={{
+            rotate: [0, 8, -8, 0],
+            y: [0, -5, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="pointer-events-none absolute -right-4 -top-7 text-8xl opacity-20"
+        >
+          🎯
+        </motion.div>
+
+        <div className="relative flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
+
+            {/* Main icon */}
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center
+              rounded-2xl border border-white/30 bg-white/20
+              text-4xl shadow-inner backdrop-blur-md">
+              ⏱️
+            </div>
+
+            {/* Content */}
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-[0.2em]
+                text-violet-100">
+                Study Focus
+              </p>
+
+              <h2 className="mt-1 text-xl font-extrabold tracking-tight
+                text-white sm:text-2xl">
+                Focus Mode
+              </h2>
+
+              <p className="mt-1 text-sm font-medium leading-relaxed
+                text-white/90">
+                মন দিয়ে পড়ো, Tracker নিজেই আপডেট হবে।
+              </p>
+            </div>
+          </div>
+
+          {/* Arrow */}
+          <span className="flex h-11 w-11 shrink-0 items-center
+            justify-center rounded-full border border-white/30
+            bg-white/20 text-white shadow-sm backdrop-blur-md
+            transition-all duration-300
+            group-hover:translate-x-1 group-hover:bg-white/30">
+            <ArrowRight size={22} />
+          </span>
+        </div>
+
+        {/* Feature badge */}
+        <div className="relative mt-5 inline-flex items-center gap-2
+          rounded-full border border-white/25 bg-black/15
+          px-4 py-2 text-xs font-bold text-white shadow-sm
+          backdrop-blur-md sm:text-sm">
+          <Clock size={15} />
+          <span>৩ ঘণ্টার Checkpoint ও Background Alarm</span>
+        </div>
+      </motion.div>
+    </Link>
+
+
+
       {/* Today's quick stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard
