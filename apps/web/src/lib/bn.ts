@@ -15,9 +15,30 @@ export const BN_MONTHS = [
 
 export const BN_WEEKDAYS_SHORT = ['শনি', 'রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র'];
 
+
 export function formatBnDate(iso: string): string {
-  const d = new Date(iso);
-  return `${toBnDigits(d.getDate())} ${BN_MONTHS[d.getMonth()]}, ${toBnDigits(d.getFullYear())}`;
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+
+  if (dateOnly) {
+    const year = Number(dateOnly[1]);
+    const month = Number(dateOnly[2]);
+    const day = Number(dateOnly[3]);
+
+    return `${toBnDigits(day)} ${BN_MONTHS[month - 1]}, ${toBnDigits(year)}`;
+  }
+
+  const date = new Date(iso);
+
+  if (Number.isNaN(date.getTime())) {
+    return 'তারিখ পাওয়া যায়নি';
+  }
+
+  return new Intl.DateTimeFormat('bn-BD', {
+    timeZone: 'Asia/Dhaka',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
 }
 
 export function formatMinutes(minutes: number): string {

@@ -50,6 +50,7 @@ interface Goal {
   currentChapters: number;
   isAchieved: boolean;
   daysRemaining: number;
+  isExpired: boolean;
 }
 
 const TYPE_LABEL: Record<Goal['type'], string> = {
@@ -68,16 +69,17 @@ export default function GoalsPage() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'active' | 'completed'>('active');
+  const [tab, setTab] = useState<'active' | 'completed' | 'expired'>('active');
   const [open, setOpen] = useState(false);
 
   // Form
   const [title, setTitle] = useState('');
   const [type, setType] = useState<Goal['type']>('DAILY');
-  const [targetMinutes, setTargetMinutes] = useState(120);
+  const [targetMinutes, setTargetMinutes] = useState<number | ''>('');
   const [targetChapters, setTargetChapters] = useState<number | ''>('');
   const [subjectId, setSubjectId] = useState('');
   const [saving, setSaving] = useState(false);
+  const [completingId, setCompletingId] = useState<string | null>(null);
 
   const load = async () => {
     try {
@@ -102,56 +104,112 @@ export default function GoalsPage() {
   const resetForm = () => {
     setTitle('');
     setType('DAILY');
-    setTargetMinutes(120);
+    setTargetMinutes('');;
     setTargetChapters('');
     setSubjectId('');
   };
 
+ 
   const create = async () => {
-    if (!title.trim()) {
-      toast.error('লক্ষ্যের নাম দাও');
+    const cleanTitle = title.trim();
+
+    const minutes =
+      targetMinutes === '' ? undefined : targetMinutes;
+
+    const chapters =
+      targetChapters === '' ? undefined : targetChapters;
+
+    if (cleanTitle.length < 2) {
+      toast.error('লক্ষ্যের নাম কমপক্ষে ২ অক্ষরের হতে হবে');
       return;
     }
-    if (!targetMinutes && !targetChapters) {
-      toast.error('সময় অথবা অধ্যায় লক্ষ্য দাও');
+
+    if (minutes === undefined && chapters === undefined) {
+      toast.error('সময় অথবা অধ্যায়ের লক্ষ্য নির্ধারণ করো');
       return;
     }
+
+    if (
+      minutes !== undefined &&
+      (!Number.isInteger(minutes) ||
+        minutes < 1 ||
+        minutes > 100000)
+    ) {
+      toast.error('মিনিটের লক্ষ্য ১ থেকে ১০০০০০ হতে হবে');
+      return;
+    }
+
+    if (
+      chapters !== undefined &&
+      (!Number.isInteger(chapters) ||
+        chapters < 1 ||
+        chapters > 500)
+    ) {
+      toast.error('অধ্যায়ের লক্ষ্য ১ থেকে ৫০০ হতে হবে');
+      return;
+    }
+
     setSaving(true);
+
     try {
-      const res = await api.post<{ success: true; message: string }>('/goals', {
-        title: title.trim(),
+      const response = await api.post<{
+        success: true;
+        message: string;
+      }>('/goals', {
+        title: cleanTitle,
         type,
-        targetMinutes: targetMinutes || undefined,
-        targetChapters: targetChapters || undefined,
+        targetMinutes: minutes,
+        targetChapters: chapters,
         subjectId: subjectId || undefined,
       });
-      toast.success(res.message);
+
+      toast.success(response.message);
       setOpen(false);
       resetForm();
+
       await load();
     } catch (err) {
-      const e = err as ApiError;
-      toast.error(e.message || 'সংরক্ষণ করা যায়নি');
+      const error = err as ApiError;
+
+      toast.error(
+        error.message || 'লক্ষ্য সংরক্ষণ করা যায়নি',
+      );
     } finally {
       setSaving(false);
     }
   };
 
+
   const { fire } = useConfetti();
 
-      const markComplete = async (g: Goal) => {
-      try {
-        const res = await api.patch<{ success: true; message: string }>(`/goals/${g.id}`, {
-          isCompleted: true,
-        });
-        fire(); // 🎉 confetti
-        toast.success('লক্ষ্য পূরণ! 🎉');
-        await load();
-      } catch (err) {
-        const e = err as ApiError;
-        toast.error(e.message || 'সমস্যা হয়েছে');
-      }
-    };
+
+  const markComplete = async (goal: Goal) => {
+    if (completingId || !goal.isAchieved || goal.isCompleted) {
+      return;
+    }
+
+    setCompletingId(goal.id);
+
+    try {
+      await api.patch(`/goals/${goal.id}`, {
+        isCompleted: true,
+      });
+
+      fire();
+      toast.success('অভিনন্দন! লক্ষ্য সম্পন্ন হয়েছে 🎉');
+
+      await load();
+    } catch (err) {
+      const error = err as ApiError;
+
+      toast.error(
+        error.message || 'লক্ষ্য সম্পন্ন করা যায়নি',
+      );
+    } finally {
+      setCompletingId(null);
+    }
+  };
+
 
   const remove = async (g: Goal) => {
     if (!confirm(`"${g.title}" লক্ষ্যটি মুছে ফেলবে?`)) return;
@@ -165,9 +223,26 @@ export default function GoalsPage() {
     }
   };
 
-  const filtered = goals.filter((g) =>
-    tab === 'active' ? !g.isCompleted : g.isCompleted,
+  
+  const activeGoals = goals.filter(
+    (goal) => !goal.isCompleted && !goal.isExpired,
   );
+
+  const completedGoals = goals.filter(
+    (goal) => goal.isCompleted,
+  );
+
+  const expiredGoals = goals.filter(
+    (goal) => !goal.isCompleted && goal.isExpired,
+  );
+
+  const filtered =
+    tab === 'active'
+      ? activeGoals
+      : tab === 'completed'
+        ? completedGoals
+        : expiredGoals;
+
 
   if (loading) {
     return (
@@ -209,22 +284,38 @@ export default function GoalsPage() {
         </Button>
       </div>
 
-      <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
-        <TabsList className="grid grid-cols-2 w-full bg-lavender-100 rounded-2xl p-1">
-          <TabsTrigger value="active">
-            চলমান ({toBnDigits(goals.filter((g) => !g.isCompleted).length)})
-          </TabsTrigger>
-          <TabsTrigger value="completed">
-            সম্পন্ন ({toBnDigits(goals.filter((g) => g.isCompleted).length)})
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+     
+        <Tabs
+          value={tab}
+          onValueChange={(value) =>
+            setTab(value as 'active' | 'completed' | 'expired')
+          }
+        >
+          <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-lavender-100 p-1">
+            <TabsTrigger value="active">
+              চলমান ({toBnDigits(activeGoals.length)})
+            </TabsTrigger>
+
+            <TabsTrigger value="completed">
+              সম্পন্ন ({toBnDigits(completedGoals.length)})
+            </TabsTrigger>
+
+            <TabsTrigger value="expired">
+              মেয়াদ শেষ ({toBnDigits(expiredGoals.length)})
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
 
       {filtered.length === 0 ? (
         <div className="card-soft p-8 text-center">
           <div className="text-5xl mb-2">🌸</div>
           <p className="text-sm text-primary-500 mb-4">
-            {tab === 'active' ? 'এখনো কোনো লক্ষ্য নেই। একটা বানাও!' : 'এখনো কিছু সম্পন্ন হয়নি, চেষ্টা চালিয়ে যাও!'}
+            {tab === 'active'
+            ? 'এখন কোনো চলমান লক্ষ্য নেই। নতুন লক্ষ্য তৈরি করো!'
+            : tab === 'completed'
+              ? 'এখনো কোনো লক্ষ্য সম্পন্ন হয়নি।'
+              : 'মেয়াদ শেষ হওয়া কোনো লক্ষ্য নেই।'}
           </p>
           {tab === 'active' && (
             <Button onClick={() => setOpen(true)} variant="soft">
@@ -300,6 +391,26 @@ export default function GoalsPage() {
                   )}
                 </div>
 
+
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-lavender-100 px-3 py-2">
+                  <span className="text-xs font-semibold text-primary-600">
+                    সামগ্রিক অগ্রগতি
+                  </span>
+
+                  <span className="text-sm font-bold text-primary-800">
+                    {toBnDigits(g.progressPercent)}%
+                  </span>
+                </div>
+
+                {!g.isCompleted && g.isExpired && (
+                  <div className="mt-2">
+                    <Badge color="gray">
+                      সময়সীমা শেষ
+                    </Badge>
+                  </div>
+                )}
+
+
                 {!g.isCompleted && g.isAchieved && (
                   <Button
                     onClick={() => markComplete(g)}
@@ -311,6 +422,8 @@ export default function GoalsPage() {
                     লক্ষ্য পূরণ হয়েছে — সম্পন্ন করো
                   </Button>
                 )}
+                loading={completingId === g.id}
+                disabled={completingId !== null}
               </motion.div>
             ))}
           </AnimatePresence>
@@ -362,22 +475,39 @@ export default function GoalsPage() {
                 <Label>লক্ষ্য (মিনিট)</Label>
                 <Input
                   type="number"
-                  min={0}
+                  min={1}
+                  max={100000}
+                  step={1}
                   value={targetMinutes}
-                  onChange={(e) => setTargetMinutes(Number(e.target.value))}
+                  onChange={(e) =>
+                    setTargetMinutes(
+                      e.target.value === ''
+                        ? ''
+                        : Number(e.target.value),
+                    )
+                  }
+                  placeholder="যেমন: ১২০"
                 />
+
               </div>
               <div>
-                <Label>লক্ষ্য (অধ্যায়)</Label>
+                <Label>লক্ষ্য (অধ্যায়)</Label> 
                 <Input
                   type="number"
-                  min={0}
+                  min={1}
+                  max={500}
+                  step={1}
                   value={targetChapters}
                   onChange={(e) =>
-                    setTargetChapters(e.target.value ? Number(e.target.value) : '')
+                    setTargetChapters(
+                      e.target.value === ''
+                        ? ''
+                        : Number(e.target.value),
+                    )
                   }
                   placeholder="ঐচ্ছিক"
                 />
+
               </div>
             </div>
 

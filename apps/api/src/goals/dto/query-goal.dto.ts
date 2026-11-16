@@ -15,13 +15,21 @@ export class QueryGoalDto {
 
   @ApiPropertyOptional({ example: false })
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @Transform(({ value }) => {
+  if (value === true || value === 'true') return true;
+  if (value === false || value === 'false') return false;
+  return value;
+})
   @IsBoolean()
   isCompleted?: boolean;
 
   @ApiPropertyOptional({ example: true, description: 'শুধু চলমান (endsAt >= today)' })
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @Transform(({ value }) => {
+  if (value === true || value === 'true') return true;
+  if (value === false || value === 'false') return false;
+  return value;
+})
   @IsBoolean()
   active?: boolean;
 }

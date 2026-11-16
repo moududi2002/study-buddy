@@ -13,14 +13,12 @@ import {
   Flame,
   Target,
   TrendingUp,
-  Sparkles,
-  Trophy,
   ArrowRight,
   Loader2,
 } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
 import { useAuthStore } from '@/lib/stores/auth.store';
-import { greetingBn, toBnDigits, formatMinutes, formatMinutesShort } from '@/lib/bn';
+import { greetingBn, toBnDigits, formatMinutesShort } from '@/lib/bn';
 import {
   DashboardResponse,
   LevelInfo,
@@ -31,12 +29,16 @@ import {
 import { StatCard } from '@/components/dashboard/stat-card';
 import { MotivationBanner } from '@/components/dashboard/motivation-banner';
 import { SectionHeader } from '@/components/dashboard/section';
-import { ProgressRing } from '@/components/charts/progress-ring';
+
 import { StudyLineChart } from '@/components/charts/study-line-chart';
 import { SubjectPieChart } from '@/components/charts/subject-pie-chart';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+
+
+import { DailyGoalCard } from '@/components/dashboard/daily-goal-card';
+
 
 const BADGE_ICONS: Record<string, string> = {
   FIRST_STUDY_ENTRY: '🌱',
@@ -51,7 +53,7 @@ const BADGE_ICONS: Record<string, string> = {
   NIGHT_OWL: '🌙',
 };
 
-const DAILY_TARGET_MINUTES = 120; // 2 hours goal display
+
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
@@ -61,38 +63,98 @@ export default function DashboardPage() {
   const [weekly, setWeekly] = useState<WeeklyAnalytics | null>(null);
   const [insight, setInsight] = useState<AiInsight | null>(null);
   const [badges, setBadges] = useState<BadgeInfo[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
+
+    async function loadEssentialData() {
       try {
-        const [d, l, w, ai, b] = await Promise.all([
-          api.get<{ success: true; data: DashboardResponse }>('/analytics/dashboard'),
-          api.get<{ success: true; data: LevelInfo }>('/gamification/level'),
-          api.get<{ success: true; data: WeeklyAnalytics }>('/analytics/weekly'),
-          api.get<{ success: true; data: AiInsight }>('/ai/weekly-insight'),
-          api.get<{ success: true; data: { items: BadgeInfo[] } }>('/gamification/badges'),
-        ]);
+        setLoading(true);
+        setLoadError(null);
+
+        const [dashboardResponse, levelResponse, weeklyResponse] =
+          await Promise.all([
+            api.get<{
+              success: true;
+              data: DashboardResponse;
+            }>('/analytics/dashboard'),
+
+            api.get<{
+              success: true;
+              data: LevelInfo;
+            }>('/gamification/level'),
+
+            api.get<{
+              success: true;
+              data: WeeklyAnalytics;
+            }>('/analytics/weekly'),
+          ]);
+
         if (cancelled) return;
-        setDashboard(d.data);
-        setLevel(l.data);
-        setWeekly(w.data);
-        setInsight(ai.data);
-        setBadges(b.data.items.filter((x) => x.earned).slice(0, 4));
+
+        setDashboard(dashboardResponse.data);
+        setLevel(levelResponse.data);
+        setWeekly(weeklyResponse.data);
       } catch (err) {
-        const e = err as ApiError;
-        console.error(e);
+        if (cancelled) return;
+
+        console.error('Dashboard load failed:', err);
+
+        const error = err as ApiError;
+
+        setLoadError(
+          error.message || 'ড্যাশবোর্ড লোড করা যায়নি',
+        );
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
-    load();
+
+    async function loadOptionalData() {
+      const results = await Promise.allSettled([
+        api.get<{
+          success: true;
+          data: AiInsight;
+        }>('/ai/weekly-insight'),
+
+        api.get<{
+          success: true;
+          data: { items: BadgeInfo[] };
+        }>('/gamification/badges'),
+      ]);
+
+      if (cancelled) return;
+
+      const [aiResult, badgeResult] = results;
+
+      if (aiResult.status === 'fulfilled') {
+        setInsight(aiResult.value.data);
+      }
+
+      if (badgeResult.status === 'fulfilled') {
+        setBadges(
+          badgeResult.value.data.items
+            .filter((badge) => badge.earned)
+            .slice(0, 4),
+        );
+      }
+    }
+
+    void loadEssentialData();
+    void loadOptionalData();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
-  if (loading || !dashboard || !level || !weekly) {
+
+  if (loading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
         <motion.div
@@ -110,8 +172,33 @@ export default function DashboardPage() {
     );
   }
 
+  
+  if (loadError || !dashboard || !level || !weekly) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
+        <span className="text-5xl">🐱</span>
+
+        <h2 className="text-xl font-bold text-primary-800">
+          ড্যাশবোর্ড লোড করতে সমস্যা হয়েছে
+        </h2>
+
+        <p className="max-w-md text-sm text-primary-500">
+          {loadError || 'প্রয়োজনীয় তথ্য পাওয়া যায়নি।'}
+        </p>
+
+        <Button
+          onClick={() => window.location.reload()}
+          variant="secondary"
+        >
+          আবার চেষ্টা করো
+        </Button>
+      </div>
+    );
+  }
+
+  
   const todayMinutes = dashboard.today.minutes;
-  const goalPercent = Math.min(100, Math.round((todayMinutes / DAILY_TARGET_MINUTES) * 100));
+  
 
   return (
     <div className="space-y-5">
@@ -162,23 +249,10 @@ export default function DashboardPage() {
       {/* Big two-column: goal ring + level */}
       <div className="grid md:grid-cols-2 gap-4">
         {/* Today goal ring */}
-        <div className="card-soft p-5 flex flex-col items-center">
-          <SectionHeader emoji="🎯" title="আজকের লক্ষ্য" className="w-full" />
-          <ProgressRing
-            value={goalPercent}
-            size={160}
-            label={`${toBnDigits(goalPercent)}%`}
-            sublabel={`${formatMinutesShort(todayMinutes)} / ২ ঘণ্টা`}
-            emoji={goalPercent >= 100 ? '🎉' : '📚'}
-          />
-          <p className="mt-3 text-sm text-primary-600 text-center">
-            {goalPercent >= 100
-              ? 'আজকের লক্ষ্য পূরণ! দারুণ করেছো 🌟'
-              : todayMinutes > 0
-                ? `আরও ${formatMinutesShort(DAILY_TARGET_MINUTES - todayMinutes)} পড়লেই আজকের লক্ষ্য পূরণ!`
-                : 'ছোট করে হলেও শুরু করো — স্ট্রিক গড়ে উঠবে ✨'}
-          </p>
-        </div>
+        
+          {/* Dynamic daily goal */}
+          <DailyGoalCard />
+
 
         {/* Level progress */}
         <div className="card-soft p-5 flex flex-col">
@@ -258,9 +332,14 @@ export default function DashboardPage() {
               )
             }
           />
-          <div className="rounded-2xl bg-gradient-to-br from-lavender-100 to-pink-soft-100 p-4">
+          <div className="rounded-2xl .bg-gradient-to-br {
+              --tw-gradient-position: to bottom right in oklab;
+              background-image: linear-gradient(var(--tw-gradient-stops));
+              } from-lavender-100 to-pink-soft-100 p-4">
             <p className="text-sm text-primary-700 leading-relaxed">
-              {insight?.insight ?? 'কিছুক্ষণ পর আবার দেখা যাবে...'}
+              {insight?.insight ??
+              weekly.suggestions?.[0] ??
+              'নিয়মিত পড়াশোনা চালিয়ে যাও। প্রতিদিনের ছোট অগ্রগতিও গুরুত্বপূর্ণ!'}
             </p>
           </div>
          {insight && (
@@ -302,24 +381,60 @@ export default function DashboardPage() {
             {dashboard.activeGoals.slice(0, 3).map((g) => (
               <div
                 key={g.id}
-                className="card-soft p-4 flex items-center gap-3 hover:shadow-soft-lg transition-shadow"
+                className="card-soft p-4 transition-shadow hover:shadow-soft-lg"
               >
-                <div className="text-2xl">🎯</div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-primary-800 text-sm truncate">
-                    {g.title}
-                  </p>
-                  <p className="text-xs text-primary-500">
-                    {g.type === 'DAILY' && 'আজকের'}
-                    {g.type === 'WEEKLY' && 'সাপ্তাহিক'}
-                    {g.type === 'MONTHLY' && 'মাসিক'}
-                    {g.targetMinutes && ` · ${formatMinutesShort(g.targetMinutes)}`}
-                  </p>
+                <div className="flex items-start gap-3">
+                  <div className="rounded-2xl bg-lavender-100 p-2.5 text-2xl">
+                    🎯
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="truncate text-sm font-bold text-primary-800">
+                        {g.title}
+                      </p>
+
+                      <Badge color={g.isAchieved ? 'mint' : 'primary'}>
+                        {toBnDigits(g.progressPercent)}%
+                      </Badge>
+                    </div>
+
+                    <p className="mt-1 text-xs text-primary-500">
+                      {g.type === 'DAILY'
+                        ? 'আজকের'
+                        : g.type === 'WEEKLY'
+                          ? 'সাপ্তাহিক'
+                          : 'মাসিক'}
+                      {g.subject && ` · ${g.subject.name}`}
+                    </p>
+
+                    <div className="mt-3">
+                      <Progress value={g.progressPercent} />
+                    </div>
+
+                    <div className="mt-2 flex flex-wrap justify-between gap-2 text-xs text-primary-500">
+                      <span>
+                        {g.targetMinutes != null &&
+                          `${formatMinutesShort(g.currentMinutes)} / ${formatMinutesShort(g.targetMinutes)}`}
+
+                        {g.targetMinutes != null &&
+                          g.targetChapters != null &&
+                          ' · '}
+
+                        {g.targetChapters != null &&
+                          `${toBnDigits(g.currentChapters)} / ${toBnDigits(g.targetChapters)} অধ্যায়`}
+                      </span>
+
+                      <span>
+                        {g.isAchieved
+                          ? '🎉 অর্জিত'
+                          : `${toBnDigits(g.daysRemaining)} দিন বাকি`}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <Badge color="primary">
-                  {g.endsAt.slice(-2).replace(/^0/, '')} তারিখ পর্যন্ত
-                </Badge>
               </div>
+
             ))}
           </div>
         </div>

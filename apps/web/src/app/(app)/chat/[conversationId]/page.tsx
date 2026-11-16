@@ -48,8 +48,7 @@ const PRESET_EMOJI: Record<string, string> = {
   bunny_reader: '📚',
 };
 
-const voiceRecorder = useVoiceRecorder();
-const [uploadingVoice, setUploadingVoice] = useState(false);
+
 
 
 export default function ChatRoomPage() {
@@ -73,6 +72,10 @@ export default function ChatRoomPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTypingRef = useRef(false);
+
+
+  const voiceRecorder = useVoiceRecorder();
+  const [uploadingVoice, setUploadingVoice] = useState(false);
 
   // Load conversation + messages
   useEffect(() => {
@@ -703,6 +706,41 @@ export default function ChatRoomPage() {
               <ImageIcon size={18} />
             )}
           </button>
+
+          <button
+            onClick={voiceRecorder.recording ? sendVoice : startVoice}
+            disabled={uploadingVoice || !connected}
+            className={cn(
+              'h-11 w-11 shrink-0 rounded-2xl flex items-center justify-center transition-all',
+              voiceRecorder.recording
+                ? 'bg-red-500 text-white animate-pulse'
+                : 'bg-lavender-100 text-primary-500 hover:bg-lavender-200',
+            )}
+            title={
+              voiceRecorder.recording
+                ? 'Voice পাঠাও'
+                : 'Voice record'
+            }
+          >
+            {uploadingVoice ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : voiceRecorder.recording ? (
+              <Send size={18} />
+            ) : (
+              <Mic size={18} />
+            )}
+          </button>
+
+          {voiceRecorder.recording && (
+            <button
+              onClick={voiceRecorder.cancel}
+              className="h-11 px-3 rounded-2xl bg-red-50 text-red-500 text-xs"
+            >
+              বাতিল
+            </button>
+          )}
+
+
           <input
             ref={fileInputRef}
             type="file"

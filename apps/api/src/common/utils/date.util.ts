@@ -2,50 +2,93 @@
 // Path: apps/api/src/common/utils/date.util.ts
 // ============================================================
 
+
+const STUDY_TIMEZONE = 'Asia/Dhaka';
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+  timeZone: STUDY_TIMEZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
 export class DateUtil {
-  // Get start of day (00:00:00) in local time
-  static startOfDay(d: Date = new Date()): Date {
-    const x = new Date(d);
-    x.setHours(0, 0, 0, 0);
-    return x;
+  static toDateOnly(value: Date | string): Date {
+    if (
+      typeof value === 'string' &&
+      /^\d{4}-\d{2}-\d{2}$/.test(value)
+    ) {
+      const date = new Date(`${value}T00:00:00.000Z`);
+      if (Number.isNaN(date.getTime())) {
+        throw new Error('Invalid date');
+      }
+      return date;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      throw new Error('Invalid date');
+    }
+
+    const parts = dateFormatter.formatToParts(date);
+    const get = (type: string) =>
+      Number(parts.find((p) => p.type === type)?.value);
+
+    return new Date(
+      Date.UTC(get('year'), get('month') - 1, get('day')),
+    );
   }
 
-  // Normalize to date-only (for @db.Date fields)
-  static toDateOnly(d: Date | string): Date {
-    const x = typeof d === 'string' ? new Date(d) : new Date(d);
-    return new Date(Date.UTC(x.getFullYear(), x.getMonth(), x.getDate()));
+  static startOfDay(date: Date = new Date()): Date {
+    return this.toDateOnly(date);
   }
 
-  // YYYY-MM-DD
-  static toISODate(d: Date): string {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+  static toISODate(date: Date): string {
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
-  // Difference in days between two dates (date-only)
   static diffDays(a: Date, b: Date): number {
-    const ms = this.startOfDay(a).getTime() - this.startOfDay(b).getTime();
-    return Math.floor(ms / (1000 * 60 * 60 * 24));
+    const first = this.toDateOnly(a).getTime();
+    const second = this.toDateOnly(b).getTime();
+
+    return Math.round((first - second) / DAY_MS);
   }
 
-  // Get start (Saturday) and end (Friday) of the week containing given date
-  static getWeekRange(d: Date = new Date()): { start: Date; end: Date } {
-    const date = this.startOfDay(d);
-    const day = date.getDay(); // 0=Sun, 6=Sat
-    // Bangladesh week starts Saturday
-    const diffToSat = (day + 1) % 7; // Sat=0, Sun=1, ... Fri=6
-    const start = new Date(date);
-    start.setDate(date.getDate() - diffToSat);
+  static getWeekRange(
+    date: Date = new Date(),
+  ): { start: Date; end: Date } {
+    const today = this.toDateOnly(date);
+
+    // Bangladesh study week: Saturday to Friday
+    const daysSinceSaturday = (today.getUTCDay() + 1) % 7;
+
+    const start = new Date(today);
+    start.setUTCDate(
+      today.getUTCDate() - daysSinceSaturday,
+    );
+
     const end = new Date(start);
-    end.setDate(start.getDate() + 6);
+    end.setUTCDate(start.getUTCDate() + 6);
+
     return { start, end };
   }
 
-  static getMonthRange(d: Date = new Date()): { start: Date; end: Date } {
-    const start = new Date(d.getFullYear(), d.getMonth(), 1);
-    const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    return { start: this.startOfDay(start), end: this.startOfDay(end) };
+  static getMonthRange(
+    date: Date = new Date(),
+  ): { start: Date; end: Date } {
+    const today = this.toDateOnly(date);
+    const year = today.getUTCFullYear();
+    const month = today.getUTCMonth();
+
+    return {
+      start: new Date(Date.UTC(year, month, 1)),
+      end: new Date(Date.UTC(year, month + 1, 0)),
+    };
   }
 }

@@ -83,7 +83,7 @@ export class AuthController {
   // ----------------------------------------------------------
   // POST /auth/refresh
   // ----------------------------------------------------------
-  @Public()
+    @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Access token রিফ্রেশ' })
@@ -92,15 +92,37 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const rawRefresh = req.cookies?.[REFRESH_COOKIE];
-    const result = await this.authService.refresh(rawRefresh, {
-      userAgent: req.headers['user-agent'],
-      ipAddress: req.ip,
-    });
-    this.setRefreshCookie(res, result.data.refreshToken, false);
-    return {
-      message: result.message,
-      data: { user: result.data.user, accessToken: result.data.accessToken },
-    };
+
+    try {
+      const result = await this.authService.refresh(rawRefresh, {
+        userAgent: req.headers['user-agent'],
+        ipAddress: req.ip,
+      });
+
+      this.setRefreshCookie(res, result.data.refreshToken, false);
+
+      return {
+        message: result.message,
+        data: {
+          user: result.data.user,
+          accessToken: result.data.accessToken,
+        },
+      };
+    } catch (error) {
+      // Invalid/expired/revoked refresh token অথবা
+      // database থেকে user delete হয়ে গেলে stale cookie remove করো
+      res.clearCookie(REFRESH_COOKIE, {
+        httpOnly: true,
+        secure: this.config.get<string>('NODE_ENV') === 'production',
+        sameSite:
+          this.config.get<string>('NODE_ENV') === 'production'
+            ? 'strict'
+            : 'lax',
+        path: '/',
+      });
+
+      throw error;
+    }
   }
 
   // ----------------------------------------------------------

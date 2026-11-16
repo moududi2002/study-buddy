@@ -8,12 +8,18 @@ import { DateUtil } from '../common/utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 
+import { GoalsService } from '../goals/goals.service';
+
+
 @Injectable()
 export class AnalyticsService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly redis: RedisService,
-  ) {}
+  
+constructor(
+  private readonly prisma: PrismaService,
+  private readonly redis: RedisService,
+  private readonly goalsService: GoalsService,
+) {}
+
 
   // ----------------------------------------------------------
   // WEEKLY ANALYSIS
@@ -70,7 +76,7 @@ export class AnalyticsService {
     const daily: Array<{ date: string; dayLabel: string; minutes: number }> = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date(start);
-      d.setDate(start.getDate() + i);
+      d.setUTCDate(start.getUTCDate() + i);
       const key = DateUtil.toISODate(d);
       daily.push({ date: key, dayLabel: dayLabels[i], minutes: dailyMap.get(key) ?? 0 });
     }
@@ -114,7 +120,7 @@ export class AnalyticsService {
 
     // Previous month range for growth
     const prevMonthRef = new Date(start);
-    prevMonthRef.setDate(0); // last day of previous month
+    prevMonthRef.setUTCDate(0); // last day of previous month
     const { start: prevStart, end: prevEnd } = DateUtil.getMonthRange(prevMonthRef);
 
     const [thisMonth, prevMonth] = await Promise.all([
@@ -143,7 +149,7 @@ export class AnalyticsService {
     const distinctDays = new Set(
       thisMonth.map((e) => DateUtil.toISODate(e.date)),
     ).size;
-    const daysInMonth = end.getDate();
+    const daysInMonth = end.getUTCDate();
     const consistencyPercent = Math.round((distinctDays / daysInMonth) * 100);
 
     // Subject-wise
@@ -175,8 +181,21 @@ export class AnalyticsService {
     });
 
     // Badge count this month
+   
+  const nextMonthStart = new Date(end);
+
+    nextMonthStart.setUTCDate(
+      end.getUTCDate() + 1,
+    );
+
     const badgeCount = await this.prisma.userBadge.count({
-      where: { userId, earnedAt: { gte: start, lte: end } },
+      where: {
+        userId,
+        earnedAt: {
+          gte: start,
+          lt: nextMonthStart,
+        },
+      },
     });
 
     const suggestions = this.buildMonthlySuggestions({
@@ -265,7 +284,7 @@ export class AnalyticsService {
   async dailyTrend(userId: string, days = 30) {
     const today = DateUtil.toDateOnly(new Date());
     const from = new Date(today);
-    from.setDate(today.getDate() - (days - 1));
+    from.setUTCDate(today.getUTCDate() - (days - 1));
 
     const entries = await this.prisma.studyEntry.findMany({
       where: { userId, date: { gte: from, lte: today } },
@@ -281,7 +300,7 @@ export class AnalyticsService {
     const series: Array<{ date: string; minutes: number }> = [];
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date(today);
-      d.setDate(today.getDate() - i);
+      d.setUTCDate(today.getUTCDate() - i);
       const key = DateUtil.toISODate(d);
       series.push({ date: key, minutes: map.get(key) ?? 0 });
     }
@@ -326,15 +345,15 @@ export class AnalyticsService {
     const todayEntries = todayAgg._count._all;
 
     // Active goals
-    const activeGoals = await this.prisma.goal.findMany({
-      where: {
-        userId,
-        isCompleted: false,
-        endsAt: { gte: DateUtil.toDateOnly(new Date()) },
-      },
-      take: 3,
-      orderBy: { endsAt: 'asc' },
-    });
+  
+    // Get active goals with real calculated progress.
+    const activeGoalsResponse = await this.goalsService.list(
+      userId,
+      { active: true },
+    );
+
+    const activeGoals = activeGoalsResponse.data.slice(0, 3);
+
 
     // Recent badges
     const recentBadges = await this.prisma.userBadge.findMany({

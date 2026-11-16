@@ -14,14 +14,36 @@ export interface DashboardResponse {
   today: { minutes: number; entries: number };
   weekTotalMinutes: number;
   motivation: string;
+ 
   activeGoals: Array<{
     id: string;
     title: string;
     type: 'DAILY' | 'WEEKLY' | 'MONTHLY';
+
     targetMinutes: number | null;
     targetChapters: number | null;
+
+    currentMinutes: number;
+    currentChapters: number;
+
+    progressPercent: number;
+    isAchieved: boolean;
+    isCompleted: boolean;
+    isExpired: boolean;
+
+    startsAt: string;
     endsAt: string;
+    daysRemaining: number;
+
+    subjectId: string | null;
+    subject: {
+      id: string;
+      name: string;
+      color: string;
+      icon: string;
+    } | null;
   }>;
+
   recentBadges: Array<{ code: string; earnedAt: string }>;
   weeklySummary: {
     topSubject: { name: string; minutes: number } | null;

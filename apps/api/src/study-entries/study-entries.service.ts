@@ -38,12 +38,16 @@ export class StudyEntriesService {
     if (!subject) throw new NotFoundException(MESSAGES.SUBJECT_NOT_FOUND);
     if (subject.userId !== userId) throw new ForbiddenException(MESSAGES.FORBIDDEN);
 
-    const entryDate = new Date(dto.date);
-    if (entryDate.getTime() > Date.now() + 24 * 60 * 60 * 1000) {
-      throw new BadRequestException('ভবিষ্যতের তারিখে এন্ট্রি করা যাবে না');
-    }
+   
+      const dateOnly = DateUtil.toDateOnly(dto.date);
+      const today = DateUtil.toDateOnly(new Date());
 
-    const dateOnly = DateUtil.toDateOnly(entryDate);
+      if (dateOnly.getTime() > today.getTime()) {
+        throw new BadRequestException(
+          'ভবিষ্যতের তারিখে পড়াশোনার এন্ট্রি করা যাবে না',
+        );
+      }
+
 
     const entry = await this.prisma.studyEntry.create({
       data: {
@@ -239,7 +243,7 @@ export class StudyEntriesService {
 
     const today = DateUtil.toDateOnly(new Date());
     const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+    yesterday.setUTCDate(today.getUTCDate() - 1);
 
     // If entry is not today or yesterday, don't touch streak
     if (

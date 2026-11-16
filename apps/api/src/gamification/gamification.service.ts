@@ -17,25 +17,52 @@ export class GamificationService {
   // ----------------------------------------------------------
   // Award XP and recompute level
   // ----------------------------------------------------------
+ 
   async awardXp(userId: string, xp: number) {
-    if (xp <= 0) return { xp: 0, level: 1, gained: 0 };
+    if (!Number.isInteger(xp) || xp <= 0) {
+      return {
+        xp: 0,
+        level: 1,
+        gained: 0,
+        leveledUp: false,
+      };
+    }
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { xp: true, level: true },
+    return this.prisma.$transaction(async (tx) => {
+      // Atomic increment prevents lost XP updates.
+      const updated = await tx.user.update({
+        where: { id: userId },
+        data: {
+          xp: {
+            increment: xp,
+          },
+        },
+        select: {
+          xp: true,
+          level: true,
+        },
+      });
+
+      const newLevel = LevelUtil.levelFromXp(updated.xp);
+
+      if (newLevel !== updated.level) {
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            level: newLevel,
+          },
+        });
+      }
+
+      return {
+        xp: updated.xp,
+        level: newLevel,
+        gained: xp,
+        leveledUp: newLevel > updated.level,
+      };
     });
-    if (!user) return { xp: 0, level: 1, gained: 0 };
-
-    const newXp = user.xp + xp;
-    const newLevel = LevelUtil.levelFromXp(newXp);
-
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { xp: newXp, level: newLevel },
-    });
-
-    return { xp: newXp, level: newLevel, gained: xp, leveledUp: newLevel > user.level };
   }
+
 
   // ----------------------------------------------------------
   // Check and grant eligible badges (idempotent)
@@ -141,12 +168,12 @@ export class GamificationService {
     const toGrant = granted.filter((code) => !existingSet.has(code));
 
     if (toGrant.length > 0) {
-      await this.prisma.userBadge.createMany({
+      const createdBadges = await this.prisma.userBadge.createMany({
         data: toGrant.map((code) => ({ userId, code })),
         skipDuplicates: true,
       });
 
-      const bonus = toGrant.length * LevelUtil.xpForBadge();
+      const bonus = createdBadges.count * LevelUtil.xpForBadge();
       if (bonus > 0) await this.awardXp(userId, bonus);
 
       this.logger.log(
