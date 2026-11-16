@@ -325,6 +325,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  
   @SubscribeMessage('call_reject')
   async onCallReject(
     @ConnectedSocket() client: AuthSocket,
@@ -338,58 +339,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return { ok: false, error: 'unauthorized' };
     }
 
-
     try {
       await this.chat.ensureParticipant(
         client.userId,
         data.conversationId,
       );
 
-        async ensurePeer(
-        userId: string,
-        conversationId: string,
-        targetUserId: string,
-      ) {
-        await this.ensureParticipant(userId, conversationId);
+      client.to(`conv:${data.conversationId}`).emit(
+        'call_reject',
+        {
+          conversationId: data.conversationId,
+          callId: data.callId,
+          userId: client.userId,
+        },
+      );
 
-        if (userId === targetUserId) {
-          throw new ForbiddenException('অবৈধ কল টার্গেট');
-        }
-
-        const peer =
-          await this.prisma.conversationParticipant.findUnique({
-            where: {
-              conversationId_userId: {
-                conversationId,
-                userId: targetUserId,
-              },
-            },
-            select: { id: true },
-          });
-
-        if (!peer) {
-          throw new ForbiddenException(
-            'টার্গেট ব্যবহারকারী এই চ্যাটের সদস্য নয়',
-          );
-        }
-      }
-
-    } catch {
-      return { ok: false, error: 'Friendship required' };
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error: (error as Error).message,
+      };
     }
-
-
-  
-
-
-    client.to(`conv:${data.conversationId}`).emit('call_reject', {
-      conversationId: data.conversationId,
-      callId: data.callId,
-      userId: client.userId,
-    });
-
-    return { ok: true };
   }
+
 
   @SubscribeMessage('webrtc_offer')
   async onWebrtcOffer(

@@ -283,66 +283,103 @@ export class GamificationService {
   // ----------------------------------------------------------
   // GET /gamification/leaderboard
   // ----------------------------------------------------------
-  async getLeaderboard(currentUserId: string, limit = 20) {
-    const users = await this.prisma.user.findMany({
-      where: { isActive: true, role: 'STUDENT' },
-      orderBy: [{ xp: 'desc' }, { createdAt: 'asc' }],
-      take: limit,
-      select: {
-        id: true,
-        username: true,
-        fullName: true,
-        avatarUrl: true,
-        classLevel: true,
-        xp: true,
-        level: true,
-        currentStreak: true,
-      },
-    });
+  
+  async getLeaderboard(
+    currentUserId: string,
+    limit = 20,
+  ) {
+    const safeLimit = Math.min(100, Math.max(1, limit));
 
-    // Rank
-    const ranked = users.map((u, idx) => ({
-      rank: idx + 1,
-      id: u.id,
-      username: u.username,
-      fullName: u.fullName,
-      avatarUrl: u.avatarUrl,
-      classLevel: u.classLevel,
-      xp: u.xp,
-      level: u.level,
-      currentStreak: u.currentStreak,
-      isMe: u.id === currentUserId,
+    const [users, me] = await Promise.all([
+      this.prisma.user.findMany({
+        where: {
+          isActive: true,
+          role: 'STUDENT',
+        },
+        orderBy: [
+          { xp: 'desc' },
+          { createdAt: 'asc' },
+          { id: 'asc' },
+        ],
+        take: safeLimit,
+        select: {
+          id: true,
+        },
+      }),
+
+      this.prisma.user.findFirst({
+        where: {
+          id: currentUserId,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          username: true,
+          fullName: true,
+          avatarUrl: true,
+          classLevel: true,
+          xp: true,
+          level: true,
+          createdAt: true,
+        },
+      }),
+    ]);
+
+    // Anonymous public leaderboard.
+    // No other user's identity or XP is returned.
+    const items = users.map((user, index) => ({
+      rank: index + 1,
+      label:
+        user.id === currentUserId
+          ? 'তুমি'
+          : `অংশগ্রহণকারী ${index + 1}`,
+      isMe: user.id === currentUserId,
     }));
 
-    // Current user's rank (if not in top N)
-    let myRank: any = ranked.find((r) => r.isMe) ?? null;
-    if (!myRank) {
+    let myRank = null;
+
+    if (me) {
       const higherCount = await this.prisma.user.count({
-        where: { isActive: true, role: 'STUDENT', xp: { gt: (await this.prisma.user.findUnique({ where: { id: currentUserId }, select: { xp: true } }))?.xp ?? 0 } },
-      });
-      const me = await this.prisma.user.findUnique({
-        where: { id: currentUserId },
-        select: {
-          id: true, username: true, fullName: true, avatarUrl: true,
-          classLevel: true, xp: true, level: true, currentStreak: true,
+        where: {
+          isActive: true,
+          role: 'STUDENT',
+          OR: [
+            {
+              xp: { gt: me.xp },
+            },
+            {
+              xp: me.xp,
+              createdAt: { lt: me.createdAt },
+            },
+            {
+              xp: me.xp,
+              createdAt: me.createdAt,
+              id: { lt: me.id },
+            },
+          ],
         },
       });
-      if (me) {
-        myRank = {
-          rank: higherCount + 1,
-          ...me,
-          isMe: true,
-        };
-      }
+
+      myRank = {
+        rank: higherCount + 1,
+        id: me.id,
+        username: me.username,
+        fullName: me.fullName,
+        avatarUrl: me.avatarUrl,
+        classLevel: me.classLevel,
+        xp: me.xp,
+        level: me.level,
+      };
     }
 
     return {
       data: {
-        items: ranked,
+        items,
         myRank,
       },
     };
   }
+
 
   // ----------------------------------------------------------
   // GET /gamification/recent-achievements

@@ -106,6 +106,7 @@ export class GroupsService {
   // ----------------------------------------------------------
   // GET /groups/:id — full detail
   // ----------------------------------------------------------
+
   async getDetail(userId: string, groupId: string) {
     await this.ensureMember(userId, groupId);
 
@@ -113,7 +114,12 @@ export class GroupsService {
       where: { id: groupId },
       include: {
         owner: {
-          select: { id: true, username: true, fullName: true, avatarUrl: true },
+          select: {
+            id: true,
+            username: true,
+            fullName: true,
+            avatarUrl: true,
+          },
         },
         members: {
           include: {
@@ -124,94 +130,143 @@ export class GroupsService {
                 fullName: true,
                 avatarUrl: true,
                 classLevel: true,
-                xp: true,
-                level: true,
-                currentStreak: true,
-                longestStreak: true,
               },
             },
           },
-          orderBy: [{ role: 'asc' }, { joinedAt: 'asc' }],
+          orderBy: [
+            { role: 'asc' },
+            { joinedAt: 'asc' },
+          ],
         },
       },
     });
-    if (!group) throw new NotFoundException('গ্রুপ খুঁজে পাওয়া যায়নি');
 
-    const conv = await this.prisma.conversation.findUnique({
-        where: { groupId },
-        select: { id: true },
-        });
+    if (!group) {
+      throw new NotFoundException('গ্রুপ পাওয়া যায়নি');
+    }
 
-    // Weekly summary for each member + group total
-    const { start, end } = DateUtil.getWeekRange(new Date());
-    const memberIds = group.members.map((m) => m.userId);
-
-    const weeklyAgg = await this.prisma.studyEntry.groupBy({
-      by: ['userId'],
-      where: {
-        userId: { in: memberIds },
-        date: { gte: start, lte: end },
-      },
-      _sum: { durationMinutes: true },
-      _count: { _all: true },
-    });
-    const weekMap = new Map(
-      weeklyAgg.map((a) => [a.userId, a._sum.durationMinutes ?? 0]),
+    const me = group.members.find(
+      (member) => member.userId === userId,
     );
 
-    const badgeCounts = await this.prisma.userBadge.groupBy({
-      by: ['userId'],
-      where: { userId: { in: memberIds } },
-      _count: { _all: true },
+    const conversation = await this.prisma.conversation.findUnique({
+      where: {
+        groupId,
+      },
+      select: {
+        id: true,
+      },
     });
-    const badgeMap = new Map(badgeCounts.map((b) => [b.userId, b._count._all]));
 
-    const members = group.members.map((m) => ({
-      id: m.user.id,
-      conversationId: conv?.id ?? null,
-      username: m.user.username,
-      fullName: m.user.fullName,
-      avatarUrl: m.user.avatarUrl,
-      classLevel: m.user.classLevel,
-      role: m.role,
-      isMuted: m.isMuted,
-      joinedAt: m.joinedAt.toISOString(),
-      xp: m.user.xp,
-      level: m.user.level,
-      currentStreak: m.user.currentStreak,
-      longestStreak: m.user.longestStreak,
-      weekMinutes: weekMap.get(m.userId) ?? 0,
-      badgeCount: badgeMap.get(m.userId) ?? 0,
+    const members = group.members.map((member) => ({
+      id: member.user.id,
+      username: member.user.username,
+      fullName: member.user.fullName,
+      avatarUrl: member.user.avatarUrl,
+      classLevel: member.user.classLevel,
+      role: member.role,
+      isMuted: member.isMuted,
+      joinedAt: member.joinedAt.toISOString(),
     }));
 
-    const groupTotalMinutes = members.reduce((s, m) => s + m.weekMinutes, 0);
-    const memberCount = members.length;
-    const target = group.weeklyTargetMinutes ?? null;
+    // Study data is used for sorting only.
+    // Individual study minutes are never returned.
+    const { start, end } = DateUtil.getWeekRange(new Date());
 
-    // Group leaderboard (this week) sorted by minutes desc, XP desc
-    const leaderboard = [...members]
-      .sort((a, b) => b.weekMinutes - a.weekMinutes || b.xp - a.xp)
-      .map((m, idx) => ({ rank: idx + 1, ...m }));
+    const memberIds = group.members.map(
+      (member) => member.userId,
+    );
 
-    // Pending invitations (visible to owner/admin only)
-    let invitations: any[] = [];
-    const me = group.members.find((m) => m.userId === userId);
-    if (me && (me.role === GroupRole.OWNER || me.role === GroupRole.ADMIN)) {
-      const rows = await this.prisma.groupInvitation.findMany({
-        where: { groupId, status: InvitationStatus.PENDING },
+    const weeklyRecords = memberIds.length
+      ? await this.prisma.studyEntry.groupBy({
+          by: ['userId'],
+          where: {
+            userId: { in: memberIds },
+            date: {
+              gte: start,
+              lte: end,
+            },
+          },
+          _sum: {
+            durationMinutes: true,
+          },
+        })
+      : [];
+
+    const minutesMap = new Map(
+      weeklyRecords.map((row) => [
+        row.userId,
+        row._sum.durationMinutes ?? 0,
+      ]),
+    );
+
+    const rankedMembers = [...group.members].sort(
+      (a, b) => {
+        const aMinutes = minutesMap.get(a.userId) ?? 0;
+        const bMinutes = minutesMap.get(b.userId) ?? 0;
+
+        if (aMinutes !== bMinutes) {
+          return bMinutes - aMinutes;
+        }
+
+        return a.userId.localeCompare(b.userId);
+      },
+    );
+
+    const leaderboard = rankedMembers.map(
+      (member, index) => ({
+        rank: index + 1,
+        isMe: member.userId === userId,
+        label:
+          member.userId === userId
+            ? 'তুমি'
+            : `অংশগ্রহণকারী ${index + 1}`,
+      }),
+    );
+
+    let invitations: Array<{
+      id: string;
+      status: string;
+      createdAt: string;
+      expiresAt: string;
+      invitee: {
+        id: string;
+        username: string;
+        fullName: string;
+        avatarUrl: string | null;
+      };
+    }> = [];
+
+    if (
+      me?.role === GroupRole.OWNER ||
+      me?.role === GroupRole.ADMIN
+    ) {
+      const pending = await this.prisma.groupInvitation.findMany({
+        where: {
+          groupId,
+          status: InvitationStatus.PENDING,
+        },
         include: {
           invitee: {
-            select: { id: true, username: true, fullName: true, avatarUrl: true },
+            select: {
+              id: true,
+              username: true,
+              fullName: true,
+              avatarUrl: true,
+            },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
-      invitations = rows.map((r) => ({
-        id: r.id,
-        status: r.status,
-        createdAt: r.createdAt.toISOString(),
-        expiresAt: r.expiresAt.toISOString(),
-        invitee: r.invitee,
+
+      invitations = pending.map((row) => ({
+        id: row.id,
+        status: row.status,
+        createdAt: row.createdAt.toISOString(),
+        expiresAt: row.expiresAt.toISOString(),
+        invitee: row.invitee,
       }));
     }
 
@@ -224,24 +279,28 @@ export class GroupsService {
         imageUrl: group.imageUrl,
         ownerId: group.ownerId,
         owner: group.owner,
+
+        conversationId: conversation?.id ?? null,
+
         myRole: me?.role ?? null,
         isMuted: me?.isMuted ?? false,
-        memberCount,
-        weeklyTargetMinutes: target,
+        memberCount: members.length,
+
+        weeklyTargetMinutes: group.weeklyTargetMinutes,
         weeklyTargetChapters: group.weeklyTargetChapters,
+
         weekStart: DateUtil.toISODate(start),
         weekEnd: DateUtil.toISODate(end),
-        groupTotalMinutes,
-        targetProgressPercent: target
-          ? Math.min(100, Math.round((groupTotalMinutes / target) * 100))
-          : 0,
+
         members,
         leaderboard,
         invitations,
+
         createdAt: group.createdAt.toISOString(),
       },
     };
   }
+
 
   // ----------------------------------------------------------
   // PATCH /groups/:id — update

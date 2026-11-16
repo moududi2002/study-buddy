@@ -127,6 +127,8 @@ exports.Prisma.UserScalarFieldEnum = {
   fullName: 'fullName',
   passwordHash: 'passwordHash',
   classLevel: 'classLevel',
+  academicGroup: 'academicGroup',
+  academicConfigured: 'academicConfigured',
   avatarUrl: 'avatarUrl',
   role: 'role',
   xp: 'xp',
@@ -172,7 +174,8 @@ exports.Prisma.SubjectScalarFieldEnum = {
   icon: 'icon',
   isCustom: 'isCustom',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive'
 };
 
 exports.Prisma.StudyEntryScalarFieldEnum = {
@@ -293,6 +296,16 @@ exports.Prisma.MessageScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.FriendshipScalarFieldEnum = {
+  id: 'id',
+  userLowId: 'userLowId',
+  userHighId: 'userHighId',
+  requestedById: 'requestedById',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -318,6 +331,12 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.AcademicGroup = exports.$Enums.AcademicGroup = {
+  SCIENCE: 'SCIENCE',
+  HUMANITIES: 'HUMANITIES',
+  BUSINESS: 'BUSINESS'
+};
+
 exports.UserRole = exports.$Enums.UserRole = {
   STUDENT: 'STUDENT'
 };
@@ -383,6 +402,12 @@ exports.MessageType = exports.$Enums.MessageType = {
   AUDIO: 'AUDIO'
 };
 
+exports.FriendshipStatus = exports.$Enums.FriendshipStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OtpToken: 'OtpToken',
@@ -398,7 +423,8 @@ exports.Prisma.ModelName = {
   Notification: 'Notification',
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
-  Message: 'Message'
+  Message: 'Message',
+  Friendship: 'Friendship'
 };
 
 /**

@@ -27,7 +27,14 @@ interface BadgeItem {
   earnedAt: string | null;
 }
 
+
 interface LeaderboardItem {
+  rank: number;
+  label: string;
+  isMe: boolean;
+}
+
+interface MyRank {
   rank: number;
   id: string;
   username: string;
@@ -36,9 +43,8 @@ interface LeaderboardItem {
   classLevel: number;
   xp: number;
   level: number;
-  currentStreak: number;
-  isMe: boolean;
 }
+
 
 interface LevelRow {
   level: number;
@@ -53,7 +59,7 @@ export default function AchievementsPage() {
   const [level, setLevel] = useState<LevelInfo | null>(null);
   const [levelTable, setLevelTable] = useState<LevelRow[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardItem[]>([]);
-  const [myRank, setMyRank] = useState<LeaderboardItem | null>(null);
+  const [myRank, setMyRank] = useState<MyRank | null>(null);
   const prevEarnedCount = useRef(0);
 
       const fire = () => {
@@ -77,7 +83,7 @@ export default function AchievementsPage() {
           api.get<{ success: true; data: { levels: LevelRow[] } }>('/gamification/level-progress'),
           api.get<{
             success: true;
-            data: { items: LeaderboardItem[]; myRank: LeaderboardItem | null };
+            data: { items: LeaderboardItem[]; myRank: MyRank | null };
           }>('/gamification/leaderboard?limit=20'),
         ]);
         setBadges(b.data.items);
@@ -266,75 +272,111 @@ export default function AchievementsPage() {
         </TabsContent>
 
         {/* ============ LEADERBOARD ============ */}
-        <TabsContent value="leaderboard" className="mt-4 space-y-4">
-          {/* My rank highlight */}
+        
+        {/* ============ LEADERBOARD ============ */}
+        <TabsContent
+          value="leaderboard"
+          className="mt-4 space-y-4"
+        >
           {myRank && (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="card-soft p-4 flex items-center gap-3 border-2 border-primary-300"
+              className="card-soft flex items-center gap-3 border-2 border-primary-300 p-4"
             >
-              <div className="text-2xl font-bold text-primary-500 w-10 text-center">
-                {rankEmoji(myRank.rank) || `#${toBnDigits(myRank.rank)}`}
+              <div className="w-10 text-center text-2xl font-bold text-primary-500">
+                {rankEmoji(myRank.rank) ||
+                  `#${toBnDigits(myRank.rank)}`}
               </div>
+
               <Avatar className="h-11 w-11">
-                {myRank.avatarUrl && !myRank.avatarUrl.startsWith('preset:') && (
-                  <AvatarImage src={myRank.avatarUrl} />
-                )}
+                {myRank.avatarUrl &&
+                  !myRank.avatarUrl.startsWith('preset:') && (
+                    <AvatarImage src={myRank.avatarUrl} />
+                  )}
                 <AvatarFallback>🐱</AvatarFallback>
               </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-primary-800 truncate">
-                  {myRank.fullName} <span className="text-xs text-primary-400">(তুমি)</span>
+
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-primary-800">
+                  {myRank.fullName}
+                  <span className="ml-1 text-xs text-primary-400">
+                    (তুমি)
+                  </span>
                 </p>
-                <p className="text-xs text-primary-500">ক্লাস {toBnDigits(myRank.classLevel)}</p>
+
+                <p className="text-xs text-primary-500">
+                  ক্লাস {toBnDigits(myRank.classLevel)}
+                </p>
               </div>
+
               <div className="text-right">
-                <p className="font-bold text-primary-700">{toBnDigits(myRank.xp)} XP</p>
-                <p className="text-xs text-primary-400">লেভেল {toBnDigits(myRank.level)}</p>
+                <p className="font-bold text-primary-700">
+                  {toBnDigits(myRank.xp)} XP
+                </p>
+
+                <p className="text-xs text-primary-400">
+                  লেভেল {toBnDigits(myRank.level)}
+                </p>
               </div>
             </motion.div>
           )}
 
-          <div className="space-y-2">
-            {leaderboard.map((u, i) => (
-              <motion.div
-                key={u.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.03 }}
-                className={`card-soft p-3 flex items-center gap-3 ${
-                  u.isMe ? 'ring-2 ring-primary-300' : ''
-                }`}
-              >
-                <div className="text-lg font-bold text-primary-500 w-8 text-center">
-                  {rankEmoji(u.rank) || `#${toBnDigits(u.rank)}`}
-                </div>
-                <Avatar className="h-10 w-10">
-                  {u.avatarUrl && !u.avatarUrl.startsWith('preset:') && (
-                    <AvatarImage src={u.avatarUrl} />
-                  )}
-                  <AvatarFallback>
-                    {u.fullName?.[0] ?? '🐱'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-primary-800 truncate text-sm">
-                    {u.fullName}
-                    {u.isMe && <span className="text-xs text-primary-400 ml-1">(তুমি)</span>}
-                  </p>
-                  <p className="text-xs text-primary-500">
-                    ক্লাস {toBnDigits(u.classLevel)} · 🔥 {toBnDigits(u.currentStreak)}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-primary-700 text-sm">{toBnDigits(u.xp)}</p>
-                  <p className="text-[10px] text-primary-400">XP</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="card-soft p-4">
+            <div className="mb-4">
+              <h3 className="font-bold text-primary-800">
+                🏆 সেরা শিক্ষার্থীদের অবস্থান
+              </h3>
+
+              <p className="mt-1 text-xs text-primary-500">
+                তোমার নিজের অবস্থান দেখো। অন্যদের ব্যক্তিগত তথ্য গোপন থাকবে।
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              {leaderboard.map((item, index) => (
+                <motion.div
+                  key={item.rank}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.04 }}
+                  className={
+                    'flex items-center gap-3 rounded-2xl p-3 ' +
+                    (item.isMe
+                      ? 'bg-lavender-200 ring-2 ring-primary-300'
+                      : 'bg-lavender-100')
+                  }
+                >
+                  <div className="w-10 text-center text-xl font-bold text-primary-600">
+                    {rankEmoji(item.rank) ||
+                      `#${toBnDigits(item.rank)}`}
+                  </div>
+
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
+                    {item.isMe ? '🐱' : '🎓'}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-primary-800">
+                      {item.label}
+                    </p>
+
+                    <p className="text-xs text-primary-500">
+                      {item.isMe
+                        ? 'তোমার অবস্থান'
+                        : 'পরিচয় ও অর্জন ব্যক্তিগত'}
+                    </p>
+                  </div>
+
+                  <span className="text-lg">
+                    {item.isMe ? '💜' : '🔒'}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </TabsContent>
+
 
         {/* ============ LEVELS ============ */}
         <TabsContent value="levels" className="mt-4">

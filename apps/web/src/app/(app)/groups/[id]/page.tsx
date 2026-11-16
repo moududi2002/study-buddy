@@ -145,9 +145,16 @@ export default function GroupDetailPage() {
     }
   };
 
+  
   const openChat = () => {
-    router.push(`/chat/group/${params.id}`);
+    if (!group?.conversationId) {
+      toast.error('গ্রুপের চ্যাট পাওয়া যায়নি');
+      return;
+    }
+
+    router.push(`/chat/${group.conversationId}`);
   };
+
 
   if (loading || !group) {
     return (
@@ -201,20 +208,14 @@ export default function GroupDetailPage() {
         {/* Actions */}
         <div className="relative flex flex-wrap gap-2 mt-4">
           <Button
-            onClick={() => {
-                openChat();
-                router.push(
-                group.conversationId
-                    ? `/chat/${group.conversationId}`
-                    : `/chat/group/${params.id}`
-                );
-            }}
+            onClick={openChat}
             variant="primary"
             size="sm"
-            >
+          >
             <MessageCircle size={14} />
             গ্রুপ চ্যাট
-            </Button>
+          </Button>
+
 
           {canManage && (
             <Button onClick={() => setInviteOpen(true)} variant="soft" size="sm">
@@ -247,26 +248,31 @@ export default function GroupDetailPage() {
         </div>
       </motion.div>
 
-      {/* Weekly target progress */}
-      {group.weeklyTargetMinutes && (
-        <div className="card-soft p-5">
-          <SectionHeader emoji="🎯" title="সাপ্তাহিক লক্ষ্য" />
-          <div className="flex items-center gap-4">
-            <div className="text-5xl">🏆</div>
-            <div className="flex-1">
-              <p className="text-sm text-primary-600 mb-2">
-                গ্রুপ মিলে {formatMinutesShort(group.groupTotalMinutes)} /{' '}
-                {formatMinutesShort(group.weeklyTargetMinutes)}
-              </p>
-              <Progress value={group.targetProgressPercent} className="h-3" />
-              <p className="text-xs text-primary-400 mt-1.5">
-                {toBnDigits(group.targetProgressPercent)}% সম্পন্ন
-                {group.targetProgressPercent >= 100 && ' — অভিনন্দন! 🎉'}
-              </p>
+      
+        {/* Group target without exposing private study logs */}
+        {group.weeklyTargetMinutes != null && (
+          <div className="card-soft p-5">
+            <SectionHeader
+              emoji="🎯"
+              title="গ্রুপের সাপ্তাহিক লক্ষ্য"
+            />
+
+            <div className="mt-3 flex items-center gap-4 rounded-2xl bg-lavender-100 p-4">
+              <span className="text-4xl">📚</span>
+
+              <div>
+                <p className="text-sm font-bold text-primary-800">
+                  লক্ষ্য: {formatMinutesShort(group.weeklyTargetMinutes)}
+                </p>
+
+                <p className="mt-1 text-xs text-primary-500">
+                  সদস্যদের ব্যক্তিগত পড়ার সময় গোপন রাখা হয়েছে।
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+
 
       {/* Pending invitations (owner/admin only) */}
       {canManage && group.invitations.length > 0 && (
@@ -295,49 +301,67 @@ export default function GroupDetailPage() {
       )}
 
       {/* Leaderboard */}
+
+      {/* Anonymous group leaderboard */}
       <div className="card-soft p-5">
-        <SectionHeader emoji="🏆" title="এই সপ্তাহের লিডারবোর্ড" />
+        <SectionHeader
+          emoji="🏆"
+          title="এই সপ্তাহের লিডারবোর্ড"
+        />
+
+        <p className="mb-4 text-xs text-primary-500">
+          শিক্ষার্থীদের পরিচয় ও ব্যক্তিগত পড়ার সময় প্রকাশ না করে র‍্যাংক দেখানো হচ্ছে।
+        </p>
+
         <div className="space-y-2">
-          {group.leaderboard.slice(0, 5).map((m) => {
-            const medal = m.rank === 1 ? '🥇' : m.rank === 2 ? '🥈' : m.rank === 3 ? '🥉' : `#${toBnDigits(m.rank!)}`;
-            const isMe = m.id === me?.id;
+          {group.leaderboard.slice(0, 10).map((item, index) => {
+            const medal =
+              item.rank === 1
+                ? '🥇'
+                : item.rank === 2
+                  ? '🥈'
+                  : item.rank === 3
+                    ? '🥉'
+                    : `#${toBnDigits(item.rank)}`;
+
             return (
-              <Link key={m.id} href={isMe ? '/profile' : `/friends/${m.id}`}>
-                <div
-                  className={`flex items-center gap-3 p-3 rounded-2xl transition-colors ${
-                    isMe ? 'bg-lavender-200' : 'bg-lavender-100 hover:bg-lavender-200'
-                  }`}
-                >
-                  <div className="w-8 text-center text-lg font-bold text-primary-600">
-                    {medal}
-                  </div>
-                  <Avatar className="h-10 w-10">
-                    {m.avatarUrl && !m.avatarUrl.startsWith('preset:') && (
-                      <AvatarImage src={m.avatarUrl} />
-                    )}
-                    <AvatarFallback>{m.fullName?.[0] ?? '🐱'}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-primary-800 truncate">
-                      {m.fullName}
-                      {isMe && <span className="text-xs text-primary-500 ml-1">(তুমি)</span>}
-                    </p>
-                    <p className="text-xs text-primary-500">
-                      লেভেল {toBnDigits(m.level)} · 🔥 {toBnDigits(m.currentStreak)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary-700 text-sm">
-                      {formatMinutesShort(m.weekMinutes)}
-                    </p>
-                    <p className="text-[10px] text-primary-400">এই সপ্তাহে</p>
-                  </div>
+              <motion.div
+                key={item.rank}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className={
+                  'flex items-center gap-3 rounded-2xl p-4 ' +
+                  (item.isMe
+                    ? 'bg-lavender-200 ring-2 ring-primary-300'
+                    : 'bg-lavender-100')
+                }
+              >
+                <span className="w-9 text-center text-2xl">
+                  {medal}
+                </span>
+
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-primary-800">
+                    {item.label}
+                  </p>
+
+                  <p className="text-xs text-primary-500">
+                    {item.isMe
+                      ? 'এটি তোমার অবস্থান'
+                      : 'পরিচয় ব্যক্তিগত রাখা হয়েছে'}
+                  </p>
                 </div>
-              </Link>
+
+                <span className="text-xl">
+                  {item.isMe ? '💜' : '🔒'}
+                </span>
+              </motion.div>
             );
           })}
         </div>
       </div>
+
 
       {/* All members */}
       <div className="card-soft p-5">
@@ -364,7 +388,7 @@ export default function GroupDetailPage() {
                       {m.role === 'ADMIN' && <Shield size={12} className="text-primary-500" />}
                     </p>
                     <p className="text-xs text-primary-500 truncate">
-                      লেভেল {toBnDigits(m.level)} · {formatMinutesShort(m.weekMinutes)}
+                      @{m.username} · ক্লাস {toBnDigits(m.classLevel)}
                     </p>
                   </div>
                 </Link>

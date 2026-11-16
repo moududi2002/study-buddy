@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Protected routes (require authentication)
+
 const PROTECTED = [
   '/dashboard',
   '/tracker',
@@ -14,7 +15,12 @@ const PROTECTED = [
   '/achievements',
   '/diary',
   '/profile',
+  '/friends',
+  '/groups',
+  '/chat',
+  '/notifications',
 ];
+
 
 // Auth routes
 const AUTH_ROUTES = [
@@ -24,7 +30,7 @@ const AUTH_ROUTES = [
   '/reset-password',
 ];
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const hasRefreshCookie = req.cookies.has('sb_refresh');

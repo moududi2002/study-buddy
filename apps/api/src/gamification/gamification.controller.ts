@@ -50,15 +50,26 @@ export class GamificationController {
   // ----------------------------------------------------------
   // GET /gamification/leaderboard
   // ----------------------------------------------------------
-  @Get('leaderboard')
-  @ApiOperation({ summary: 'টপ শিক্ষার্থী লিডারবোর্ড' })
-  async leaderboard(
-    @CurrentUser() user: AuthUser,
-    @Query() query: LeaderboardQueryDto,
-  ) {
-    const result = await this.gamification.getLeaderboard(user.id, query.limit ?? 20);
-    return { message: 'লিডারবোর্ড', data: result.data };
-  }
+  
+    @Get('leaderboard')
+    @ApiOperation({
+      summary: 'Privacy-safe student leaderboard',
+    })
+    async leaderboard(
+      @CurrentUser() user: AuthUser,
+      @Query() query: LeaderboardQueryDto,
+    ) {
+      const result = await this.gamification.getLeaderboard(
+        user.id,
+        query.limit ?? 20,
+      );
+
+      return {
+        message: 'লিডারবোর্ড',
+        data: result.data,
+      };
+    }
+
 
   // ----------------------------------------------------------
   // GET /gamification/recent-achievements

@@ -1,11 +1,15 @@
-// ============================================================
-// Path: apps/api/src/auth/dto/register.dto.ts
-// ============================================================
+// apps/api/src/auth/dto/register.dto.ts 
 
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
+
 import {
   IsEmail,
+  IsEnum,
   IsInt,
+  IsOptional,
   IsString,
   Matches,
   Max,
@@ -14,48 +18,48 @@ import {
   MinLength,
 } from 'class-validator';
 
-
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
 import { AcademicGroup } from '../../generated/prisma/client';
 
-
 export class RegisterDto {
-  @ApiProperty({ example: 'munira@example.com' })
+  @ApiProperty({ example: 'student@example.com' })
   @IsEmail({}, { message: 'সঠিক ইমেইল দিন' })
   email: string;
 
-  @ApiProperty({ example: 'munira_2010' })
+  @ApiProperty({ example: 'student_2026' })
   @IsString()
-  @MinLength(3, { message: 'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে' })
-  @MaxLength(20, { message: 'ইউজারনেম সর্বোচ্চ ২০ অক্ষরের' })
+  @MinLength(3)
+  @MaxLength(20)
   @Matches(/^[a-zA-Z0-9_]+$/, {
     message: 'ইউজারনেমে শুধু ইংরেজি অক্ষর, সংখ্যা ও _ ব্যবহার করা যাবে',
   })
   username: string;
 
-  @ApiProperty({ example: 'সিরাজুম মুনিরা' })
+  @ApiProperty({ example: 'শিক্ষার্থীর নাম' })
   @IsString()
-  @MinLength(2, { message: 'নাম কমপক্ষে ২ অক্ষরের হতে হবে' })
+  @MinLength(2)
   @MaxLength(60)
   fullName: string;
 
   @ApiProperty({ example: 'StrongPass123!' })
   @IsString()
-  @MinLength(8, { message: 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে' })
+  @MinLength(8)
   @MaxLength(72)
   password: string;
 
-@ApiProperty({ example: 11, description: '৬ থেকে ১২' })
-@IsInt()
-@Min(6)
-@Max(12)
-classLevel: number;
+  @ApiProperty({
+    example: 11,
+    description: 'Class 6–12',
+  })
+  @IsInt()
+  @Min(6)
+  @Max(12)
+  classLevel: number;
 
-@ApiPropertyOptional({
-  enum: AcademicGroup,
-  description: 'Class 9–12-এর জন্য বাধ্যতামূলক',
-})
-@IsOptional()
-@IsEnum(AcademicGroup)
-academicGroup?: AcademicGroup;
+  @ApiPropertyOptional({
+    enum: AcademicGroup,
+    description: 'Class 9–12-এর জন্য বাধ্যতামূলক',
+  })
+  @IsOptional()
+  @IsEnum(AcademicGroup)
+  academicGroup?: AcademicGroup;
+}

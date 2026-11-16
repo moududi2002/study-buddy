@@ -58,9 +58,6 @@ export class ChatService {
     const participants = await this.prisma.conversationParticipant.findMany({
       where: {
         userId,
-        conversation: {
-          groupId: null,
-        },
       },
 
       include: {
@@ -113,8 +110,30 @@ export class ChatService {
     ),
   );
 
+  
+  const myGroupMemberships = await this.prisma.groupMember.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      groupId: true,
+    },
+  });
+
+  const myGroupIds = new Set(
+    myGroupMemberships.map((member) => member.groupId),
+  );
+
   const visibleParticipants = participants.filter((p) => {
-    const others = p.conversation.participants.filter(
+    const conversation = p.conversation;
+
+    // Group conversation: group membership is enough.
+    if (conversation.groupId !== null) {
+      return myGroupIds.has(conversation.groupId);
+    }
+
+    // Personal conversation: accepted friendship required.
+    const others = conversation.participants.filter(
       (item) => item.userId !== userId,
     );
 
@@ -123,6 +142,7 @@ export class ChatService {
       friendIds.has(others[0].userId)
     );
   });
+
 
 
     const now = Date.now();
@@ -275,8 +295,6 @@ export class ChatService {
                 username: true,
                 fullName: true,
                 avatarUrl: true,
-                level: p.user.level,
-                xp: p.user.xp,
               },
             },
           },
@@ -304,8 +322,6 @@ export class ChatService {
           username: p.user.username,
           fullName: p.user.fullName,
           avatarUrl: p.user.avatarUrl,
-          level: p.user.level,
-          xp: p.user.xp,
         })),
       },
     };
@@ -567,90 +583,185 @@ export class ChatService {
   // INTERNAL: participant check
   // ----------------------------------------------------------
 
-    async ensureParticipant(
-      userId: string,
-      conversationId: string,
-    ) {
-      const participant =
-        await this.prisma.conversationParticipant.findUnique({
-          where: {
-            conversationId_userId: {
-              conversationId,
-              userId,
-            },
-          },
-        });
-
-      if (!participant) {
-        throw new ForbiddenException(
-          'তুমি এই চ্যাটের সদস্য নও',
-        );
-      }
-
-      const conversation = await this.prisma.conversation.findUnique({
-        where: { id: conversationId },
-        select: {
-          groupId: true,
-          participants: {
-            select: {
-              userId: true,
-            },
-          },
-        },
-      });
-
-      if (!conversation) {
-        throw new NotFoundException(
-          'চ্যাট খুঁজে পাওয়া যায়নি',
-        );
-      }
-
-      // Group messaging disabled under friends-only policy.
-      if (conversation.groupId !== null) {
-        throw new ForbiddenException(
-          'বর্তমানে শুধু Accepted Friend-এর সঙ্গে ব্যক্তিগত চ্যাট করা যাবে',
-        );
-      }
-
-      const memberIds = conversation.participants.map(
-        (item) => item.userId,
-      );
-
-      if (
-        memberIds.length !== 2 ||
-        !memberIds.includes(userId)
-      ) {
-        throw new ForbiddenException(
-          'অবৈধ ব্যক্তিগত চ্যাট',
-        );
-      }
-
-      const otherId = memberIds.find(
-        (id) => id !== userId,
-      )!;
-
-      const pair =
-        userId < otherId
-          ? { userLowId: userId, userHighId: otherId }
-          : { userLowId: otherId, userHighId: userId };
-
-      const friendship = await this.prisma.friendship.findUnique({
+    
+  async ensureParticipant(
+    userId: string,
+    conversationId: string,
+  ) {
+    const participant =
+      await this.prisma.conversationParticipant.findUnique({
         where: {
-          userLowId_userHighId: pair,
-        },
-        select: {
-          status: true,
+          conversationId_userId: {
+            conversationId,
+            userId,
+          },
         },
       });
 
-      if (friendship?.status !== FriendshipStatus.ACCEPTED) {
+    if (!participant) {
+      throw new ForbiddenException(
+        'তুমি এই চ্যাটের সদস্য নও',
+      );
+    }
+
+    const conversation = await this.prisma.conversation.findUnique({
+      where: {
+        id: conversationId,
+      },
+      select: {
+        groupId: true,
+        participants: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    if (!conversation) {
+      throw new NotFoundException(
+        'চ্যাট খুঁজে পাওয়া যায়নি',
+      );
+    }
+
+    // GROUP CHAT:
+    // Friendship is not required between group members.
+    // But valid group membership is mandatory.
+    if (conversation.groupId !== null) {
+      const membership = await this.prisma.groupMember.findUnique({
+        where: {
+          groupId_userId: {
+            groupId: conversation.groupId,
+            userId,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!membership) {
         throw new ForbiddenException(
-          'বন্ধুত্ব না থাকায় এই চ্যাট ব্যবহার করা যাবে না',
+          'তুমি আর এই গ্রুপের সদস্য নও',
         );
       }
 
       return participant;
     }
+
+    // PERSONAL CHAT:
+    // Exactly two participants and accepted friendship required.
+    const memberIds = conversation.participants.map(
+      (item) => item.userId,
+    );
+
+    if (
+      memberIds.length !== 2 ||
+      !memberIds.includes(userId)
+    ) {
+      throw new ForbiddenException(
+        'অবৈধ ব্যক্তিগত চ্যাট',
+      );
+    }
+
+    const otherId = memberIds.find(
+      (id) => id !== userId,
+    );
+
+    if (!otherId) {
+      throw new ForbiddenException(
+        'চ্যাটের অন্য ব্যবহারকারী পাওয়া যায়নি',
+      );
+    }
+
+    const pair =
+      userId < otherId
+        ? {
+            userLowId: userId,
+            userHighId: otherId,
+          }
+        : {
+            userLowId: otherId,
+            userHighId: userId,
+          };
+
+    const friendship = await this.prisma.friendship.findUnique({
+      where: {
+        userLowId_userHighId: pair,
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    if (friendship?.status !== FriendshipStatus.ACCEPTED) {
+      throw new ForbiddenException(
+        'ব্যক্তিগত চ্যাটের জন্য Accepted Friendship প্রয়োজন',
+      );
+    }
+
+    return participant;
+  }
+
+
+async ensurePeer(
+  userId: string,
+  conversationId: string,
+  targetUserId: string,
+) {
+  await this.ensureParticipant(userId, conversationId);
+
+  if (userId === targetUserId) {
+    throw new ForbiddenException(
+      'নিজেকে Call Target করা যাবে না',
+    );
+  }
+
+  const conversation = await this.prisma.conversation.findUnique({
+    where: { id: conversationId },
+    select: { groupId: true },
+  });
+
+  const peer =
+    await this.prisma.conversationParticipant.findUnique({
+      where: {
+        conversationId_userId: {
+          conversationId,
+          userId: targetUserId,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+  if (!peer) {
+    throw new ForbiddenException(
+      'এই ব্যবহারকারী চ্যাটের সদস্য নন',
+    );
+  }
+
+  // For group calls, target must still be a group member.
+  if (conversation?.groupId) {
+    const groupMember = await this.prisma.groupMember.findUnique({
+      where: {
+        groupId_userId: {
+          groupId: conversation.groupId,
+          userId: targetUserId,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!groupMember) {
+      throw new ForbiddenException(
+        'Call Target এই গ্রুপের সদস্য নন',
+      );
+    }
+  }
+
+  return true;
+}
 
 
   // ----------------------------------------------------------

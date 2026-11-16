@@ -11,8 +11,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
-
 // ============================================================
 // ENUMS
 // ============================================================
@@ -33,7 +31,6 @@ enum GoalType {
   MONTHLY
 }
 
-
 enum AcademicGroup {
   SCIENCE
   HUMANITIES
@@ -45,7 +42,6 @@ enum FriendshipStatus {
   ACCEPTED
   DECLINED
 }
-
 
 enum BadgeCode {
   FIRST_STUDY_ENTRY
@@ -65,55 +61,54 @@ enum BadgeCode {
 // ============================================================
 
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  username        String    @unique
-  fullName        String
-  passwordHash    String
-  classLevel      Int
+  id           String @id @default(cuid())
+  email        String @unique
+  username     String @unique
+  fullName     String
+  passwordHash String
+  classLevel   Int
 
   academicGroup      AcademicGroup?
-  academicConfigured Boolean @default(false)
+  academicConfigured Boolean        @default(false)
 
-  avatarUrl       String?
-  role            UserRole  @default(STUDENT)
+  avatarUrl String?
+  role      UserRole @default(STUDENT)
 
-  xp              Int       @default(0)
-  level           Int       @default(1)
-  currentStreak   Int       @default(0)
-  longestStreak   Int       @default(0)
-  lastStudyDate   DateTime? @db.Date
+  xp            Int       @default(0)
+  level         Int       @default(1)
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastStudyDate DateTime? @db.Date
 
-  isEmailVerified Boolean   @default(false)
-  isActive        Boolean   @default(true)
-  isProfilePublic Boolean   @default(true)
+  isEmailVerified Boolean @default(false)
+  isActive        Boolean @default(true)
+  isProfilePublic Boolean @default(true)
 
-  googleId        String?   @unique
+  googleId String? @unique
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  subjects        Subject[]
-  studyEntries    StudyEntry[]
-  goals           Goal[]
-  badges          UserBadge[]
-  otpTokens       OtpToken[]
-  refreshTokens   RefreshToken[]
-  diaries         StudyDiary[]
+  subjects      Subject[]
+  studyEntries  StudyEntry[]
+  goals         Goal[]
+  badges        UserBadge[]
+  otpTokens     OtpToken[]
+  refreshTokens RefreshToken[]
+  diaries       StudyDiary[]
 
   // === NEW relations (Step 19) ===
-  ownedGroups             Group[]                    @relation("GroupOwner")
-  groupMemberships        GroupMember[]
-  sentInvitations         GroupInvitation[]          @relation("Inviter")
-  receivedInvitations     GroupInvitation[]          @relation("Invitee")
-  notifications           Notification[]
+  ownedGroups              Group[]                   @relation("GroupOwner")
+  groupMemberships         GroupMember[]
+  sentInvitations          GroupInvitation[]         @relation("Inviter")
+  receivedInvitations      GroupInvitation[]         @relation("Invitee")
+  notifications            Notification[]
   conversationParticipants ConversationParticipant[]
-  messages                Message[]
+  messages                 Message[]
 
   friendshipsAsLow  Friendship[] @relation("FriendLow")
   friendshipsAsHigh Friendship[] @relation("FriendHigh")
-
 
   @@index([email])
   @@index([username])
@@ -137,7 +132,7 @@ model OtpToken {
   consumed  Boolean    @default(false)
   createdAt DateTime   @default(now())
 
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, purpose])
   @@index([code])
@@ -148,17 +143,17 @@ model OtpToken {
 // ============================================================
 
 model RefreshToken {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   userId     String
-  tokenHash  String   @unique
+  tokenHash  String    @unique
   userAgent  String?
   ipAddress  String?
-  rememberMe Boolean  @default(false)
+  rememberMe Boolean   @default(false)
   expiresAt  DateTime
   revokedAt  DateTime?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -176,8 +171,7 @@ model Subject {
   isCustom  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  isActive Boolean @default(true)
-
+  isActive  Boolean  @default(true)
 
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   studyEntries StudyEntry[]
@@ -317,23 +311,23 @@ enum MessageType {
 // ============================================================
 
 model Group {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
-  description String?  @db.Text
+  description String? @db.Text
   imageUrl    String?
   ownerId     String
-  isMuted     Boolean  @default(false) // owner global mute flag (optional use)
+  isMuted     Boolean @default(false) // owner global mute flag (optional use)
 
   // Group-wide study target (optional)
-  weeklyTargetMinutes Int?
+  weeklyTargetMinutes  Int?
   weeklyTargetChapters Int?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  owner       User               @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  members     GroupMember[]
-  invitations GroupInvitation[]
+  owner        User              @relation("GroupOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members      GroupMember[]
+  invitations  GroupInvitation[]
   conversation Conversation?
 
   @@index([ownerId])
@@ -344,15 +338,15 @@ model Group {
 // ============================================================
 
 model GroupMember {
-  id        String    @id @default(cuid())
-  groupId   String
-  userId    String
-  role      GroupRole @default(MEMBER)
-  isMuted   Boolean   @default(false) // user-level mute in this group
-  joinedAt  DateTime  @default(now())
+  id       String    @id @default(cuid())
+  groupId  String
+  userId   String
+  role     GroupRole @default(MEMBER)
+  isMuted  Boolean   @default(false) // user-level mute in this group
+  joinedAt DateTime  @default(now())
 
-  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([groupId, userId])
   @@index([groupId])
@@ -374,13 +368,13 @@ model GroupInvitation {
   createdAt   DateTime         @default(now())
   expiresAt   DateTime
 
-  group       Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  inviter     User             @relation("Inviter", fields: [inviterId], references: [id], onDelete: Cascade)
-  invitee     User             @relation("Invitee", fields: [inviteeId], references: [id], onDelete: Cascade)
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  inviter User  @relation("Inviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  invitee User  @relation("Invitee", fields: [inviteeId], references: [id], onDelete: Cascade)
 
+  @@unique([groupId, inviteeId, status])
   @@index([inviteeId, status])
   @@index([groupId])
-  @@unique([groupId, inviteeId, status])
 }
 
 // ============================================================
@@ -393,11 +387,11 @@ model Notification {
   type      NotificationType
   title     String
   body      String           @db.Text
-  data      Json?            // extra context: { groupId, invitationId, senderId, conversationId, ... }
+  data      Json? // extra context: { groupId, invitationId, senderId, conversationId, ... }
   isRead    Boolean          @default(false)
   createdAt DateTime         @default(now())
 
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isRead])
   @@index([userId, createdAt])
@@ -414,7 +408,7 @@ model Conversation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  group        Group?                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group        Group?                    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   participants ConversationParticipant[]
   messages     Message[]
 
@@ -445,15 +439,15 @@ model ConversationParticipant {
 // ============================================================
 
 model Message {
-  id             String       @id @default(cuid())
+  id             String      @id @default(cuid())
   conversationId String
   senderId       String
-  type           MessageType  @default(TEXT)
-  content        String?      @db.Text   // text content (null if image-only)
-  imageUrl       String?                 // image path
-  audioUrl String?
-  audioDuration Int? // seconds
-  createdAt      DateTime     @default(now())
+  type           MessageType @default(TEXT)
+  content        String?     @db.Text // text content (null if image-only)
+  imageUrl       String? // image path
+  audioUrl       String?
+  audioDuration  Int? // seconds
+  createdAt      DateTime    @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
@@ -461,7 +455,6 @@ model Message {
   @@index([conversationId, createdAt])
   @@index([senderId])
 }
-
 
 model Friendship {
   id            String           @id @default(cuid())
@@ -472,19 +465,8 @@ model Friendship {
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 
-  userLow  User @relation(
-    "FriendLow",
-    fields: [userLowId],
-    references: [id],
-    onDelete: Cascade
-  )
-
-  userHigh User @relation(
-    "FriendHigh",
-    fields: [userHighId],
-    references: [id],
-    onDelete: Cascade
-  )
+  userLow  User @relation("FriendLow", fields: [userLowId], references: [id], onDelete: Cascade)
+  userHigh User @relation("FriendHigh", fields: [userHighId], references: [id], onDelete: Cascade)
 
   @@unique([userLowId, userHighId])
   @@index([userLowId, status])

@@ -13,7 +13,7 @@ import {
 export class CreateSubjectDto {
   @ApiProperty({ example: 'উচ্চতর গণিত' })
   @IsString()
-  @MinLength(1, { message: 'বিষয়ের নাম দিন' })
+  @MinLength(2, { message: 'বিষয়ের নাম দিন' })
   @MaxLength(40, { message: 'নাম সর্বোচ্চ ৪০ অক্ষরের' })
   name: string;
 

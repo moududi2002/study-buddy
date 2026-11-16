@@ -14,6 +14,7 @@ export interface GroupListItem {
   joinedAt: string;
 }
 
+
 export interface GroupMemberItem {
   id: string;
   username: string;
@@ -23,14 +24,14 @@ export interface GroupMemberItem {
   role: 'OWNER' | 'ADMIN' | 'MEMBER';
   isMuted: boolean;
   joinedAt: string;
-  xp: number;
-  level: number;
-  currentStreak: number;
-  longestStreak: number;
-  weekMinutes: number;
-  badgeCount: number;
-  rank?: number;
 }
+
+export interface GroupLeaderboardItem {
+  rank: number;
+  label: string;
+  isMe: boolean;
+}
+
 
 export interface GroupInvitationItem {
   id: string;
@@ -45,33 +46,40 @@ export interface GroupInvitationItem {
   };
 }
 
+
 export interface GroupDetail {
   id: string;
   name: string;
   description: string | null;
   imageUrl: string | null;
   ownerId: string;
+
   owner: {
     id: string;
     username: string;
     fullName: string;
     avatarUrl: string | null;
   };
+
+  conversationId: string | null;
+
   myRole: 'OWNER' | 'ADMIN' | 'MEMBER' | null;
   isMuted: boolean;
   memberCount: number;
+
   weeklyTargetMinutes: number | null;
   weeklyTargetChapters: number | null;
+
   weekStart: string;
   weekEnd: string;
-  groupTotalMinutes: number;
-  targetProgressPercent: number;
+
   members: GroupMemberItem[];
-  leaderboard: GroupMemberItem[];
+  leaderboard: GroupLeaderboardItem[];
   invitations: GroupInvitationItem[];
+
   createdAt: string;
-  conversationId?: string | null;
 }
+
 
 export interface MyInvitation {
   id: string;
