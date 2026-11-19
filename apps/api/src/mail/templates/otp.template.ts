@@ -50,7 +50,7 @@ export function renderOtpEmail({
             </tr>
             <tr>
               <td style="padding:32px 28px;">
-                <h2 style="margin:0 0 8px;font-size:18px;color:#4C1D95;">প্রিয় ${fullName},</h2>
+                <h2 style="margin:0 0 8px;font-size:18px;color:#4C1D95;">প্রিয় ${fullName}, </h2>
                 <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#5B21B6;">
                   ${intro}
                 </p>
