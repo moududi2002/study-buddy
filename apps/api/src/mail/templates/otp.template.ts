@@ -8,7 +8,7 @@ export interface OtpEmailParams {
   fullName: string;
   otp: string;
   purpose: 'EMAIL_VERIFICATION' | 'PASSWORD_RESET';
-  expiryMinutes: number;
+  expiryMinutes: number; 
 }
 
 export function renderOtpEmail({
@@ -25,8 +25,8 @@ export function renderOtpEmail({
 
   const heading = isVerify ? 'ইমেইল যাচাই করুন' : 'পাসওয়ার্ড রিসেট করুন';
   const intro = isVerify
-    ? 'Study Buddy তে স্বাগতম! নিচের কোডটি দিয়ে আপনার ইমেইল যাচাই সম্পন্ন করুন।'
-    : 'আপনি পাসওয়ার্ড রিসেট করার অনুরোধ করেছেন। নিচের কোডটি ব্যবহার করুন।';
+    ? 'Study Buddy তে স্বাগতম! নিচের কোডটি দিয়ে তোমার ইমেইল যাচাই সম্পন্ন করো ।'
+    : 'তুমি পাসওয়ার্ড রিসেট করার অনুরোধ করেছ। নিচের কোডটি ব্যবহার ব্যাবহার করে নতুন পাসওয়ার্ড সেট করে ফেলো ।';
 
   const html = `
   <!DOCTYPE html>
@@ -45,7 +45,7 @@ export function renderOtpEmail({
               <td style="background:linear-gradient(135deg,#C4B5FD 0%,#FBCFE8 100%);padding:28px 24px;text-align:center;">
                 <div style="font-size:44px;line-height:1;">🐱</div>
                 <h1 style="margin:8px 0 0;font-size:22px;color:#4C1D95;">Study Buddy</h1>
-                <p style="margin:4px 0 0;font-size:13px;color:#6D28D9;">আপনার পড়াশোনার সঙ্গী</p>
+                <p style="margin:4px 0 0;font-size:13px;color:#6D28D9;">তোমার কিউট পড়াশোনার সঙ্গী</p>
               </td>
             </tr>
             <tr>
@@ -65,8 +65,8 @@ export function renderOtpEmail({
                   ⏱️ কোডটির মেয়াদ শেষ হবে <b>${expiryMinutes} মিনিটে</b>
                 </p>
                 <p style="margin:24px 0 0;font-size:13px;color:#9333EA;line-height:1.7;">
-                  যদি আপনি এই অনুরোধ না করে থাকেন, এই ইমেইলটি উপেক্ষা করুন।
-                  কারো সাথে এই কোড শেয়ার করবেন না। 🔒
+                  যদি তুমি এই অনুরোধ না করে থাক,তবে এই ইমেইলটি এড়িয়ে যাও । 
+                  ভুলেও কারো সাথে এই কোড শেয়ার করবে না। 🔒
                 </p>
               </td>
             </tr>

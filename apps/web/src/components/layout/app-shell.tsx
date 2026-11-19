@@ -35,11 +35,11 @@ import { Timer } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'হোম', icon: Home },
+  { href: '/focus', label: 'ফোকাস', icon: Timer },
   { href: '/tracker', label: 'ট্র্যাকার', icon: BookOpen },
   { href: '/analytics', label: 'রিপোর্ট', icon: BarChart3 },
   { href: '/goals', label: 'লক্ষ্য', icon: Target },
   { href: '/achievements', label: 'ব্যাজ', icon: Trophy },
-  { href: '/focus', label: 'ফোকাস', icon: Timer },
 
 ];
 
